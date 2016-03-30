@@ -10,6 +10,7 @@ import smtplib
 import json
 import traceback
 import pprint
+import email.utils
 
 from app import app
 
@@ -68,10 +69,11 @@ def send_text_mail(recipient_list, subject, body, from_address=None):
         recipient_list = [email_to_override]
         log.info('Using email override: %s' % ', '.join(recipient_list))
 
-    msg = MIMEText(body, "plain", "utf-8")
+    msg = MIMEText(body, 'plain', 'utf-8')
     msg['To'] = ', '.join(recipient_list)
     msg['Subject'] = subject
     msg['From'] = from_address
+    msg['Date'] = email.utils.formatdate()
 
     s.sendmail(from_address, recipient_list, msg.as_string())
     s.quit()
