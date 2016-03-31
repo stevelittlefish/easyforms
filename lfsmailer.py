@@ -133,11 +133,20 @@ Message:
             try:
                 from flask import request
                 url = request.url
+                method = request.method
                 endpoint = request.endpoint
-                args = pprint.pformat(dict(request.args))
-                form = pprint.pformat(dict(request.form))
 
-                msg = '%s\nRequest:\n\nurl:      %s\nendpoint: %s\nargs:     %s\nform:     %s\n' % (msg, url, endpoint, args, form)
+                # Obscure password field and prettify a little bit
+                form_dict = dict(request.form)
+                for key in form_dict:
+                    if 'password' in key.lower():
+                        form_dict[key] = '******'
+                    elif len(form_dict[key]) == 1:
+                        form_dict[key] = form_dict[key][0]
+
+                form = pprint.pformat(form_dict).replace('\n', '\n          ')
+
+                msg = '%s\nRequest:\n\nurl:      %s\nmethod:   %s\nendpoint: %s\nform:     %s\n' % (msg, url, method, endpoint, form)
             except:
                 traceback.print_exc()
 
