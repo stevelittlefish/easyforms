@@ -7,6 +7,7 @@ __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 import logging
 import datetime
 import calendar
+import dateutil.parser
 
 import pytz
 
@@ -228,3 +229,11 @@ def unix_time(dt=None):
     epoch = datetime.datetime.utcfromtimestamp(0)
     delta = dt - epoch
     return delta.total_seconds()
+
+
+def format_datetime_iso8601(datetime):
+    return datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+def datetime_from_iso8601(string):
+    return dateutil.parser.parse(string)

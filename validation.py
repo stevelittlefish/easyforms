@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 email_regex = re.compile('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z.]+$', flags=re.IGNORECASE)
 telephone_regex = re.compile('^\+?\d+(\s*-?\s*\d+)*$')
 postcode_regex = re.compile('^[A-Za-z0-9 -]{1,10}$')
+url_regex = re.compile('^https?://[^.]+\.[^.]+')
 
 
 def luhn_check(card_number):
@@ -35,6 +36,10 @@ def luhn_check(card_number):
 
 def validate_email_address(email_address):
     return email_regex.match(email_address)
+
+
+def validate_url(url):
+    return url_regex.match(url)
 
 
 def validate_telephone_number(telephone_number):
