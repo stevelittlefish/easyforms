@@ -158,7 +158,7 @@ def to_base62(n):
     :param n: The number to convert
     :return: Base 62 representation of number (string)
     """
-    remainder = n  % 62
+    remainder = n % 62
     result = BASE62_MAP[remainder]
     num = n / 62
 
