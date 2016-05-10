@@ -13,6 +13,9 @@ email_regex = re.compile('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z.]+$', flags=re.IGNOR
 telephone_regex = re.compile('^\+?\d+(\s*-?\s*\d+)*$')
 postcode_regex = re.compile('^[A-Za-z0-9 -]{1,10}$')
 url_regex = re.compile('^https?://[^.]+\.[^.]+')
+card_number_regex = re.compile('^\d{16}$')
+security_code_regex = re.compile('^\d{3}$')
+royal_mail_tracking_number_regex = re.compile('^[A-Z0-9]{11}GB$')
 
 
 def luhn_check(card_number):
@@ -48,3 +51,14 @@ def validate_telephone_number(telephone_number):
 
 def validate_postcode(postcode):
     return postcode_regex.match(postcode)
+
+
+def validate_card_number(card_number):
+    return card_number_regex.match(card_number)
+
+def validate_security_code(security_code):
+    return security_code_regex.match(security_code)
+
+
+def validate_royal_mail_tracking_number(tracking_number):
+    return royal_mail_tracking_number_regex.match(tracking_number)

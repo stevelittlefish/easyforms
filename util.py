@@ -10,8 +10,10 @@ from cStringIO import StringIO
 import csv
 from functools import wraps
 import random
+import re
 
 from flask import jsonify, make_response, request
+import flask
 import jinja2
 from flask.ext.sqlalchemy import get_debug_queries
 
@@ -25,6 +27,8 @@ NUMBERS = '0123456789'
 SYMBOLS = '!?@%'
 
 BASE62_MAP = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+paragraph_split_regex = re.compile(r'\n\n+')
 
 
 def generate_password():
@@ -76,6 +80,52 @@ def format_commas(number):
     if number is None:
         return None
     return '{:,.0f}'.format(number)
+
+
+def format_multiline_html(text):
+    """Turns a string like 'a\nb\nc' into 'a<br>b<br>c' and marks as Markup"""
+    if text is None:
+        return None
+
+    if '\n' not in text:
+        return text
+
+    parts = text.replace('\r', '').split('\n')
+    out = flask.Markup()
+    for part in parts:
+        if out:
+            out += flask.Markup('<br>')
+        out += flask.escape(part)
+    return out
+
+
+def to_paragraphs(string):
+    # Split the string into parts using multiple returns as a separator
+    parts = paragraph_split_regex.split(string)
+    return flask.Markup('<p>%s</p>' % '</p><p>'.join(parts))
+
+
+def format_filesize(bytes):
+    one_mb = 1024 * 1024
+
+    if bytes < 1024:
+        return '%s Bytes' % bytes
+    elif bytes < one_mb:
+        return '%0.1f KiB' % (float(bytes) / 1024)
+    else:
+        return '%0.1f MiB' % (float(bytes) / one_mb)
+
+
+def format_ordinal(n):
+    """
+    Format an ordinal, like 1st, 2nd, 3rd...
+
+    Not tested with large numbers of negative numbers!
+    """
+    if 10 <= n % 100 < 20:
+        return str(n) + 'th'
+    else:
+        return str(n) + {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, "th")
 
 
 def is_ascii(s):

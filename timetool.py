@@ -237,3 +237,15 @@ def format_datetime_iso8601(datetime):
 
 def datetime_from_iso8601(string):
     return dateutil.parser.parse(string)
+
+
+def is_christmas_period():
+    """Is this the christmas period?"""
+    now = datetime.date.today()
+    if now.month != 12:
+        return False
+    if now.day < 15:
+        return False
+    if now.day > 27:
+        return False
+    return True
