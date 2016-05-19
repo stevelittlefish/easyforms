@@ -2,8 +2,6 @@
 Code to send email messages via an SMTP server
 """
 
-__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
-
 import logging
 from email.mime.text import MIMEText
 import smtplib
@@ -12,7 +10,10 @@ import traceback
 import pprint
 import email.utils
 
+import timetool
 from app import app
+
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class LfsSmtpHandler(logging.Handler):
     A handler class which sends an SMTP email for each logging event.  This has been customised to (easily) work with
     lfsmailer
     """
-    def __init__(self, fromaddr, toaddrs, subject):
+    def __init__(self, fromaddr, toaddrs, subject, max_sends_per_minute=15):
         """
         Initialize the handler.
 
@@ -106,6 +107,8 @@ class LfsSmtpHandler(logging.Handler):
         self.toaddrs = toaddrs
         self.subject = subject
         self._timeout = 5.0
+        self.max_sends_per_minute = max_sends_per_minute
+        self.rate_limiter = []
 
         # Default formatter
         self.setFormatter(logging.Formatter('''
@@ -127,6 +130,20 @@ Message:
         Format the record and send it to the specified addressees.
         """
         try:
+            # First, remove all records from the rate limiter list that are over a minute old
+            now = timetool.unix_time()
+            one_minute_ago = now - 60
+            new_rate_limiter = [x for x in self.rate_limiter if x > one_minute_ago]
+            log.debug('Rate limiter %s -> %s' % (len(self.rate_limiter), len(new_rate_limiter)))
+            self.rate_limiter = new_rate_limiter
+
+            # Now, get the number of emails sent in the last minute.  If it's less than the threshold, add another
+            # entry to the rate limiter list
+            recent_sends = len(self.rate_limiter)
+            send_email = recent_sends < self.max_sends_per_minute
+            if send_email:
+                self.rate_limiter.append(now)
+
             msg = self.format(record)
 
             # Try to append Flask request details
@@ -164,7 +181,11 @@ Message:
                 traceback.print_exc()
 
             # Finally send the message!
-            send_text_mail(self.toaddrs, self.subject, msg, self.fromaddr)
+            if send_email:
+                send_text_mail(self.toaddrs, self.subject, msg, self.fromaddr)
+            else:
+                log.info('!! WARNING: Not sending email as too many emails have been sent in the past minute !!')
+                log.info(msg)
 
         except (KeyboardInterrupt, SystemExit):
             raise
