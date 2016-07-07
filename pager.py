@@ -25,7 +25,7 @@ class Pager(object):
         
         # Do the paging here
         self.total_items = query.count()
-        self.total_pages = (self.total_items - 1) / page_size + 1
+        self.total_pages = (self.total_items - 1) // page_size + 1
         
         if self.page_number > self.total_pages:
             self.page_number = self.total_pages

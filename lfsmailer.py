@@ -10,7 +10,7 @@ import traceback
 import pprint
 import email.utils
 
-import timetool
+from . import timetool
 from app import app
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -55,8 +55,8 @@ def send_text_mail(recipient_list, subject, body, from_address=None):
     if dump_email_body:
         log.info(body)
 
-    s = smtplib.SMTP()
-    s.connect(host, port)
+    s = smtplib.SMTP(host, port)
+    # s.connect(host, port)
 
     if use_tls:
         s.ehlo()
@@ -102,7 +102,7 @@ class LfsSmtpHandler(logging.Handler):
         """
         super(LfsSmtpHandler, self).__init__()
         self.fromaddr = fromaddr
-        if isinstance(toaddrs, basestring):
+        if isinstance(toaddrs, str):
             toaddrs = [toaddrs]
         self.toaddrs = toaddrs
         self.subject = subject
@@ -163,7 +163,8 @@ Message:
 
                 form = pprint.pformat(form_dict).replace('\n', '\n          ')
 
-                msg = '%s\nRequest:\n\nurl:      %s\nmethod:   %s\nendpoint: %s\nform:     %s\n' % (msg, url, method, endpoint, form)
+                msg = '%s\nRequest:\n\nurl:      %s\nmethod:   %s\nendpoint: %s\nform:     %s\n' % \
+                    (msg, url, method, endpoint, form)
             except:
                 traceback.print_exc()
 

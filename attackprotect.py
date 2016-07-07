@@ -64,7 +64,7 @@ class AttackProtect(object):
         """
         with self.lock:
             # Decrement / remove all attempts
-            for key in self.attempts.keys():
+            for key in list(self.attempts.keys()):
                 log.debug('Decrementing count for %s' % key)
                 if key in self.attempts:
                     if self.attempts[key] <= 1:
@@ -74,7 +74,7 @@ class AttackProtect(object):
 
             # Remove expired locks
             now = datetime.datetime.utcnow()
-            for key in self.locks.keys():
+            for key in list(self.locks.keys()):
                 if key in self.locks and self.locks[key] < now:
                     log.info('Expiring login lock for %s' % key)
                     del self.locks[key]

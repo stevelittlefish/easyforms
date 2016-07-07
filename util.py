@@ -6,7 +6,7 @@ __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 import logging
 import os
-from cStringIO import StringIO
+from io import StringIO
 import csv
 from functools import wraps
 import random
@@ -180,7 +180,7 @@ def rows_to_csv(rows, filename='report.csv', header=None):
             replacement_row = []
             for item in row:
                 # if item contains utf-8 characters, then replace string with 'INVALID'
-                if not isinstance(item, unicode) or is_ascii(item):
+                if not isinstance(item, str) or is_ascii(item):
                     replacement_row.append(item)
                 else:
                     replacement_row.append('!!INVALID!!')
