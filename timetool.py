@@ -2,14 +2,14 @@
 This contains functions to manipulate and display timestamps
 """
 
-__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
-
 import logging
 import datetime
 import calendar
 import dateutil.parser
 
 import pytz
+
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
@@ -24,8 +24,11 @@ def to_local_time(time_in):
     elif time_in.tzinfo is None:
         # If there is no timezone, localise it to UTC
         time_utc = utc.localize(time_in)
-    elif time_in.tzinfo.zone == 'UTC':
+    elif hasattr(time_in.tzinfo, 'zone') and time_in.tzinfo.zone == 'UTC':
         # Already UTC - no need to localize
+        time_utc = time_in
+    elif hasattr(time_in.tzinfo, 'tzname') and time_in.tzinfo.tzname(time_in) == 'UTC':
+        # Already UTC
         time_utc = time_in
     else:
         # Not a UTC timestamp
@@ -118,6 +121,17 @@ def format_date_long_no_day(datetime, convert_to_local=True):
         except ValueError:
             log.warning('Invalid date: %s' % datetime)
             return '????'
+    else:
+        return ''
+
+
+def format_time(datetime, convert_to_local=True):
+    if datetime:
+        if convert_to_local:
+            local_datetime = to_local_time(datetime)
+            return local_datetime.strftime('%H:%M:%S')
+        else:
+            return datetime.strftime('%H:%M:%S')
     else:
         return ''
 
