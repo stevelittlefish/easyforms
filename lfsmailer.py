@@ -41,22 +41,31 @@ def send_text_mail_single(to_email_address, to_name, subject, body, from_address
 
 
 def send_text_mail(recipient_list, subject, body, from_address=None):
+    send_mail(recipient_list, subject, body, html=False, from_address=None)
+
+
+def send_html_mail(recipient_list, subject, body, from_address=None):
+    send_mail(recipient_list, subject, body, html=True, from_address=None)
+
+
+def send_mail(recipient_list, subject, body, html=False, from_address=None):
     """
     :param recipient_list: List of recipients i.e. ['testing@fig14.com', 'Stephen Brown <steve@fig14.com>']
-    :param from_address: From email address or name and address i.e. 'Test System <errors@test.com>
     :param subject: The subject
     :param body: The email body
+    :param html: Is this a html email? Defaults to False
+    :param from_address: From email address or name and address i.e. 'Test System <errors@test.com>
     :return:
     """
     if from_address is None:
         from_address = default_email_from
-
-    log.debug('Sending mail to %s: %s' % (', '.join(recipient_list), subject))
+    
+    mime_type = 'html' if html else 'plain'
+    log.debug('Sending {} mail to {}: {}'.format(mime_type, ', '.join(recipient_list), subject))
     if dump_email_body:
         log.info(body)
 
     s = smtplib.SMTP(host, port)
-    # s.connect(host, port)
 
     if use_tls:
         s.ehlo()
@@ -70,7 +79,7 @@ def send_text_mail(recipient_list, subject, body, from_address=None):
         recipient_list = [email_to_override]
         log.info('Using email override: %s' % ', '.join(recipient_list))
 
-    msg = MIMEText(body, 'plain', 'utf-8')
+    msg = MIMEText(body, mime_type, 'utf-8')
     msg['To'] = ', '.join(recipient_list)
     msg['Subject'] = subject
     msg['From'] = from_address

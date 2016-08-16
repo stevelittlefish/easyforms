@@ -2,12 +2,12 @@
 Image processing utility functions
 """
 
-__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
-
 import logging
 
 import PIL.Image
 import PIL.ImageEnhance
+
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
@@ -35,15 +35,11 @@ def resize_image_to_fit(image, dest_w, dest_h):
         scaled_h = dest_h
         scaled_w = src_w * scale
 
-        offset = (int((dest_w - scaled_w) / 2), 0)
-
     else:
         # Image is short and wide - we need to scale to the right height and then crop
         scale = dest_w / src_w
         scaled_w = dest_w
         scaled_h = src_h * scale
-
-        offset = (0, int((dest_h - scaled_h) / 2))
 
     scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.BICUBIC)
 
