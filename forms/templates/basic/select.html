@@ -1,0 +1,24 @@
+{% import 'macros.html' as macros %}
+
+<div class="form-group {% if field.error %}has-error{% endif %} {% if field.form_group_css_class %}{{ field.form_group_css_class }}{% endif %}">
+	{{ macros.standard_label(field) }}
+	
+	<div {{ field.input_column_attributes }}>
+		<select name="{{ field.name }}" id="{{ field.id }}" class="form-control">
+			{% if field.empty_option %}
+				<option value="" {% if field.value == None %}selected="selected"{% endif %}>
+					{{ field.empty_option_name }}
+				</option>
+			{% endif %}
+			{% for key_pair in field.key_pairs %}
+				<option value="{{ key_pair.select_value }}"
+						{% if field.value == key_pair.select_value or field.value == key_pair %}selected="selected"{% endif %}>
+					{{ key_pair.select_name }}
+				</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>

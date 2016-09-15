@@ -1,0 +1,356 @@
+"""
+Contains the definitions for the more exotic types of form inputs, such as date pickers and gender selection inputs
+"""
+
+import logging
+import datetime
+import re
+
+from flask import request
+
+from . import basicfields
+from . import validate
+from . import form
+from .env import env
+from lfs import timetool
+
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
+
+log = logging.getLogger(__name__)
+
+
+class NameField(basicfields.TextField):
+    def __init__(self, name, **kwargs):
+        """
+        :param name: The name of the field (the name field in the generated input)
+        """
+        super(NameField, self).__init__(name, 'text', **kwargs)
+
+    def convert_value(self):
+        # convert to title case
+        if self.value is not None:
+            self.value = self.value.title()
+
+
+class CodeField(basicfields.TextField):
+    """Field for entering url safe lower case strings"""
+
+    def __init__(self, name, **kwargs):
+        super().__init__(name, 'text', **kwargs)
+        
+        self.validators.append(validate.url_safe)
+
+    def convert_value(self):
+        # convert to lower case
+        if self.value is not None:
+            self.value = self.value.lower()
+
+
+class EmailField(basicfields.TextField):
+    def __init__(self, name, type='email', **kwargs):
+        """
+        :param name: The name of the field (the name field in the generated input)
+        :param type: The type, i.e. text, email
+        """
+        if type not in ['email', 'text']:
+            raise ValueError('Type must be \'email\' or \'text\'')
+
+        super(EmailField, self).__init__(name, type, **kwargs)
+
+        self.validators.append(validate.email)
+
+    def convert_value(self):
+        # convert to lower case
+        if self.value is not None:
+            self.value = self.value.lower()
+
+
+class UrlField(basicfields.TextField):
+    def __init__(self, name, type='url', **kwargs):
+        """
+        :param name: The name of the field (the name field in the generated input)
+        :param type: The type, i.e. text, url
+        """
+        if type not in ['url', 'text']:
+            raise ValueError('Type must be \'url\' or \'text\'')
+
+        super(UrlField, self).__init__(name, type, **kwargs)
+
+        self.validators.append(validate.url)
+
+
+class PhoneNumberField(basicfields.TextField):
+    def __init__(self, name, type='tel', **kwargs):
+        """
+        :param name: The name of the field (the name field in the generated input)
+        :param type: The type, i.e. text, email
+        """
+        if type not in ['tel', 'text']:
+            raise ValueError('Type must be \'tel\' or \'text\'')
+
+        super(PhoneNumberField, self).__init__(name, type, **kwargs)
+
+        self.validators.append(validate.phone_number)
+
+    def convert_value(self):
+        # Strip out spaces
+        if self.value is not None:
+            self.value = self.value.replace(' ', '')
+
+
+class PostcodeField(basicfields.TextField):
+    def __init__(self, name, **kwargs):
+        """
+        :param name: The name of the field (the name field in the generated input)
+        :param type: The type, i.e. text, email
+        """
+        if 'type' in kwargs:
+            raise Exception('Invalid keyword argument: type')
+
+        super(PostcodeField, self).__init__(name, 'text', **kwargs)
+
+        self.validators.append(validate.postcode)
+
+    def convert_value(self):
+        if self.value is not None:
+            self.value = self.value.upper()
+
+
+class GenderField(form.Field):
+    def __init__(self, name, **kwargs):
+        super(GenderField, self).__init__(name, allow_missing=True, **kwargs)
+
+    def render(self):
+        return env.get_template('advanced/gender.html').render(field=self)
+
+
+class DateSelectField(form.Field):
+    def __init__(self, name, **kwargs):
+        super(DateSelectField, self).__init__(name, **kwargs)
+
+    def render(self):
+        return env.get_template('advanced/date_select.html')\
+            .render(field=self, day=self.value.day if self.value else None,
+                    month=self.value.month if self.value else None, year=self.value.year if self.value else None,
+                    this_year=datetime.datetime.now().year)
+
+    def extract_value(self, data):
+        day_str = data['%s-day' % self.name]
+        month_str = data['%s-month' % self.name]
+        year_str = data['%s-year' % self.name]
+
+        # Validate and process date of birth
+        if day_str and month_str and year_str:
+            try:
+                day = int(day_str)
+                month = int(month_str)
+                year = int(year_str)
+
+                self.value = datetime.date(year, month, day)
+            except Exception:
+                self.error = 'Invalid date'
+
+
+class YearMonthSelectField(form.Field):
+    def __init__(self, name, **kwargs):
+        super(YearMonthSelectField, self).__init__(name, **kwargs)
+
+    def render(self):
+        return env.get_template('advanced/year_month_select.html')\
+            .render(field=self, month=self.value.month if self.value else None,
+                    year=self.value.year if self.value else None,
+                    this_year=datetime.datetime.now().year)
+
+    def extract_value(self, data):
+        month_str = data['%s-month' % self.name]
+        year_str = data['%s-year' % self.name]
+
+        # Validate and process date of birth
+        if month_str and year_str:
+            try:
+                day = 1
+                month = int(month_str)
+                year = int(year_str)
+
+                self.value = datetime.date(year, month, day)
+            except Exception:
+                self.error = 'Invalid date'
+
+
+class DatePickerField(form.Field):
+    """
+    You must enable the date picker javascript for this to work!
+    """
+    def __init__(self, name, **kwargs):
+        if 'width' not in kwargs:
+            kwargs['width'] = 3
+        super(DatePickerField, self).__init__(name, css_class='date-picker', **kwargs)
+
+    def render(self):
+        date = self.value
+        if date is not None:
+            date = timetool.datetime_to_datepicker(date)
+
+        return env.get_template('advanced/date_picker.html').render(field=self, date=date)
+
+    def convert_value(self):
+        if self.value is not None:
+            try:
+                self.value = timetool.datetime_from_datepicker(self.value).date()
+            except ValueError:
+                self.error = 'Invalid date: "%s"' % self.value
+                self.value = datetime.datetime.now()
+
+
+class IntegerSelectField(basicfields.SelectField):
+    def __init__(self, name, key_pairs, empty_option=False, empty_option_name='', button_link_url=None,
+                 button_link_text=None, **kwargs):
+        super(IntegerSelectField, self).__init__(name, key_pairs, empty_option=empty_option,
+                                                 empty_option_name=empty_option_name, button_link_url=button_link_url,
+                                                 button_link_text=button_link_text, **kwargs)
+
+    def convert_value(self):
+        if self.value is not None:
+            try:
+                self.value = int(self.value)
+            except ValueError:
+                self.error = 'Invalid value'
+
+
+class ListSelectField(basicfields.SelectField):
+    def __init__(self, name, values, **kwargs):
+        class KeyPair(object):
+            def __init__(self, x):
+                self.select_name = x
+                self.select_value = x
+
+        key_pairs = [KeyPair(x) for x in values]
+
+        super(ListSelectField, self).__init__(name, key_pairs, **kwargs)
+
+
+class HtmlField(basicfields.TextAreaField):
+    def __init__(self, name, no_smiley=True, no_image=True, no_nbsp=True, height=None, on_change=None,
+                 pretty_print=False, strip_empty_paragraphs=True, **kwargs):
+        super(HtmlField, self).__init__(name, **kwargs)
+
+        self.no_smiley = no_smiley
+        self.no_image = no_image
+        self.no_nbsp = no_nbsp
+        self.height = height
+        self.on_change = on_change
+        self.pretty_print = pretty_print
+        self.strip_empty_paragraphs = strip_empty_paragraphs
+
+    def render(self):
+        return env.get_template('advanced/ckeditor.html').render(field=self)
+
+    def convert_value(self):
+        if self.value is not None and self.no_nbsp:
+            self.value = re.sub(r'\s?&nbsp;\s?', ' ', self.value)
+
+        if self.value and self.strip_empty_paragraphs:
+            self.value = re.sub(r'<p>\s*</p>', '', self.value)
+
+        if self.value is not None and self.pretty_print:
+            # soup = BeautifulSoup(self.value, "lxml")
+            # soup.html.unwrap()
+            # soup.body.unwrap()
+            # html = soup.prettify()
+            # r = re.compile(r'^(\s*)', re.MULTILINE)
+            # self.value = r.sub(r'\1\1', html)
+            log.error('Pretty_print not implemented!')
+
+
+class TimeInputField(form.Field):
+    def __init__(self, name, **kwargs):
+        super(TimeInputField, self).__init__(name, **kwargs)
+
+    def render(self):
+        return env.get_template('advanced/time_input.html').render(field=self)
+
+    def extract_value(self, data):
+        hour_str = data['%s-hour' % self.name]
+        minute_str = data['%s-minute' % self.name]
+
+        # Validate and process time
+        if hour_str and minute_str:
+            try:
+                hour = int(hour_str)
+                minute = int(minute_str)
+
+                self.value = datetime.time(hour, minute)
+            except Exception:
+                self.error = 'Invalid time'
+
+
+class FileUploadField(form.Field):
+    def __init__(self, name, accept, disable_submitted_warning=False, **kwargs):
+        super(FileUploadField, self).__init__(name, requires_multipart=True, allow_missing=True, **kwargs)
+
+        self.accept = accept
+        self.submitted = False
+        self.file = None
+        self.filename = None
+        self.disable_submitted_warning = disable_submitted_warning
+
+    def render(self):
+        return env.get_template('advanced/file_upload.html').render(field=self)
+
+    def convert_value(self):
+        if self.name in request.files:
+            self.file = request.files[self.name]
+            self.filename = self.file.filename
+            if self.filename:
+                self.value = self.file.read()
+                if not self.disable_submitted_warning:
+                    self.submitted = True
+            else:
+                self.file = None
+                self.filename = None
+                self.value = None
+
+
+class MultiCheckboxField(form.Field):
+    """
+    This field renders as multiple checkboxes in a vertical column. The must pass in a list of
+    object with select_name and select_value properties defined.  Each checkbox will have
+    select_name as a label, and select_value (which must be unique) will be submitted as the
+    value of the checkbox.
+
+    When reading form data, the original objects will be copied into a new list, with each
+    object that had its box ticked being present in the list.
+    """
+    def __init__(self, name, values, value=None, **kwargs):
+        if value is None:
+            value = []
+
+        if not isinstance(value, list):
+            raise Exception('Value must be a list for multi-checkbox field')
+
+        super().__init__(name, allow_missing=True, value=value, **kwargs)
+
+        self.values = values
+        self._checked_select_values = [v.select_value for v in self.value]
+    
+    def render(self):
+        return env.get_template('advanced/multicheckbox.html').render(field=self)
+
+    def extract_value(self, data):
+        self._checked_select_values = data.getlist(self.name)
+        self.value = [v for v in self.values if v.select_value in self._checked_select_values]
+
+
+class SubmitCancelButton(basicfields.SubmitButton):
+    def __init__(self, name, cancel_url, value=None, cancel_text='Cancel', css_class='btn-primary',
+                 cancel_css_class='btn-danger', render_after_sections=True, **kwargs):
+        self.cancel_url = cancel_url
+        self.cancel_text = cancel_text
+        self.cancel_css_class = cancel_css_class
+
+        super().__init__(name, value=value, css_class=css_class,
+                         render_after_sections=render_after_sections, **kwargs)
+
+    def render(self):
+        return env.get_template('advanced/submit_cancel.html').render(field=self)
+

@@ -1,0 +1,34 @@
+{% import 'macros.html' as macros %}
+
+<div class="form-group {% if field.error %}has-error{% endif %} cms-field">
+	{{ macros.standard_label(field) }}
+
+	{% if field.form_type == formtype.VERTICAL %}
+		{{ macros.standard_help_text(field) }}
+	{% endif %}
+
+	<div class="{{ field.input_column_class }}">
+		<textarea class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
+				  id="{{ field.id }}" placeholder="{{ field.placeholder|sn }}" rows="{{ field.rows }}"
+				  {% if field.readonly %}readonly{% endif %}>{{ field.value|sn }}</textarea>
+	</div>
+
+	{{ macros.standard_error(field) }}
+
+	{% if field.form_type != formtype.VERTICAL %}
+		{{ macros.standard_help_text(field) }}
+	{% endif %}
+
+	<script src="{{ url_for('static', filename='cms-ckeditor/ckeditor.js') }}"></script>
+	<script>
+		{% if field.no_smiley or field.no_image %}
+			CKEDITOR.config.removePlugins = "";
+		{% endif %}
+
+		var editor = CKEDITOR.replace("{{ field.id }}", {removePlugins: "{% if field.no_smiley %}smiley,{% endif %}{% if field.no_image %}image,{% endif %}codesnippet"
+		                                                 {% if field.height %}, height: "{{ field.height }}px"{% endif %}});
+		{% if field.on_change %}
+			editor.on("change", {{ field.on_change }});
+		{% endif %}
+	</script>
+</div>

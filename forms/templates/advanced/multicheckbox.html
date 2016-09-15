@@ -1,0 +1,20 @@
+{% import 'macros.html' as macros %}
+
+<div class="form-group {% if field.error %}has-error{% endif %}">
+	{{ macros.standard_label(field) }}
+	
+	<div {{ field.input_column_attributes }} id="{{ field.id }}">
+		{% for value in field.values %}
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="{{ field.name }}" value="{{ value.select_value }}"
+						   {% if value.select_value in field._checked_select_values %}checked{% endif %}>
+					{{ value.select_name }}
+				</label>
+			</div>
+		{% endfor %}
+	</div>
+
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>

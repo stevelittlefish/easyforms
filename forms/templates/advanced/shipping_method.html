@@ -1,0 +1,40 @@
+<div class="form-group {% if field.error %}has-error{% endif %}">
+	{% if field.label_width > 0 %}
+		{# Note: Label behaviour's a bit odd! #}
+		<label class="visible-md">
+			{{ field.label }}
+		</label>
+		<label class="col-sm-{{ field.label_width }} hidden-md control-label">
+			{{ field.label }}
+		</label>
+	{% endif %}
+
+	<div class="col-sm-{{ field.width }} col-md-12 col-lg-{{ field.width }}" id="shipping-control-content">
+		{# This is all rendered with the javascript using an ajax call #}
+		{#{% if field.shipping_methods %}
+			{% if field.non_eu %}
+				<div class="info">We can't ship to non-EU countries.</div>
+			{% else %}
+				{% for method in field.shipping_methods %}
+					<div class="radio">
+						<label>
+							<input type="radio" name="{{ field.name }}" id="{{ field.id }}-{{ method.code }}" value="{{ method.code }}"
+							       {% if field.value == method %}checked{% endif %}
+							       {% if method.code == shippingcodes.UPS_ACCESS_POINT %}class="access-point-radio"{% endif %}>
+							{{ method.name }}
+							{{ method.delivery_estimate_brackets }}
+							{% if method.get_price(field.shipping_address.country, field.shipping_address.postcode) > 0 %}
+								<strong>
+									{{ method.get_price(field.shipping_address.country, field.shipping_address.postcode) | format_price }}
+								</strong>
+							{% endif %}
+						</label>
+					</div>
+				{% endfor %}
+			{% endif %}
+		{% else %}
+			<div class="info">You need to enter a shipping address before you can select a shipping method</div>
+		{% endif %}#}
+		<div class="info">You need to enter a shipping address before you can select a shipping method</div>
+	</div>
+</div>

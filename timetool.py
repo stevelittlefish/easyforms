@@ -100,9 +100,9 @@ def format_date_long(datetime, convert_to_local=True):
         try:
             if convert_to_local:
                 local_datetime = to_local_time(datetime)
-                return local_datetime.strftime('%A %d %B %Y')
+                return local_datetime.strftime('%A %-d %B %Y')
             else:
-                return datetime.strftime('%A %d %B %Y')
+                return datetime.strftime('%A %-d %B %Y')
         except ValueError:
             log.warning('Invalid date: %s' % datetime)
             return '????'
@@ -115,9 +115,9 @@ def format_date_long_no_day(datetime, convert_to_local=True):
         try:
             if convert_to_local:
                 local_datetime = to_local_time(datetime)
-                return local_datetime.strftime('%d %B %Y')
+                return local_datetime.strftime('%-d %B %Y')
             else:
-                return datetime.strftime('%d %B %Y')
+                return datetime.strftime('%-d %B %Y')
         except ValueError:
             log.warning('Invalid date: %s' % datetime)
             return '????'

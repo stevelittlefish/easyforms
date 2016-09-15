@@ -2,10 +2,10 @@
 Contains field validation functions
 """
 
-__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
-
 import logging
 import re
+
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
@@ -16,6 +16,7 @@ url_regex = re.compile('^https?://[^.]+\.[^.]+')
 card_number_regex = re.compile('^\d{16}$')
 security_code_regex = re.compile('^\d{3}$')
 royal_mail_tracking_number_regex = re.compile('^[A-Z0-9]{11}GB$')
+url_safe_regex = re.compile('^[A-Za-z0-9_-]+$')
 
 
 def luhn_check(card_number):
@@ -56,9 +57,15 @@ def validate_postcode(postcode):
 def validate_card_number(card_number):
     return card_number_regex.match(card_number)
 
+
 def validate_security_code(security_code):
     return security_code_regex.match(security_code)
 
 
 def validate_royal_mail_tracking_number(tracking_number):
     return royal_mail_tracking_number_regex.match(tracking_number)
+
+
+def validate_url_safe(value):
+    return url_safe_regex.match(value)
+

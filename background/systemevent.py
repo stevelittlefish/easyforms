@@ -1,8 +1,6 @@
 """
 System Event queue is a background thread that runs several repeated tasks in a single thread
 """
-__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
-
 import logging
 import datetime
 import threading
@@ -10,13 +8,32 @@ import time
 
 from sqlalchemy.exc import SQLAlchemyError
 
-from app import app, db
+from models import db
+
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
 _SYSTEM_EVENTS = []
 
-_SYSTEM_EVENT_DEBUG = app.config['SYSTEM_EVENT_DEBUG']
+_debug = False
+_run_interval = None
+_min_interval = None
+_configured = False
+
+
+def init(app):
+    global _debug, _run_interval, _min_interval, _configured
+
+    if _configured:
+        raise Exception('Tried in initialise system events twice!')
+
+    _debug = app.config.get('SYSTEM_EVENT_DEBUG', False)
+    _run_interval = app.config['SYSTEM_EVENT_RUN_INTERVAL']
+    _min_interval = app.config['SYSTEM_EVENT_MIN_INTERVAL']
+
+    system_event_thread = _SystemEventThread()
+    system_event_thread.start()
 
 
 def queue_event(event):
@@ -43,7 +60,7 @@ class SystemEvent(object):
 
     def run_job(self):
         try:
-            if _SYSTEM_EVENT_DEBUG:
+            if _debug:
                 log.info('Running system event: %s' % self)
             self.process()
         except SQLAlchemyError as e:
@@ -57,7 +74,7 @@ class SystemEvent(object):
         if self.run_every:
             interval = datetime.timedelta(seconds=self.run_every)
             self.next_run = datetime.datetime.utcnow() + interval
-            if _SYSTEM_EVENT_DEBUG:
+            if _debug:
                 log.info('Next run in %s at %s' % (interval, self.next_run))
         else:
             self.done = True
@@ -66,7 +83,7 @@ class SystemEvent(object):
         raise NotImplementedError()
 
 
-class SystemEventThread(threading.Thread):
+class _SystemEventThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.daemon = True
@@ -75,20 +92,15 @@ class SystemEventThread(threading.Thread):
         global _SYSTEM_EVENTS
 
         log.info('System event thread starting up')
-
-        # Cron timer resolution (in seconds)
-        run_interval = app.config['SYSTEM_EVENT_RUN_INTERVAL']
-        min_interval = app.config['SYSTEM_EVENT_MIN_INTERVAL']
-
-        log.info('Checking for system events every %s seconds' % run_interval)
+        log.info('Checking for system events every %s seconds' % _run_interval)
 
         # Start the loop
         while True:
             # Default to run_interval in case we crash
-            sleep_time = run_interval
+            sleep_time = _run_interval
 
             try:
-                if _SYSTEM_EVENT_DEBUG:
+                if _debug:
                     log.info('System Event Queue - waking up')
                 now = datetime.datetime.utcnow()
 
@@ -101,24 +113,23 @@ class SystemEventThread(threading.Thread):
 
                 # Now that we've run all jobs, calculate the next run time
                 dt = datetime.datetime.utcnow() - now
-                if _SYSTEM_EVENT_DEBUG:
+                if _debug:
                     log.info('System event cycle took %s' % dt)
                 sleep_time -= dt.seconds
-                if sleep_time < min_interval:
+                if sleep_time < _min_interval:
                     log.warning('System event cycle took too long!  Took %s when desired interval is %s seconds'
-                                % (dt, run_interval))
-                    sleep_time = min_interval
+                                % (dt, _run_interval))
+                    sleep_time = _min_interval
 
-            except SQLAlchemyError as e:
+            except SQLAlchemyError:
                 log.exception('Database error in System event thread - rolling back to try to recover')
                 db.session.rollback()
 
-            except Exception as e:
+            except Exception:
                 log.exception('Error in System event thread')
 
-            if _SYSTEM_EVENT_DEBUG:
+            if _debug:
                 log.info('Sleeping for %s seconds' % sleep_time)
             time.sleep(sleep_time)
-
 
         log.info('System event thread shutting down')

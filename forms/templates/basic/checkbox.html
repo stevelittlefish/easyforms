@@ -1,0 +1,16 @@
+{% import 'macros.html' as macros %}
+
+<div class="form-group {% if field.error %}has-error{% endif %}">
+	<div class="{{ field.input_no_label_column_class }}">
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="true"
+				       {% if field.value %}checked{% endif %}>
+				{{ field.label }}
+			</label>
+		</div>
+	</div>
+	
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>

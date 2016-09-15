@@ -11,24 +11,45 @@ import pprint
 import email.utils
 
 from . import timetool
-from app import app
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
-host = app.config['SMTP_HOST']
-port = app.config['SMTP_PORT']
-username = app.config['SMTP_USERNAME']
-password = app.config['SMTP_PASSWORD']
-use_tls = app.config['SMTP_USE_TLS']
+host = None
+port = None
+username = None
+password = None
+use_tls = None
+default_email_from = None
+email_to_override = None
+dump_email_body = None
+_configured = False
 
-default_email_from = app.config['DEFAULT_EMAIL_FROM']
 
-# If this is set, we will send all emails here
-email_to_override = app.config['EMAIL_TO_OVERRIDE']
-# Whether or not to dump the email body
-dump_email_body = app.config['DUMP_EMAIL_BODY']
+def init(app):
+    global host, port, username, password, use_tls, default_email_from, email_to_override,\
+        dump_email_body, _configured
+
+    if _configured and not app.config['TESTING']:
+        raise Exception('Multiple calls to {}.init(app)'.format(__name__))
+
+    host = app.config['SMTP_HOST']
+    port = app.config['SMTP_PORT']
+    username = app.config['SMTP_USERNAME']
+    password = app.config['SMTP_PASSWORD']
+    use_tls = app.config['SMTP_USE_TLS']
+
+    log.info('LFS Mailer using {}@{}:{}{}'.format(username, host, port, ' (TLS)' if use_tls else ''))
+
+    default_email_from = app.config['DEFAULT_EMAIL_FROM']
+
+    # If this is set, we will send all emails here
+    email_to_override = app.config['EMAIL_TO_OVERRIDE']
+    # Whether or not to dump the email body
+    dump_email_body = app.config['DUMP_EMAIL_BODY']
+
+    _configured = True
 
 
 def send_text_mail_single(to_email_address, to_name, subject, body, from_address=None):
@@ -57,6 +78,9 @@ def send_mail(recipient_list, subject, body, html=False, from_address=None):
     :param from_address: From email address or name and address i.e. 'Test System <errors@test.com>
     :return:
     """
+    if not _configured:
+        raise Exception('LFS Mailer hasn\'t been configured')
+
     if from_address is None:
         from_address = default_email_from
     

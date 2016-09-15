@@ -150,3 +150,19 @@ def resize_pad_image(image, dest_w, dest_h):
 
     return padded_image
 
+
+def resize_image_to_fit_width(image, dest_w):
+    """
+    Resize and image to fit the passed in width, keeping the aspect ratio the same
+
+    :param image: PIL.Image
+    :param dest_w: The desired width
+    """
+    dest_w = dest_w
+    scale_factor = dest_w / image.size[0]
+    dest_h = image.size[1] * scale_factor
+    
+    scaled_image = image.resize((int(dest_w), int(dest_h)), PIL.Image.BICUBIC)
+
+    return scaled_image
+

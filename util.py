@@ -2,8 +2,6 @@
 Utility Functions
 """
 
-__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
-
 import logging
 import os
 from io import StringIO
@@ -12,12 +10,11 @@ from functools import wraps
 import random
 import re
 
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response
 import flask
 import jinja2
-from flask.ext.sqlalchemy import get_debug_queries
 
-from app import app
+__author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
@@ -33,13 +30,13 @@ paragraph_split_regex = re.compile(r'\n\n+')
 
 def generate_password():
     return random.choice(UPPER_CASE)\
-           + random.choice(LOWER_CASE)\
-           + random.choice(LOWER_CASE)\
-           + random.choice(LOWER_CASE)\
-           + random.choice(LOWER_CASE)\
-           + random.choice(NUMBERS)\
-           + random.choice(NUMBERS)\
-           + random.choice(SYMBOLS)
+        + random.choice(LOWER_CASE)\
+        + random.choice(LOWER_CASE)\
+        + random.choice(LOWER_CASE)\
+        + random.choice(LOWER_CASE)\
+        + random.choice(NUMBERS)\
+        + random.choice(NUMBERS)\
+        + random.choice(SYMBOLS)
 
 
 def ajax_error(error_message):
@@ -71,24 +68,36 @@ def format_price(price):
 
 
 def format_price_commas_no_point(price):
+    """
+    Formats prices, rounding (i.e. to the nearest whole number of pounds) with commas
+
+    Why is this in the library?
+    """
     if price is None:
         return None
     return jinja2.Markup('&pound;{:,.0f}'.format(price))
 
 
 def format_commas(number):
+    """
+    Rounds a number and formats it with commas i.e. 123,456,789
+    """
     if number is None:
         return None
     return '{:,.0f}'.format(number)
 
 
 def format_multiline_html(text):
-    """Turns a string like 'a\nb\nc' into 'a<br>b<br>c' and marks as Markup"""
+    """
+    Turns a string like 'a\nb\nc' into 'a<br>b<br>c' and marks as Markup
+
+    Note: Will remove all \r characters from output (if present)
+    """
     if text is None:
         return None
 
     if '\n' not in text:
-        return text
+        return text.replace('\r', '')
 
     parts = text.replace('\r', '').split('\n')
     out = flask.Markup()
@@ -130,13 +139,13 @@ def format_ordinal(n):
 
 def is_ascii(s):
     """
-    Check if a string contains all ascii characters
+    Check if a "bytes" contains all ascii characters
     :param s: the string to check
     :return: true if the string is entirely ascii characters
     """
     try:
         s.decode('ascii')
-    except UnicodeEncodeError:
+    except UnicodeDecodeError:
         return False
     return True
 
@@ -237,20 +246,26 @@ def from_base62(s):
     return result
 
 
-def print_sql_debug_timings():
-    try:
-        log.info('***** SQL Profiling for request: %s *****' % request.url)
-        if app.config['SQL_TIMINGS_SHOW_SUMMARY']:
-            total_time = 0
-            total_queries = 0
-            for query in get_debug_queries():
-                total_time += query.duration
-                total_queries += 1
+def read_file(filename):
+    with open(filename, 'rb') as f:
+        file_data = f.read()
+        return file_data
 
-            log.info('<< %s queries took %fs >>' % (total_queries, total_time))
-        else:
-            for query in get_debug_queries():
-                log.info('QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' % (query.statement, query.parameters,
-                                                                                  query.duration, query.context))
-    except:
-        log.exception('Exception in SQL profiling code.  Ignoring.')
+
+# def print_sql_debug_timings():
+#     try:
+#         log.info('***** SQL Profiling for request: %s *****' % request.url)
+#         if app.config['SQL_TIMINGS_SHOW_SUMMARY']:
+#             total_time = 0
+#             total_queries = 0
+#             for query in get_debug_queries():
+#                 total_time += query.duration
+#                 total_queries += 1
+#
+#             log.info('<< %s queries took %fs >>' % (total_queries, total_time))
+#         else:
+#             for query in get_debug_queries():
+#                 log.info('QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' % (query.statement, query.parameters,
+#                                                                                       query.duration, query.context))
+#     except:
+#         log.exception('Exception in SQL profiling code.  Ignoring.')

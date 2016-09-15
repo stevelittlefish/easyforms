@@ -1,0 +1,32 @@
+{% macro standard_label(field) %}
+	{% if field.label_width > 0 %}
+		<label for="{{ field.id }}" class="{{ field.label_column_class }}">
+			{{ field.label }}
+			{% if field.optional %}
+				<span class="info">(optional)</span>
+			{% endif %}
+		</label>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro standard_error(field) %}
+	{% if field.error %}
+		<div class="{{ field.error_column_class }}">
+			<p class="help-block">
+				{{ field.error }}
+			</p>
+		</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro standard_help_text(field) %}
+	{% if field.help_text %}
+		<div class="{{ field.help_text_column_class }}">
+			<p class="help-block">
+				{{ field.help_text }}
+			</p>
+		</div>
+	{% endif %}
+{% endmacro %}

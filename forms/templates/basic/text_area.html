@@ -1,0 +1,15 @@
+{% import 'macros.html' as macros %}
+
+<div class="form-group {% if field.error %}has-error{% endif %} {% if field.form_group_css_class %}{{ field.form_group_css_class }}{% endif %}">
+	{{ macros.standard_label(field) }}
+
+	<div {{ field.input_column_attributes }}>
+		<textarea class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
+				  id="{{ field.id }}" placeholder="{{ field.placeholder|sn }}" rows="{{ field.rows }}"
+				  {% if field.readonly %}readonly{% endif %}
+				  {% if field.maxlength %}maxlength="{{ field.maxlength }}"{% endif %}>{{ field.value|sn }}</textarea>
+	</div>
+	
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>

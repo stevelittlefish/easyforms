@@ -7,8 +7,7 @@ import datetime
 import traceback
 
 from . import systemevent
-from models import QueuedEmail
-from app import db, app
+from models import db, QueuedEmail
 from lfs import timetool
 from lfs import lfsmailer
 
@@ -24,10 +23,13 @@ STATUS_RETRY = 'RETRY'
 
 
 class ProcessEmailQueueSystemEvent(systemevent.SystemEvent):
-    def __init__(self):
+    def __init__(self, app):
         run_every = app.config['PROCESS_EMAIL_QUEUE_INTERVAL']
         first_run = datetime.datetime.utcnow() + datetime.timedelta(seconds=run_every)
+
         super(ProcessEmailQueueSystemEvent, self).__init__(run_every=run_every, first_run=first_run)
+
+        self.max_attempts = app.config['EMAIL_QUEUE_MAX_ATTEMPTS']
 
     def process(self):
         queued_emails = QueuedEmail.query.filter(db.or_(QueuedEmail.status == STATUS_QUEUED,
@@ -43,7 +45,7 @@ class ProcessEmailQueueSystemEvent(systemevent.SystemEvent):
                 email.status = STATUS_SENT
                 db.session.commit()
             except Exception as e:
-                if email.attempts < app.config['EMAIL_QUEUE_MAX_ATTEMPTS']:
+                if email.attempts < self.max_attempts:
                     stack_trace = traceback.format_exc()
 
                     log.warning('Email attempt failed, retrying. Exception: %s\n%s' % (e, stack_trace))
@@ -56,11 +58,13 @@ class ProcessEmailQueueSystemEvent(systemevent.SystemEvent):
 
 
 class EmailQueueCleanUpSystemEvent(systemevent.SystemEvent):
-    def __init__(self):
+    def __init__(self, app):
         super(EmailQueueCleanUpSystemEvent, self).__init__(run_every=app.config['CLEAN_UP_EMAIL_QUEUE_INTERVAL'])
 
+        self.max_age = app.config['EMAIL_QUEUE_MAX_DAYS']
+
     def process(self):
-        max_age = datetime.timedelta(days=app.config['EMAIL_QUEUE_MAX_DAYS'])
+        max_age = datetime.timedelta(days=self.max_age)
         delete_time = datetime.datetime.utcnow() - max_age
         log.info('Cleaning up emails queued before %s' % timetool.format_datetime_long(delete_time))
         num_deleted = QueuedEmail.query.filter(QueuedEmail.timestamp < delete_time).delete()
