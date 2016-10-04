@@ -45,7 +45,7 @@ ADJECTIVES = [
     
     'fair', 'faithful', 'fallow', 'false', 'famous', 'fancy', 'ferocious', 'fertile',
     'fervent', 'fervid', 'fibrous', 'fierce', 'flexible', 'focused', 'forgiving',
-    'forlorn', 'frail',
+    'forlorn', 'frail', 'foolish',
     
     'generous', 'genial', 'genteel', 'gentle', 'genuine', 'gifted', 'gigantic', 'glib',
     'gloomy', 'good', 'gorgeous', 'grace', 'gracious', 'grand', 'grateful',
@@ -78,7 +78,7 @@ ADJECTIVES = [
     'neglected', 'neglectful', 'negligent', 'nice', 'noble', 'notorious', 'nonsensical',
     
     'obedient', 'observant', 'open', 'open-minded', 'opinionated', 'oppressive', 'orderly',
-    'oriented', 'original', 'outrageous', 'outspoken',
+    'oriented', 'original', 'outrageous', 'outspoken', 'over-the-top',
     
     'parasitic', 'partial', 'passionate', 'patient', 'perceptive', 'personable', 'personal',
     'petulant', 'pleasant', 'poise', 'polite', 'pollutant', 'popular', 'popular',
@@ -91,13 +91,13 @@ ADJECTIVES = [
     'reflective', 'reliant', 'remarkable', 'remorseful', 'renewable', 'reproductive',
     'repugnant', 'resilient', 'resilient', 'resolute', 'resourceful', 'respectful',
     'responsible', 'responsive', 'restorative', 'reverent', 'rotting', 'rude',
-    'ruthless',
+    'ruthless', 'religious',
     
     'sadness', 'safe', 'scornful', 'scrumptious', 'selfish', 'sensible', 'sensitive',
     'sharing', 'simple', 'sober', 'solar', 'solemn', 'solitary', 'soluble', 'sour',
     'spatial', 'special', 'splendid', 'splendid', 'staunch', 'staunch', 'stern',
     'stunning', 'successful', 'sullen', 'superb', 'superior', 'supportive', 'surly',
-    'suspicious', 'sweet', 'sympathetic',
+    'suspicious', 'sweet', 'sympathetic', 'single',
     
     'tactful', 'tainted', 'temperate', 'temperate', 'tenacious', 'terrific', 'testy',
     'thoughtful', 'thoughtless', 'tolerant', 'towering', 'toxic', 'treacherous',
@@ -105,17 +105,17 @@ ADJECTIVES = [
     
     'ultimate', 'ultimate', 'uncivil', 'uncouth', 'undeveloped', 'unethical', 'unfair',
     'unique', 'unique', 'united', 'unity', 'unmannerly', 'unrefined', 'unsavory',
-    'unworthy', 'uplifting', 'upright', 'uproot', 'upstanding',
+    'unworthy', 'uplifting', 'upright', 'uprooted', 'upstanding',
     
     'valiant', 'veracious', 'versatile', 'vicious', 'vigilant', 'vigorous', 'vile',
-    'villainous', 'virtuous', 'visible', 'visible', 'vivacious', 'vocal', 'volatile',
+    'villainous', 'virtuous', 'visible', 'vivacious', 'vocal', 'volatile',
     'volunteering', 'vulnerable',
     
     'warm', 'wary', 'waspish', 'watchful', 'welcoming', 'wicked', 'wild', 'willingness',
     'winning', 'winsome', 'wise', 'wishy-washy', 'wistful', 'witty', 'woeful',
     'wonderful', 'worldwide', 'worrier', 'worthwhile', 'worthy',
     
-    'yearning', 'yielding', 'yielding', 'youthful',
+    'yearning', 'yielding', 'youthful',
     
     'zany', 'zealous', 'zero-tolerant'
 ]

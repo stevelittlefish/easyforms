@@ -25,8 +25,11 @@
 			CKEDITOR.config.removePlugins = "";
 		{% endif %}
 
-		var editor = CKEDITOR.replace("{{ field.id }}", {removePlugins: "{% if field.no_smiley %}smiley,{% endif %}{% if field.no_image %}image,{% endif %}codesnippet"
-		                                                 {% if field.height %}, height: "{{ field.height }}px"{% endif %}});
+		var editor = CKEDITOR.replace("{{ field.id }}", {
+			removePlugins: "{% if field.no_smiley %}smiley,{% endif %}{% if field.no_image %}image,{% endif %}codesnippet",
+			{% if field.height %}height: "{{ field.height }}px",{% endif %}
+			entities_latin: {{ 'true' if field.entities_latin else 'false' }}
+		});
 		{% if field.on_change %}
 			editor.on("change", {{ field.on_change }});
 		{% endif %}

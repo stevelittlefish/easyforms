@@ -231,7 +231,7 @@ class ListSelectField(basicfields.SelectField):
 
 class HtmlField(basicfields.TextAreaField):
     def __init__(self, name, no_smiley=True, no_image=True, no_nbsp=True, height=None, on_change=None,
-                 pretty_print=False, strip_empty_paragraphs=True, **kwargs):
+                 pretty_print=False, strip_empty_paragraphs=True, entities_latin=True, **kwargs):
         super(HtmlField, self).__init__(name, **kwargs)
 
         self.no_smiley = no_smiley
@@ -241,6 +241,7 @@ class HtmlField(basicfields.TextAreaField):
         self.on_change = on_change
         self.pretty_print = pretty_print
         self.strip_empty_paragraphs = strip_empty_paragraphs
+        self.entities_latin = entities_latin
 
     def render(self):
         return env.get_template('advanced/ckeditor.html').render(field=self)
@@ -253,13 +254,10 @@ class HtmlField(basicfields.TextAreaField):
             self.value = re.sub(r'<p>\s*</p>', '', self.value)
 
         if self.value is not None and self.pretty_print:
-            # soup = BeautifulSoup(self.value, "lxml")
-            # soup.html.unwrap()
-            # soup.body.unwrap()
-            # html = soup.prettify()
-            # r = re.compile(r'^(\s*)', re.MULTILINE)
-            # self.value = r.sub(r'\1\1', html)
-            log.error('Pretty_print not implemented!')
+            # Import beautiful soup here, so that the library doesn't become dependant on it
+            # if pretty printing is not used
+            from lfs import htmlutil
+            self.value = htmlutil.pretty_print(self.value)
 
 
 class TimeInputField(form.Field):

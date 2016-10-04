@@ -41,7 +41,7 @@ def resize_image_to_fit(image, dest_w, dest_h):
         scaled_w = dest_w
         scaled_h = src_h * scale
 
-    scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.BICUBIC)
+    scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.ANTIALIAS)
 
     return scaled_image
 
@@ -96,7 +96,7 @@ def resize_crop_image(image, dest_w, dest_h, pad_when_tall=False):
 
     if src_w > dest_w or src_h > dest_h:
         # This means we are shrinking the image which is ok!
-        scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.BICUBIC)
+        scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.ANTIALIAS)
         cropped_image = scaled_image.crop((int(left), int(top), int(right), int(bottom)))
 
         return cropped_image
@@ -144,8 +144,8 @@ def resize_pad_image(image, dest_w, dest_h):
 
         offset = (0, int((dest_h - scaled_h) / 2))
 
-    scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.BICUBIC)
-    padded_image = PIL.Image.new("RGB", (int(dest_w), int(dest_h)), "white")
+    scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.ANTIALIAS)
+    padded_image = PIL.Image.new(image.mode, (int(dest_w), int(dest_h)), "white")
     padded_image.paste(scaled_image, offset)
 
     return padded_image
@@ -158,11 +158,25 @@ def resize_image_to_fit_width(image, dest_w):
     :param image: PIL.Image
     :param dest_w: The desired width
     """
-    dest_w = dest_w
     scale_factor = dest_w / image.size[0]
     dest_h = image.size[1] * scale_factor
     
-    scaled_image = image.resize((int(dest_w), int(dest_h)), PIL.Image.BICUBIC)
+    scaled_image = image.resize((int(dest_w), int(dest_h)), PIL.Image.ANTIALIAS)
+
+    return scaled_image
+
+
+def resize_image_to_fit_height(image, dest_h):
+    """
+    Resize and image to fit the passed in height, keeping the aspect ratio the same
+
+    :param image: PIL.Image
+    :param dest_h: The desired height
+    """
+    scale_factor = dest_h / image.size[1]
+    dest_w = image.size[0] * scale_factor
+    
+    scaled_image = image.resize((int(dest_w), int(dest_h)), PIL.Image.ANTIALIAS)
 
     return scaled_image
 
