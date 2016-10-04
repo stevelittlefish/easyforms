@@ -30,7 +30,7 @@ ADJECTIVES = [
     'conservative', 'considerate', 'conspicuous', 'contemptible', 'contiguous',
     'cooperative', 'cordial', 'courageous', 'courteous', 'covetous', 'creative',
     'critical', 'critical', 'crucial', 'crude', 'culpable', 'curious', 'current', 'curt',
-    'cynical',
+    'cynical', 'cool',
     
     'decent', 'decorous', 'defensive', 'deferential', 'deft', 'dejected', 'delightful',
     'demeaning', 'demise', 'dependable', 'deplorable', 'depressed', 'destructive',
