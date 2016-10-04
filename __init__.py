@@ -9,3 +9,5 @@ Library URL: git@lemon.com:pylib/lfs
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 from .pager import Pager
+from .version import VERSION
+
