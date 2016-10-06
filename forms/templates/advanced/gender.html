@@ -2,13 +2,8 @@
 
 <div class="form-group {% if field.error %}has-error{% endif %}">
 	{{ macros.standard_label(field) }}
-	{% if field.label_width > 0 %}
-		<label class="{{ field.label_column_width }} control-label">
-			{{ field.label }}
-		</label>
-	{% endif %}
 
-	<div class="{{ field.input_column_width }}">
+	<div {{ field.input_column_attributes }}>
 		{% if not field.readonly or field.value == 'male' %}
 			<div>
 				<input id="{{ field.id }}-male" name="{{ field.name }}" type="radio"

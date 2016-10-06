@@ -5,6 +5,7 @@ Contains the definitions for the more exotic types of form inputs, such as date 
 import logging
 import datetime
 import re
+import io
 
 from flask import request
 
@@ -307,6 +308,81 @@ class FileUploadField(form.Field):
                 self.file = None
                 self.filename = None
                 self.value = None
+
+
+class ImageUploadField(FileUploadField):
+    def __init__(self, name, accept='image/*', min_width=None, min_height=None, max_width=None, max_height=None, **kwargs):
+        super(ImageUploadField, self).__init__(name, accept, value=None, **kwargs)
+
+        self.min_width = min_width
+        self.min_height = min_height
+        self.max_width = max_width
+        self.max_height = max_height
+        self.raw_image_data = None
+
+    def convert_value(self):
+        # This will get the file bytes and filename
+        super(ImageUploadField, self).convert_value()
+
+        # Import here instead at top of file so that projects can avoid a dependency on Pillow
+        from PIL import Image
+
+        if not self.value:
+            return
+
+        # Now time to process the image
+        self.raw_image_data = self.value
+
+        stream = io.BytesIO(self.value)
+        image = None
+        try:
+            image = Image.open(stream)
+        except IOError:
+            self.error = 'Invalid image file'
+
+        if not self.error:
+            width = image.size[0]
+            height = image.size[1]
+
+            if (self.min_width is not None and width < self.min_width) or \
+                    (self.max_width is not None and width > self.max_width) or \
+                    (self.min_height is not None and height < self.min_height) or \
+                    (self.max_height is not None and height > self.max_height):
+
+                if self.min_width is not None and self.min_width == self.max_width and self.min_height is not None and self.min_height == self.max_height:
+                    self.error = 'Image must be %s x %s pixels' % (self.min_width, self.min_height)
+                else:
+                    self.error = ''
+
+                    if self.min_width is not None:
+                        if self.max_width is not None:
+                            if self.min_width == self.max_width:
+                                self.error += 'Image width must be %s pixels. '
+                            else:
+                                self.error += 'Image width must be between %s and %s pixels. ' % (self.min_width, self.max_width)
+                        else:
+                            self.error += 'Image must be at least %s pixels wide. ' % self.min_width
+                    elif self.max_width is not None:
+                        self.error += 'Image width must be at most %s pixels wide. ' % self.max_width
+
+                    if self.min_height is not None:
+                        if self.max_height is not None:
+                            if self.min_height == self.max_height:
+                                self.error += 'Image height must be %s pixels.'
+                            else:
+                                self.error += 'Image height must be between %s and %s pixels.' % (self.min_height, self.max_height)
+                        else:
+                            self.error += 'Image must be at least %s pixels tall.' % self.min_height
+                    elif self.max_height is not None:
+                        self.error += 'Image height must be at most %s pixels tall.' % self.max_height
+
+        if self.error:
+            self.value = None
+            self.file = None
+            self.filename = None
+            self.raw_image_data = None
+        else:
+            self.value = image
 
 
 class MultiCheckboxField(form.Field):

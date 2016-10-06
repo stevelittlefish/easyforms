@@ -17,6 +17,20 @@ __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 
+_csrf_generation_function = None
+
+
+def init_csrf(csrf_generation_function):
+    """
+    Calling this function will initialised CSRF behaviour in all forms in the application.
+    Pass in a function that returns a string containing a valid CSRF token, and this function
+    will be called in each form, and will add a hidden input named "_csrf_token". This does
+    not validate the token.
+    """
+    global _csrf_generation_function
+
+    _csrf_generation_function = csrf_generation_function
+
 
 def convert_name_to_label(name):
     """Convert hyphen separated field names to label text"""
@@ -380,26 +394,34 @@ class Form(object):
 
     def render(self):
         """Render the form and all sections to HTML"""
-        return Markup(env.get_template('form.html').render(form=self, render_before=True, render_sections=True,
-                                                           render_after=True))
+        return Markup(env.get_template('form.html').render(form=self, render_before=True,
+                                                           render_sections=True,
+                                                           render_after=True,
+                                                           generate_csrf_token=_csrf_generation_function))
 
     def render_before_sections(self):
         """Render the form up to the first section.  This will open the form tag but not close it."""
-        return Markup(env.get_template('form.html').render(form=self, render_before=True, render_sections=False,
-                                                           render_after=False))
+        return Markup(env.get_template('form.html').render(form=self, render_before=True,
+                                                           render_sections=False,
+                                                           render_after=False,
+                                                           generate_csrf_token=_csrf_generation_function))
 
     def render_after_sections(self):
         """Render the form up to the first section.  This will close the form tag, but not open it."""
-        return Markup(env.get_template('form.html').render(form=self, render_before=False, render_sections=False,
-                                                           render_after=True))
+        return Markup(env.get_template('form.html').render(form=self, render_before=False,
+                                                           render_sections=False,
+                                                           render_after=True,
+                                                           generate_csrf_token=_csrf_generation_function))
 
     def render_sections(self):
         """
         Renders all sections in the form, each inside a fieldset with the legend generated from the section name.
         No form tag is included: just the inputs are rendered.
         """
-        return Markup(env.get_template('form.html').render(form=self, render_before=False, render_sections=True,
-                                                           render_after=False))
+        return Markup(env.get_template('form.html').render(form=self, render_before=False,
+                                                           render_sections=True,
+                                                           render_after=False,
+                                                           generate_csrf_token=_csrf_generation_function))
 
     def render_section(self, name):
         return self.get_section(name).render()

@@ -15,7 +15,8 @@ __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 @pytest.fixture(scope='module')
 def app():
-    flask_app = create_app()
+    flask_app = create_app(initialise_background_tasks=False)
+
     flask_app.config['TESTING'] = True
     return flask_app
 

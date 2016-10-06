@@ -3,6 +3,9 @@
 	      {% if form.multipart %}enctype="multipart/form-data" autocomplete="off"{% endif %}
 	      {% if form.id %}id={{ form.id }}{% endif %}>
         <input type="hidden" name="{{ form.submitted_hidden_input_name }}" value="1">
+		{% if generate_csrf_token %}
+			<input name=_csrf_token type=hidden value="{{ generate_csrf_token() }}">
+		{% endif %}
 
         {% for field in form.fields %}
             {% if not field.render_after_sections %}

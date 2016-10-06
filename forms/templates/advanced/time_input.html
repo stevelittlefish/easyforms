@@ -2,27 +2,24 @@
 
 <div class="form-group {% if field.error %}has-error{% endif %}">
 	{{ macros.standard_label(field) }}
-	{% if field.label_width > 0 %}
-		<label for="{{ field.id }}-day" class="{{ field.label_column_class }} control-label">
-			{{ field.label }}
-		</label>
-	{% endif %}
 
-	<div class="{{ field.input_column_class }} clearfix">
-		{% if field.readonly %}
-			<input type="hidden" name="{{ field.name }}-hour" value="{{ field.value.hour() if field.value else None }}">
-			<input type="hidden" name="{{ field.name }}-minute" value="{{ month }}">
-			<input type="hidden" name="{{ field.name }}-year" value="{{ year }}">
-			<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') }}">
-		{% else %}
-			<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-hour"
-				       id="{{ field.id }}-hour" value="{{ field.value.hour if field.value != None else '' }}"
-				       placeholder="Hour" min="0" max="23" style="width: 100px; display: inline">
-			:
-			<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-minute"
-				       id="{{ field.id }}-minute" value="{{ field.value.minute if field.value != None else '' }}"
-				       placeholder="Minute" min="0" max="59" style="width: 100px; display: inline">
-		{% endif %}
+	<div {{ field.input_column_attributes }}>
+		<div class="clearfix">
+			{% if field.readonly %}
+				<input type="hidden" name="{{ field.name }}-hour" value="{{ field.value.hour() if field.value else None }}">
+				<input type="hidden" name="{{ field.name }}-minute" value="{{ month }}">
+				<input type="hidden" name="{{ field.name }}-year" value="{{ year }}">
+				<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') }}">
+			{% else %}
+				<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-hour"
+						   id="{{ field.id }}-hour" value="{{ field.value.hour if field.value != None else '' }}"
+						   placeholder="Hour" min="0" max="23" style="width: 100px; display: inline">
+				:
+				<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-minute"
+						   id="{{ field.id }}-minute" value="{{ field.value.minute if field.value != None else '' }}"
+						   placeholder="Minute" min="0" max="59" style="width: 100px; display: inline">
+			{% endif %}
+		</div>
 	</div>
 
 	{{ macros.standard_error(field) }}

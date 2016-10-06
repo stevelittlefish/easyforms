@@ -2,13 +2,13 @@
 Class to prevent brute force attacks on the login
 """
 
-__author__ = 'Yu Lee Paul (Little Fish Solutions LTD)'
-
 import logging
 import datetime
 import threading
 
-from background import systemevent
+from .background import systemevent
+
+__author__ = 'Yu Lee Paul (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
 

@@ -8,8 +8,6 @@ import time
 
 from sqlalchemy.exc import SQLAlchemyError
 
-from models import db
-
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 log = logging.getLogger(__name__)
@@ -59,6 +57,8 @@ class SystemEvent(object):
         self.done = False
 
     def run_job(self):
+        from models import db
+
         try:
             if _debug:
                 log.info('Running system event: %s' % self)
@@ -89,6 +89,7 @@ class _SystemEventThread(threading.Thread):
         self.daemon = True
 
     def run(self):
+        from models import db
         global _SYSTEM_EVENTS
 
         log.info('System event thread starting up')
