@@ -15,6 +15,11 @@ INLINE_TAGS = ['a', 'span', 'em', 'strong', 'b', 'big', 'i', 'small', 'tt', 'abb
                'cite', 'code', 'em', 'img', 'sub', 'sup']
 
 
+def get_all_text(html):
+    soup = BeautifulSoup(html, "lxml")
+    return soup.find_all(text=True)
+
+
 def split_line(line, min_line_length=30, max_line_length=100):
     """
     This is designed to work with prettified output from Beautiful Soup which indents with a single space.
