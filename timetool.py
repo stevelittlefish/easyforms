@@ -39,6 +39,15 @@ def to_local_time(time_in):
     return time_local.replace(tzinfo=None)
 
 
+def get_local_time():
+    return to_local_time(datetime.datetime.utcnow())
+
+
+def date_to_local_time(date):
+    midnight = datetime.time()
+    return local.localize(datetime.datetime.combine(date, midnight))
+
+
 def to_utc_time(time_in):
     if not hasattr(time_in, 'tzinfo'):
         # This is a date with no timestamp info so we can't do the conversion
@@ -134,6 +143,23 @@ def format_time(datetime, convert_to_local=True):
             return datetime.strftime('%H:%M:%S')
     else:
         return ''
+
+
+def format_time_delta(delta):
+    if delta.days:
+        return str(delta.days) + ' days ' + format_duration_seconds(delta.seconds)
+    return format_duration_seconds(delta.seconds)
+
+
+def format_duration_seconds(seconds):
+    h = seconds // 3600
+    seconds = seconds % 3600
+    m = seconds // 60
+    # I'm sure there is a better way of doing this!
+    if m >= 10:
+        return "%s:%s" % (h, m)
+    else:
+        return "%s:0%s" % (h, m)
 
 
 def add_working_days(num_days, date=None, include_saturday=False):
