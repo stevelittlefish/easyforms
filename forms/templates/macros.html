@@ -1,7 +1,7 @@
 {% macro standard_label(field) %}
 	{% if field.label_width > 0 %}
 		<label for="{{ field.id }}" class="{{ field.label_column_class }}">
-			{{ field.label }}
+			{{ field.label_html }}
 			{% if field.optional %}
 				<span class="info">(optional)</span>
 			{% endif %}

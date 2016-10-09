@@ -115,8 +115,20 @@ class Field(object):
         self.form = None
 
         # Handle common validation options
+        self.required = required
         if required:
             self.validators.append(validate.required)
+    
+    @property
+    def label_html(self):
+        show_asterisks = False
+        if self.form:
+            show_asterisks = self.form.show_asterisks
+
+        if show_asterisks and self.required:
+            return Markup('<span class="required">*</span> ') + self.label
+
+        return self.label
 
     @property
     def label_width(self):
@@ -192,14 +204,14 @@ class Field(object):
     def label_column_class(self):
         if self.form.form_type == formtype.HORIZONTAL:
             if self.label_width == 0:
-                return ''
+                return 'control-label'
             else:
-                return 'col-{breakpoint}-{width}'.format(
+                return 'col-{breakpoint}-{width} control-label'.format(
                     breakpoint=self.column_breakpoint,
                     width=self.label_width
                 )
         else:
-            return ''
+            return 'control-label'
 
     @property
     def input_no_label_column_class(self):
@@ -275,7 +287,8 @@ class Form(object):
 
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
                  read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
-                 id=None, submit_css_class='btn-primary', column_breakpoint='sm'):
+                 id=None, submit_css_class='btn-primary', column_breakpoint='sm',
+                 show_asterisks=False):
         """
         :param fields: List of Field objects
         :param action: Action field in generated form
@@ -291,6 +304,7 @@ class Form(object):
         :param submit_css_class: The class of the automatically added submit button (if applicable)
         :param column_breakpoint: Bootstrap column breakpoint where horizontal form degrades into
                                   vertical form.  Values: sm, md, lg. Defaults to 'sm'
+        :param show_asterisks: Should an asterisk be displayed next to required fields?
         """
         if method != 'POST' and method != 'GET':
             raise ValueError('Invalid method: %s.  Valid options are GET and POST' % method)
@@ -321,6 +335,8 @@ class Form(object):
         self.form_type = form_type
         self.id = id
         self.column_breakpoint = column_breakpoint
+        self.show_asterisks = show_asterisks
+
         # Record whether or not we have any validation errors
         self.has_errors = False
         # Optional form 'sections' to separate out fields and to allow sections of the form to be rendered independently

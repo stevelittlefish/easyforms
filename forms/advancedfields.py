@@ -100,7 +100,7 @@ class PhoneNumberField(basicfields.TextField):
 
 
 class PostcodeField(basicfields.TextField):
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, must_contain_space=False, **kwargs):
         """
         :param name: The name of the field (the name field in the generated input)
         :param type: The type, i.e. text, email
@@ -111,6 +111,12 @@ class PostcodeField(basicfields.TextField):
         super(PostcodeField, self).__init__(name, 'text', **kwargs)
 
         self.validators.append(validate.postcode)
+        if must_contain_space:
+            def validate_space(x):
+                if ' ' not in x:
+                    return 'Please enter a UK postcode including a space in the middle'
+
+            self.validators.append(validate_space)
 
     def convert_value(self):
         if self.value is not None:
@@ -228,6 +234,13 @@ class ListSelectField(basicfields.SelectField):
         key_pairs = [KeyPair(x) for x in values]
 
         super(ListSelectField, self).__init__(name, key_pairs, **kwargs)
+
+
+class TitleSelectField(ListSelectField):
+    def __init__(self, name, **kwargs):
+        # TODO: add optional ridiculous fields here?
+        titles = ['Mr', 'Mrs', 'Miss', 'Ms']
+        super().__init__(name, titles, **kwargs)
 
 
 class HtmlField(basicfields.TextAreaField):
