@@ -43,7 +43,7 @@ def test_field():
     assert field.width == 9
     assert field.help_text_width == 9
     assert field.label_width == 2
-    assert field.label_column_class == 'col-sm-2'
+    assert field.label_column_class == 'col-sm-2 control-label'
     assert field.input_no_label_column_class == 'col-sm-offset-2 col-sm-9'
     assert field.help_text_column_class == 'col-sm-offset-2 col-sm-9'
     assert field.error_column_class == 'col-sm-offset-2 col-sm-9'
@@ -62,7 +62,7 @@ def test_field():
     assert field2.width == 6
     assert field2.help_text_width == 5
     assert field2.label_width == 4
-    assert field2.label_column_class == 'col-sm-4'
+    assert field2.label_column_class == 'col-sm-4 control-label'
     assert field2.input_no_label_column_class == 'col-sm-offset-4 col-sm-6'
     assert field2.help_text_column_class == 'col-sm-offset-4 col-sm-5'
     assert field2.error_column_class == 'col-sm-offset-4 col-sm-5'
@@ -73,7 +73,7 @@ def test_field():
     field2.label_width = 0
     field2.column_breakpoint = 'md'
     assert field2.label_width == 0
-    assert field2.label_column_class == ''
+    assert field2.label_column_class == 'control-label'
     assert field2.input_no_label_column_class == 'col-md-6'
     assert field2.help_text_column_class == 'col-md-5'
     assert field2.error_column_class == 'col-md-5'
@@ -89,7 +89,7 @@ def test_field():
     assert field3.width == 9
     assert field3.help_text_width == 9
     assert field3.label_width == 3
-    assert field3.label_column_class == ''
+    assert field3.label_column_class == 'control-label'
     assert field3.input_no_label_column_class == ''
     assert field3.help_text_column_class == ''
     assert field3.error_column_class == ''
