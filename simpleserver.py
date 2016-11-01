@@ -14,8 +14,14 @@ log = logging.getLogger(__name__)
 def simple_tcp_handler(simple_server):
     class SimpleTcpHandler(socketserver.BaseRequestHandler):
         def handle(self):
-            data = self.request.recv(1024)
-            simple_server.add_data(data)
+            while simple_server.running:
+                data = self.request.recv(1024)
+                if not data:
+                    log.debug('Client disconnect')
+                    self.request.close()
+                    break
+
+                simple_server.add_data(data)
 
     return SimpleTcpHandler
 
@@ -25,27 +31,34 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 class SimpleServer(object):
-    def __init__(self, host='localhost', port=49932):
+    def __init__(self, host='localhost', port=49932, print_data=False):
         self.host = host
         self.port = port
+        self.print_data = print_data
         self.data = []
         self.data_lock = threading.Lock()
         self.server = ThreadedTCPServer((host, port), simple_tcp_handler(self))
         self.server_thread = threading.Thread(target=self.server.serve_forever)
         self.server_thread.daemon = True
+        self.running = False
 
     def start(self):
         self.server_thread.start()
         log.info('Server tread started ({}:{})'.format(self.host, self.port))
+        self.running = True
 
     def stop(self):
         log.info('Shutting down server')
+        self.running = False
         self.server.shutdown()
         self.server.server_close()
         log.info('Server shut down complete')
 
     def add_data(self, value):
         with self.data_lock:
+            if self.print_data:
+                log.info('Received: {}'.format(value))
+
             self.data.append(value.decode('utf-8'))
 
     def get_data(self):
@@ -75,7 +88,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
 
-    server = SimpleServer(port=port)
+    server = SimpleServer(port=port, print_data=True)
 
     def signal_handler(sig, frame):
         log.info('CTRL+C pressed - shutting down')

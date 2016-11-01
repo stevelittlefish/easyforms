@@ -252,6 +252,11 @@ def read_file(filename):
         return file_data
 
 
+def write_file(filename, data):
+    with open(filename, 'wb') as f:
+        f.write(data)
+
+
 # def print_sql_debug_timings():
 #     try:
 #         log.info('***** SQL Profiling for request: %s *****' % request.url)

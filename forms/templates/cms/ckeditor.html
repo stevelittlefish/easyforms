@@ -1,6 +1,6 @@
 {% import 'macros.html' as macros %}
 
-<div class="form-group {% if field.error %}has-error{% endif %} cms-field">
+<div class="{{ field.form_group_classes }} cms-field">
 	{{ macros.standard_label(field) }}
 
 	{% if field.form_type == formtype.VERTICAL %}

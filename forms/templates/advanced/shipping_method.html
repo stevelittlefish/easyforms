@@ -1,4 +1,4 @@
-<div class="form-group {% if field.error %}has-error{% endif %}">
+<div class="{{ field.form_group_classes }}">
 	{% if field.label_width > 0 %}
 		{# Note: Label behaviour's a bit odd! #}
 		<label class="visible-md">

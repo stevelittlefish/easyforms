@@ -9,7 +9,7 @@
 {% set pre_units=None %}
 {% set units=None %}
 
-<div class="form-group {% if field.error %}has-error{% endif %}">
+<div class="{{ field.form_group_classes }}">
 	{{ macros.standard_label(field) }}
 
 	<div {{ field.input_column_attributes }}>

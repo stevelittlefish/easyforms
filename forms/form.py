@@ -269,6 +269,24 @@ class Field(object):
         if style:
             parts.append('style="{}"'.format(style))
         return Markup(' '.join(parts))
+
+    @property
+    def form_group_classes(self):
+        """
+        Full list of classes for the class attribute of the form group. Returned as a string
+        with spaces separating each class, ready for insertion into the class attribute.
+
+        This will generally look like the following:
+
+        'form-group has-error custom-class'
+        """
+        classes = ['form-group']
+        if self.error:
+            classes.append('has-error')
+        if self.form_group_css_class:
+            classes.append(self.form_group_css_class)
+
+        return ' '.join(classes)
         
 
 class FormSection(object):

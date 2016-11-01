@@ -50,6 +50,7 @@ def test_field():
     assert field.input_column_class == 'col-sm-9'
     assert field.input_column_style == ''
     assert field.input_column_attributes == 'class="col-sm-9"'
+    assert field.form_group_classes == 'form-group'
     
     field2 = Field('another-field', width=6, help_text_width=5, label_width=4, max_width=100,
                    label='Just Another Field!', id='field')
@@ -69,6 +70,7 @@ def test_field():
     assert field2.input_column_class == 'col-sm-6'
     assert field2.input_column_style == 'max-width: 100px;'
     assert field2.input_column_attributes == 'class="col-sm-6" style="max-width: 100px;"'
+    assert field2.form_group_classes == 'form-group'
 
     field2.label_width = 0
     field2.column_breakpoint = 'md'
@@ -80,8 +82,12 @@ def test_field():
     assert field2.input_column_class == 'col-md-6'
     assert field2.input_column_style == 'max-width: 100px;'
     assert field2.input_column_attributes == 'class="col-md-6" style="max-width: 100px;"'
+    assert field2.form_group_classes == 'form-group'
 
-    field3 = Field('another-field', max_width='25%')
+    field2.error = 'Test error'
+    assert field2.form_group_classes == 'form-group has-error'
+
+    field3 = Field('another-field', max_width='25%', form_group_css_class='testing')
     form3 = Form([field3], read_form_data=False, submit_text=None, form_type=forms.VERTICAL)
 
     assert field3.form == form3
@@ -96,6 +102,10 @@ def test_field():
     assert field3.input_column_class == ''
     assert field3.input_column_style == 'max-width: 25%;'
     assert field3.input_column_attributes == 'style="max-width: 25%;"'
+    assert field3.form_group_classes == 'form-group testing'
+
+    field3.error = 'Test'
+    assert field3.form_group_classes == 'form-group has-error testing'
 
 
 def test_basic_form(app):

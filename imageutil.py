@@ -145,7 +145,25 @@ def resize_pad_image(image, dest_w, dest_h):
         offset = (0, int((dest_h - scaled_h) / 2))
 
     scaled_image = image.resize((int(scaled_w), int(scaled_h)), PIL.Image.ANTIALIAS)
-    padded_image = PIL.Image.new(image.mode, (int(dest_w), int(dest_h)), "white")
+    # Normally we will want to copy the source mode for the destination image, but in some
+    # cases the source image will use a Palletted (mode=='P') in which case we need to change
+    # the mode
+    mode = scaled_image.mode
+    log.debug('Padding image with mode: "{}"'.format(mode))
+    if mode == 'P':
+        if 'transparency' in scaled_image.info:
+            mode = 'RGBA'
+        else:
+            mode = 'RGB'
+
+        scaled_image = scaled_image.convert(mode)
+        log.debug('Changed mode from "P" to "{}"'.format(mode))
+
+    # Get the pixel colour for coordinate (0,0)
+    pixels = scaled_image.load()
+    pad_colour = pixels[0, 0]
+    
+    padded_image = PIL.Image.new(mode, (int(dest_w), int(dest_h)), pad_colour)
     padded_image.paste(scaled_image, offset)
 
     return padded_image

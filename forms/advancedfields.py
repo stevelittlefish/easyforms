@@ -244,8 +244,9 @@ class TitleSelectField(ListSelectField):
 
 
 class HtmlField(basicfields.TextAreaField):
-    def __init__(self, name, no_smiley=True, no_image=True, no_nbsp=True, height=None, on_change=None,
-                 pretty_print=False, strip_empty_paragraphs=True, entities_latin=True, **kwargs):
+    def __init__(self, name, no_smiley=True, no_image=True, no_nbsp=True, height=None,
+                 on_change=None, pretty_print=False, strip_empty_paragraphs=True,
+                 entities_latin=True, pretty_print_line_length=110, **kwargs):
         super(HtmlField, self).__init__(name, **kwargs)
 
         self.no_smiley = no_smiley
@@ -254,6 +255,7 @@ class HtmlField(basicfields.TextAreaField):
         self.height = height
         self.on_change = on_change
         self.pretty_print = pretty_print
+        self.pretty_print_line_length = pretty_print_line_length
         self.strip_empty_paragraphs = strip_empty_paragraphs
         self.entities_latin = entities_latin
 
@@ -271,7 +273,8 @@ class HtmlField(basicfields.TextAreaField):
             # Import beautiful soup here, so that the library doesn't become dependant on it
             # if pretty printing is not used
             from lfs import htmlutil
-            self.value = htmlutil.pretty_print(self.value)
+            self.value = htmlutil.pretty_print(self.value,
+                                               max_line_length=self.pretty_print_line_length)
 
 
 class TimeInputField(form.Field):
