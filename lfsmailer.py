@@ -65,6 +65,15 @@ def send_text_mail(recipient_list, subject, body, from_address=None):
     send_mail(recipient_list, subject, body, html=False, from_address=from_address)
 
 
+def send_html_mail_single(to_email_address, to_name, subject, body, from_address=None):
+    if to_name is None:
+        to = to_email_address
+    else:
+        to = '%s <%s>' % (to_email_address, to_name)
+
+    send_html_mail([to], subject, body, from_address)
+
+
 def send_html_mail(recipient_list, subject, body, from_address=None):
     send_mail(recipient_list, subject, body, html=True, from_address=from_address)
 
