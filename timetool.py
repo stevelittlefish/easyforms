@@ -71,6 +71,17 @@ def format_datetime(datetime, convert_to_local=True):
     if datetime:
         if convert_to_local:
             local_datetime = to_local_time(datetime)
+            return local_datetime.strftime('%d/%m/%Y %H:%M')
+        else:
+            return datetime.strftime('%d/%m/%Y %H:%M')
+    else:
+        return ''
+
+
+def format_datetime_seconds(datetime, convert_to_local=True):
+    if datetime:
+        if convert_to_local:
+            local_datetime = to_local_time(datetime)
             return local_datetime.strftime('%d/%m/%Y %H:%M:%S')
         else:
             return datetime.strftime('%d/%m/%Y %H:%M:%S')
@@ -79,6 +90,17 @@ def format_datetime(datetime, convert_to_local=True):
 
 
 def format_datetime_long(datetime, convert_to_local=True):
+    if datetime:
+        if convert_to_local:
+            local_datetime = to_local_time(datetime)
+            return local_datetime.strftime('%A %d %B %Y %H:%M')
+        else:
+            return datetime.strftime('%A %d %B %Y %H:%M')
+    else:
+        return ''
+
+
+def format_datetime_long_seconds(datetime, convert_to_local=True):
     if datetime:
         if convert_to_local:
             local_datetime = to_local_time(datetime)
