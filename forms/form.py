@@ -306,7 +306,7 @@ class Form(object):
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
                  read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
                  id=None, submit_css_class='btn-primary', column_breakpoint='sm',
-                 show_asterisks=False):
+                 show_asterisks=False, max_width=None):
         """
         :param fields: List of Field objects
         :param action: Action field in generated form
@@ -323,6 +323,8 @@ class Form(object):
         :param column_breakpoint: Bootstrap column breakpoint where horizontal form degrades into
                                   vertical form.  Values: sm, md, lg. Defaults to 'sm'
         :param show_asterisks: Should an asterisk be displayed next to required fields?
+        :param max_width: Maximum width, either an integer value representing the number of pixels
+                          or a string containing a units i.e. '50%' or '240px'
         """
         if method != 'POST' and method != 'GET':
             raise ValueError('Invalid method: %s.  Valid options are GET and POST' % method)
@@ -354,6 +356,10 @@ class Form(object):
         self.id = id
         self.column_breakpoint = column_breakpoint
         self.show_asterisks = show_asterisks
+        
+        self.max_width = max_width
+        if isinstance(self.max_width, int):
+            self.max_width = '{}px'.format(self.max_width)
 
         # Record whether or not we have any validation errors
         self.has_errors = False

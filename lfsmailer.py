@@ -52,11 +52,14 @@ def init(app):
     _configured = True
 
 
+def format_address(email_address, name=None):
+    if name is None:
+        return email_address
+    return '{} <{}>'.format(name, email_address)
+
+
 def send_text_mail_single(to_email_address, to_name, subject, body, from_address=None):
-    if to_name is None:
-        to = to_email_address
-    else:
-        to = '%s <%s>' % (to_email_address, to_name)
+    to = format_address(to_email_address, to_name)
 
     send_text_mail([to], subject, body, from_address)
 
@@ -66,10 +69,7 @@ def send_text_mail(recipient_list, subject, body, from_address=None):
 
 
 def send_html_mail_single(to_email_address, to_name, subject, body, from_address=None):
-    if to_name is None:
-        to = to_email_address
-    else:
-        to = '%s <%s>' % (to_email_address, to_name)
+    to = format_address(to_email_address, to_name)
 
     send_html_mail([to], subject, body, from_address)
 
@@ -236,7 +236,7 @@ Message:
             self.handleError(record)
 
 
-def init_error_emails(send_error_emails, send_warning_emails, from_address, to_addresses, subject):
+def init_error_emails(send_error_emails, send_warning_emails, from_address, to_addresses, subject, logger=None):
     if send_error_emails or send_warning_emails:
         log.info('Setting up error / warning emails')
         error_handler = LfsSmtpHandler(from_address, to_addresses, subject)
@@ -247,5 +247,8 @@ def init_error_emails(send_error_emails, send_warning_emails, from_address, to_a
         else:
             log.info('Only sending ERROR emails')
             error_handler.setLevel(logging.ERROR)
-
-        logging.getLogger().addHandler(error_handler)
+        
+        if logger is None:
+            logger = logging.getLogger()
+            
+        logger.addHandler(error_handler)

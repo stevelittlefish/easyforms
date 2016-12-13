@@ -257,20 +257,8 @@ def write_file(filename, data):
         f.write(data)
 
 
-# def print_sql_debug_timings():
-#     try:
-#         log.info('***** SQL Profiling for request: %s *****' % request.url)
-#         if app.config['SQL_TIMINGS_SHOW_SUMMARY']:
-#             total_time = 0
-#             total_queries = 0
-#             for query in get_debug_queries():
-#                 total_time += query.duration
-#                 total_queries += 1
-#
-#             log.info('<< %s queries took %fs >>' % (total_queries, total_time))
-#         else:
-#             for query in get_debug_queries():
-#                 log.info('QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' % (query.statement, query.parameters,
-#                                                                                       query.duration, query.context))
-#     except:
-#         log.exception('Exception in SQL profiling code.  Ignoring.')
+def chunks(l, n):
+    """Yield successive n-sized chunks from list"""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
