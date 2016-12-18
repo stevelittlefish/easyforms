@@ -164,6 +164,48 @@ Message:
 
 %(message)s
 '''))
+    
+    def add_details(self, message):
+        """
+        Add extra details to the message.  Separate so that it can be overridden
+        """
+        msg = message
+        # Try to append Flask request details
+        try:
+            from flask import request
+            url = request.url
+            method = request.method
+            endpoint = request.endpoint
+
+            # Obscure password field and prettify a little bit
+            form_dict = dict(request.form)
+            for key in form_dict:
+                if 'password' in key.lower():
+                    form_dict[key] = '******'
+                elif len(form_dict[key]) == 1:
+                    form_dict[key] = form_dict[key][0]
+
+            form = pprint.pformat(form_dict).replace('\n', '\n          ')
+
+            msg = '%s\nRequest:\n\nurl:      %s\nmethod:   %s\nendpoint: %s\nform:     %s\n' % \
+                (msg, url, method, endpoint, form)
+        except:
+            traceback.print_exc()
+
+        # Try to append the session
+        try:
+            from flask import session
+            from flask.json import JSONEncoder
+            session_str = json.dumps(
+                dict(**session),
+                indent=2,
+                cls=JSONEncoder
+            )
+            msg = '%s\nSession:\n\n%s\n' % (msg, session_str)
+        except:
+            traceback.print_exc()
+        
+        return msg
 
     def emit(self, record):
         """
@@ -187,41 +229,7 @@ Message:
                 self.rate_limiter.append(now)
 
             msg = self.format(record)
-
-            # Try to append Flask request details
-            try:
-                from flask import request
-                url = request.url
-                method = request.method
-                endpoint = request.endpoint
-
-                # Obscure password field and prettify a little bit
-                form_dict = dict(request.form)
-                for key in form_dict:
-                    if 'password' in key.lower():
-                        form_dict[key] = '******'
-                    elif len(form_dict[key]) == 1:
-                        form_dict[key] = form_dict[key][0]
-
-                form = pprint.pformat(form_dict).replace('\n', '\n          ')
-
-                msg = '%s\nRequest:\n\nurl:      %s\nmethod:   %s\nendpoint: %s\nform:     %s\n' % \
-                    (msg, url, method, endpoint, form)
-            except:
-                traceback.print_exc()
-
-            # Try to append the session
-            try:
-                from flask import session
-                from flask.json import JSONEncoder
-                session_str = json.dumps(
-                    dict(**session),
-                    indent=2,
-                    cls=JSONEncoder
-                )
-                msg = '%s\nSession:\n\n%s\n' % (msg, session_str)
-            except:
-                traceback.print_exc()
+            msg = self.add_details(msg)
 
             # Finally send the message!
             if send_email:
@@ -250,5 +258,5 @@ def init_error_emails(send_error_emails, send_warning_emails, from_address, to_a
         
         if logger is None:
             logger = logging.getLogger()
-            
+
         logger.addHandler(error_handler)

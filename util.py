@@ -262,3 +262,7 @@ def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
+
+def generate_random_numeric_string(length):
+    return ''.join(random.choice(NUMBERS) for x in range(length))
+
