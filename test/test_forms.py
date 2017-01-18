@@ -8,14 +8,14 @@ import pytest
 
 from ..forms import Field, Form
 from .. import forms
-from app import create_app
+from app import create_test_app
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
 
 @pytest.fixture(scope='module')
 def app():
-    flask_app = create_app(initialise_background_tasks=False)
+    flask_app = create_test_app()
 
     flask_app.config['TESTING'] = True
     return flask_app
