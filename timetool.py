@@ -48,6 +48,10 @@ def date_to_local_time(date):
     return local.localize(datetime.datetime.combine(date, midnight))
 
 
+def date_to_datetime(date):
+    return datetime.datetime(date.year, date.month, date.day)
+
+
 def to_utc_time(time_in):
     if not hasattr(time_in, 'tzinfo'):
         # This is a date with no timestamp info so we can't do the conversion
@@ -283,13 +287,20 @@ def add_months_to_date(months, date):
             return datetime.datetime(year, new_month, new_day)
 
 
-def unix_time(dt=None):
+def unix_time(dt=None, as_int=False):
     """Generate a unix style timestamp (in seconds)"""
     if dt is None:
         dt = datetime.datetime.utcnow()
 
+    if type(dt) is datetime.date:
+        dt = date_to_datetime(dt)
+
     epoch = datetime.datetime.utcfromtimestamp(0)
     delta = dt - epoch
+    
+    if as_int:
+        return int(delta.total_seconds())
+
     return delta.total_seconds()
 
 

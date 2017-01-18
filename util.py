@@ -10,7 +10,7 @@ from functools import wraps
 import random
 import re
 
-from flask import jsonify, make_response
+from flask import jsonify, make_response, current_app
 import flask
 import jinja2
 
@@ -64,14 +64,15 @@ def format_number_2dp_trailing_zeros(number):
 def format_price(price):
     if price is None:
         return None
-    return jinja2.Markup('&pound;%0.2f' % price)
+    if price >= 0:
+        return jinja2.Markup('&pound;%0.2f' % price)
+    else:
+        return jinja2.Markup('-&pound;%0.2f' % -price)
 
 
 def format_price_commas_no_point(price):
     """
     Formats prices, rounding (i.e. to the nearest whole number of pounds) with commas
-
-    Why is this in the library?
     """
     if price is None:
         return None
@@ -266,3 +267,40 @@ def chunks(l, n):
 def generate_random_numeric_string(length):
     return ''.join(random.choice(NUMBERS) for x in range(length))
 
+
+def deprecated(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        name = '{}.{}'.format(f.__module__, f.__name__)
+        log.error('!!!!!!!!!!! DEPRECATED : {} !!!!!!!!!!!!!'.format(name))
+        return f(*args, **kwargs)
+
+    return decorated
+
+
+def deprecated_class_method(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        self = args[0]
+        name = '{}.{}.{}'.format(f.__module__, self.__class__.__name__, f.__name__)
+        log.error('!!!!!!!!!!! DEPRECATED : {} !!!!!!!!!!!!!'.format(name))
+        return f(*args, **kwargs)
+
+    return decorated
+
+
+def test_mode_only(f):
+    """Decorator - marks a view as only being accessible when the server is started in test mode"""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # Check if the logged in user has a customer
+        if not current_app.config['TEST_MODE']:
+            return '<html><head><title>Disabled!</title></head><body>'\
+                '<h1 style="color: red;">Disabled!</h1>'\
+                '<p>This page is only accessible if the server is in TEST_MODE.<p>'\
+                '</body></html>'
+
+        # Let them view the page
+        return f(*args, **kwargs)
+
+    return decorated

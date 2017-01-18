@@ -4,7 +4,7 @@ Functions for handling xml, normally using lxml
 
 import logging
 
-from lxml import objectify
+from lxml import objectify, etree
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -23,3 +23,10 @@ def remove_namespaces(root):
 
     objectify.deannotate(root, cleanup_namespaces=True)
 
+
+def pretty_print_xml(xml, remove_blank_text=False):
+    parser = etree.XMLParser(remove_blank_text=remove_blank_text)
+    tree = etree.fromstring(xml, parser=parser)
+    xml_output = etree.tostring(tree, pretty_print=True).decode()
+
+    return xml_output

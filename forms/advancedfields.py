@@ -132,8 +132,14 @@ class GenderField(form.Field):
 
 
 class DateSelectField(form.Field):
-    def __init__(self, name, **kwargs):
-        super(DateSelectField, self).__init__(name, **kwargs)
+    def __init__(self, name, years=None, **kwargs):
+        super().__init__(name, **kwargs)
+
+        if years is None:
+            this_year = datetime.datetime.now().year
+            self.years = [i for i in range(this_year, this_year - 115, -1)]
+        else:
+            self.years = years
 
     def render(self):
         return env.get_template('advanced/date_select.html')\
@@ -153,9 +159,14 @@ class DateSelectField(form.Field):
                 month = int(month_str)
                 year = int(year_str)
 
-                self.value = datetime.date(year, month, day)
+                if year not in self.years:
+                    self.error = 'Invalid year'
+                else:
+                    self.value = datetime.date(year, month, day)
             except Exception:
                 self.error = 'Invalid date'
+        else:
+            self.error = 'Required'
 
 
 class YearMonthSelectField(form.Field):
@@ -233,7 +244,20 @@ class ListSelectField(basicfields.SelectField):
 
         key_pairs = [KeyPair(x) for x in values]
 
-        super(ListSelectField, self).__init__(name, key_pairs, **kwargs)
+        super().__init__(name, key_pairs, **kwargs)
+
+
+class DictSelectField(basicfields.SelectField):
+    def __init__(self, name, dictionary, **kwargs):
+        class KeyPair(object):
+            def __init__(self, select_name, select_value):
+                self.select_name = select_name
+                self.select_value = select_value
+
+        key_pairs = [KeyPair(name, value) for (name, value) in dictionary.items()]
+        key_pairs = sorted(key_pairs, key=lambda x: x.select_name)
+
+        super().__init__(name, key_pairs, **kwargs)
 
 
 class TitleSelectField(ListSelectField):
