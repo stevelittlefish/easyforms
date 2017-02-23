@@ -306,7 +306,7 @@ class Form(object):
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
                  read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
                  id=None, submit_css_class='btn-primary', column_breakpoint='sm',
-                 show_asterisks=False, max_width=None):
+                 show_asterisks=False, max_width=None, disable_csrf=False):
         """
         :param fields: List of Field objects
         :param action: Action field in generated form
@@ -325,6 +325,7 @@ class Form(object):
         :param show_asterisks: Should an asterisk be displayed next to required fields?
         :param max_width: Maximum width, either an integer value representing the number of pixels
                           or a string containing a units i.e. '50%' or '240px'
+        :param disable_csrf: Set to True to remove the CSRF field (if applicable)
         """
         if method != 'POST' and method != 'GET':
             raise ValueError('Invalid method: %s.  Valid options are GET and POST' % method)
@@ -360,6 +361,8 @@ class Form(object):
         self.max_width = max_width
         if isinstance(self.max_width, int):
             self.max_width = '{}px'.format(self.max_width)
+
+        self.disable_csrf = disable_csrf
 
         # Record whether or not we have any validation errors
         self.has_errors = False
@@ -437,21 +440,21 @@ class Form(object):
         return Markup(env.get_template('form.html').render(form=self, render_before=True,
                                                            render_sections=True,
                                                            render_after=True,
-                                                           generate_csrf_token=_csrf_generation_function))
+                                                           generate_csrf_token=None if self.disable_csrf else _csrf_generation_function))
 
     def render_before_sections(self):
         """Render the form up to the first section.  This will open the form tag but not close it."""
         return Markup(env.get_template('form.html').render(form=self, render_before=True,
                                                            render_sections=False,
                                                            render_after=False,
-                                                           generate_csrf_token=_csrf_generation_function))
+                                                           generate_csrf_token=None if self.action else _csrf_generation_function))
 
     def render_after_sections(self):
         """Render the form up to the first section.  This will close the form tag, but not open it."""
         return Markup(env.get_template('form.html').render(form=self, render_before=False,
                                                            render_sections=False,
                                                            render_after=True,
-                                                           generate_csrf_token=_csrf_generation_function))
+                                                           generate_csrf_token=None if self.action else _csrf_generation_function))
 
     def render_sections(self):
         """
