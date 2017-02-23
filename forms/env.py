@@ -32,3 +32,4 @@ env.globals['url_for'] = url_for
 env.globals['hasattr'] = hasattr
 env.globals['formtype'] = formtype
 
+
