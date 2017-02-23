@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 LOWER_CASE = 'abcdefghijkmnopqrstuvwxyz'
 UPPER_CASE = 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
 NUMBERS = '0123456789'
-SYMBOLS = '!?@%'
+SYMBOLS = '!?@%$'
 
 BASE62_MAP = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -37,6 +37,32 @@ def generate_password():
         + random.choice(NUMBERS)\
         + random.choice(NUMBERS)\
         + random.choice(SYMBOLS)
+
+
+def generate_secure_password(length):
+    if length < 6:
+        raise ValueError('Length must be at least 6')
+
+    num_symbols = 2
+    num_numbers = 1
+    num_other = length - num_symbols - num_numbers
+
+    characters = []
+    for i in range(num_symbols):
+        characters.append(random.choice(SYMBOLS))
+
+    for i in range(num_numbers):
+        characters.append(random.choice(NUMBERS))
+    
+    # Note: we can have more numbers
+    other_characters = LOWER_CASE + UPPER_CASE + NUMBERS
+    for i in range(num_other):
+        characters.append(random.choice(other_characters))
+
+    # Shuffle the characters
+    random.shuffle(characters)
+
+    return ''.join(characters)
 
 
 def ajax_error(error_message):

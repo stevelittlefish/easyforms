@@ -21,7 +21,7 @@
 			<select id="{{ field.id }}-month" name="{{ field.name }}-month" size="1"
 			        style="width:120px" class="form-control pull-left">
 				<option value="">Month:</option>
-				{% for month_name in ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+				{% for month_name in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
 				                 'October', 'November', 'December'] %}
 					<option value="{{ loop.index }}" {% if month == loop.index %}selected="selected"{% endif %}>
 						{{ month_name }}

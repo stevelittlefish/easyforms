@@ -97,6 +97,10 @@ class Pager(object):
         pages.append(self.total_pages)
         return pages
 
+    @property
+    def empty(self):
+        return self.total_pages == 0
+
 
 class SimplePager(Pager):
     """

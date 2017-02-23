@@ -104,8 +104,9 @@ def send_mail(recipient_list, subject, body, html=False, from_address=None):
         s.ehlo()
         s.starttls()
         s.ehlo()
-
-    s.login(username, password)
+    
+    if username:
+        s.login(username, password)
 
     if email_to_override:
         subject = '[to %s] %s' % (', '.join(recipient_list), subject)
