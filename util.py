@@ -246,12 +246,12 @@ def to_base62(n):
     """
     remainder = n % 62
     result = BASE62_MAP[remainder]
-    num = n / 62
+    num = n // 62
 
     while num > 0:
         remainder = num % 62
         result = '%s%s' % (BASE62_MAP[remainder], result)
-        num = num / 62
+        num = num // 62
 
     return result
 

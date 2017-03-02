@@ -165,7 +165,7 @@ class DateSelectField(form.Field):
                     self.value = datetime.date(year, month, day)
             except Exception:
                 self.error = 'Invalid date'
-        else:
+        elif self.required:
             self.error = 'Required'
 
 

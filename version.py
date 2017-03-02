@@ -2,4 +2,4 @@
 Version number.  This file is auto-generated - do not modify
 """
 
-VERSION = 17
+VERSION = 18
