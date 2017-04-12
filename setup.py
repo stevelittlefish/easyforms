@@ -7,12 +7,12 @@ if sys.version_info.major < 3:
 setup(
     name='easyforms',
     packages=['easyforms'],
-    version='0.0.1',
+    version='0.0.2a1',
     description='Form processing library for Flask and Jinja2',
     author='Stephen Brown (Little Fish Solutions LTD)',
     author_email='opensource@littlefish.solutions',
     url='https://github.com/stevelittlefish/easyforms',
-    download_url='https://github.com/stevelittlefish/easyforms/archive/v0.0.1.tar.gz',
+    download_url='https://github.com/stevelittlefish/easyforms/archive/v0.0.2a1.tar.gz',
     keywords=['flask', 'forms', 'jinja2', 'easy'],
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
@@ -23,7 +23,7 @@ setup(
         'Topic :: Software Development :: Libraries'
     ],
     install_requires=[
-        'littlefish>=0.0.2',
+        'littlefish>=0.0.3',
         'Flask>=0.12.0',
         'Jinja2>=2.9.0',
     ]
