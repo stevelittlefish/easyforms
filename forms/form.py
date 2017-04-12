@@ -43,7 +43,7 @@ class Field(object):
                  validators=[], required=False, render_after_sections=False, allow_missing=False,
                  width=9, help_text_width=9, label_width=None, units=None, pre_units=None,
                  form_group_css_class=None, noclear=False, requires_multipart=False,
-                 column_breakpoint=None, max_width=None):
+                 column_breakpoint=None, max_width=None, multiple_inputs=False):
         """
         :param name: The name of the field (the name field in the generated input)
         :param label: The label text.  If None, is automatically generated from the name
@@ -74,6 +74,10 @@ class Field(object):
                                   from form
         :param max_width: Maximum width, either an integer value representing the number of pixels
                           or a string containing a units i.e. '50%' or '240px'
+        :param multiple_inputs: Set to true if this field consists of multiple input tags with the same
+                                name.  This will cause value to be an list of strings after
+                                processing form data, with each element containing one of the
+                                submitted values
         """
         self.name = name
 
@@ -110,6 +114,7 @@ class Field(object):
         self.max_width = max_width
         if isinstance(self.max_width, int):
             self.max_width = '{}px'.format(self.max_width)
+        self.multiple_inputs = multiple_inputs
 
         # This should get set by the form when we add it
         self.form = None
@@ -185,13 +190,23 @@ class Field(object):
         """
         if self.name not in data and not self.allow_missing:
             raise exceptions.FieldNotFound('Field {} is missing from request'.format(self.name))
+        
+        if self.multiple_inputs:
+            self.value = []
+            for value in data.getlist(self.name):
+                if self.strip_value:
+                    value = value.strip()
+                if value == '' and self.convert_empty_to_none:
+                    value = None
 
-        self.value = data.get(self.name)
-        if self.value is not None:
-            if self.strip_value:
-                self.value = self.value.strip()
-            if self.value == '' and self.convert_empty_to_none:
-                self.value = None
+                self.value.append(value)
+        else:
+            self.value = data.get(self.name)
+            if self.value is not None:
+                if self.strip_value:
+                    self.value = self.value.strip()
+                if self.value == '' and self.convert_empty_to_none:
+                    self.value = None
 
         # Convert the value to the correct data type
         self.convert_value()
@@ -228,7 +243,9 @@ class Field(object):
 
     @property
     def help_text_column_class(self):
-        if self.form.form_type == formtype.HORIZONTAL:
+        if self.form.form_type == formtype.INLINE:
+            return ''
+        elif self.form.form_type == formtype.HORIZONTAL:
             classes = []
             if self.label_width > 0:
                 classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
@@ -255,9 +272,12 @@ class Field(object):
 
     @property
     def input_column_style(self):
+        style = []
+        if self.form.form_type == formtype.INLINE:
+            style.append('display: inline;')
         if self.max_width:
-            return 'max-width: {};'.format(self.max_width)
-        return ''
+            style.append('max-width: {};'.format(self.max_width))
+        return ' '.join(style)
 
     @property
     def input_column_attributes(self):
@@ -287,6 +307,27 @@ class Field(object):
             classes.append(self.form_group_css_class)
 
         return ' '.join(classes)
+
+    @property
+    def form_group_style(self):
+        """
+        Style attribute for form group
+        """
+        if self.form.form_type == formtype.INLINE:
+            return 'vertical-align: top'
+        
+        return ''
+
+    @property
+    def form_group_attributes(self):
+        css_classes = self.form_group_classes
+        style = self.form_group_style
+        parts = []
+        if css_classes:
+            parts.append('class="{}"'.format(css_classes))
+        if style:
+            parts.append('style="{}"'.format(style))
+        return Markup(' '.join(parts))
         
 
 class FormSection(object):
@@ -344,6 +385,8 @@ class Form(object):
         if css_class is None:
             if form_type == formtype.HORIZONTAL:
                 self.css_class = 'form-horizontal'
+            elif form_type == formtype.INLINE:
+                self.css_class = 'form-inline'
             else:
                 self.css_class = ''
         else:

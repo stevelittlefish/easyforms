@@ -10,8 +10,9 @@ from functools import wraps
 import random
 import re
 
-from flask import jsonify, make_response, current_app
+from flask import jsonify, make_response, current_app, request
 import flask
+from flask_sqlalchemy import get_debug_queries
 import jinja2
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -85,6 +86,14 @@ def format_number_2dp_trailing_zeros(number):
     if number is None:
         return None
     return "%.2f" % number
+
+
+def format_number_2_to_4_dp(number):
+    if number is None:
+        return None
+
+    formatted = '{0:.4f}'.format(number)
+    return re.sub(r'(.*\.[0-9][0-9][1-9]*)0*$', r'\1', formatted)
 
 
 def format_price(price):
@@ -330,3 +339,21 @@ def test_mode_only(f):
         return f(*args, **kwargs)
 
     return decorated
+
+
+def print_sql_debug_timings():
+    try:
+        log.info('***** SQL Profiling for request: %s *****' % request.url)
+        if not current_app.config['SQL_TIMINGS_ONLY_SHOW_SUMMARY']:
+            for query in get_debug_queries():
+                log.info('QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' % (query.statement, query.parameters,
+                                                                                      query.duration, query.context))
+        total_time = 0
+        total_queries = 0
+        for query in get_debug_queries():
+            total_time += query.duration
+            total_queries += 1
+
+        log.info('<< %s queries took %fs >>' % (total_queries, total_time))
+    except:
+        log.exception('Exception in SQL profiling code.  Ignoring.')

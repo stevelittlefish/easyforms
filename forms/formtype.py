@@ -10,4 +10,5 @@ log = logging.getLogger(__name__)
 
 HORIZONTAL = 'HORIZONTAL'
 VERTICAL = 'VERTICAL'
+INLINE = 'INLINE'
 

@@ -91,6 +91,8 @@ class DecimalField(TextField):
         if max_value is not None:
             self.validators.append(validate.max_value(max_value))
 
+        self.min_value = min_value
+        self.max_value = max_value
         self.step = step
 
     def convert_value(self):

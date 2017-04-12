@@ -14,6 +14,12 @@
 	{% if field.error %}
 		<div class="{{ field.error_column_class }}">
 			<p class="help-block">
+				{# This invisible label pushed the validation message to be in line with the input #}
+				{% if field.form.form_type == formtype.INLINE %}
+					<span style="visibility: hidden">
+						{{ standard_label(field) }}
+					</span>
+				{% endif %}
 				{{ field.error }}
 			</p>
 		</div>

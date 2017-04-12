@@ -1,6 +1,6 @@
 {% import 'macros.html' as macros %}
 
-<div class="{{ field.form_group_classes }}">
+<div {{ field.form_group_attributes }}>
 	{{ macros.standard_label(field) }}
 	
 	<div {{ field.input_column_attributes }}>
