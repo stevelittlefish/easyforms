@@ -512,6 +512,9 @@ class Form(object):
     def render_section(self, name):
         return self.get_section(name).render()
 
+    def render_field(self, name):
+        return Markup(self.get_field(name).render())
+
     def is_section_empty(self, name):
         return not self.get_section(name).fields
 
