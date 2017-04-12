@@ -6,7 +6,7 @@ either an error message, or None if the value passes validation
 import logging
 import datetime
 
-from lfs import validation
+from littlefish import validation
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 

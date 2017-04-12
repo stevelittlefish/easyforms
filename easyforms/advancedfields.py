@@ -13,7 +13,7 @@ from . import basicfields
 from . import validate
 from . import form
 from .env import env
-from lfs import timetool
+from littlefish import timetool
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
