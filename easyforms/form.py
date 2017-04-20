@@ -480,21 +480,30 @@ class Form(object):
 
     def render(self):
         """Render the form and all sections to HTML"""
-        return Markup(env.get_template('form.html').render(form=self, render_before=True,
+        return Markup(env.get_template('form.html').render(form=self,
+                                                           render_open_tag=True,
+                                                           render_close_tag=True,
+                                                           render_before=True,
                                                            render_sections=True,
                                                            render_after=True,
                                                            generate_csrf_token=None if self.disable_csrf else _csrf_generation_function))
 
     def render_before_sections(self):
         """Render the form up to the first section.  This will open the form tag but not close it."""
-        return Markup(env.get_template('form.html').render(form=self, render_before=True,
+        return Markup(env.get_template('form.html').render(form=self,
+                                                           render_open_tag=True,
+                                                           render_close_tag=False,
+                                                           render_before=True,
                                                            render_sections=False,
                                                            render_after=False,
                                                            generate_csrf_token=None if self.action else _csrf_generation_function))
 
     def render_after_sections(self):
         """Render the form up to the first section.  This will close the form tag, but not open it."""
-        return Markup(env.get_template('form.html').render(form=self, render_before=False,
+        return Markup(env.get_template('form.html').render(form=self,
+                                                           render_open_tag=False,
+                                                           render_close_tag=True,
+                                                           render_before=False,
                                                            render_sections=False,
                                                            render_after=True,
                                                            generate_csrf_token=None if self.action else _csrf_generation_function))
@@ -504,11 +513,38 @@ class Form(object):
         Renders all sections in the form, each inside a fieldset with the legend generated from the section name.
         No form tag is included: just the inputs are rendered.
         """
-        return Markup(env.get_template('form.html').render(form=self, render_before=False,
+        return Markup(env.get_template('form.html').render(form=self,
+                                                           render_open_tag=False,
+                                                           render_close_tag=False,
+                                                           render_before=False,
                                                            render_sections=True,
                                                            render_after=False,
                                                            generate_csrf_token=_csrf_generation_function))
 
+    def render_start(self):
+        """
+        This will open the form, without rendering any fields at all
+        """
+        return Markup(env.get_template('form.html').render(form=self,
+                                                           render_open_tag=True,
+                                                           render_close_tag=False,
+                                                           render_before=False,
+                                                           render_sections=False,
+                                                           render_after=False,
+                                                           generate_csrf_token=_csrf_generation_function))
+        
+    def render_end(self):
+        """
+        This will close the form, without rendering any fields at all
+        """
+        return Markup(env.get_template('form.html').render(form=self,
+                                                           render_open_tag=False,
+                                                           render_close_tag=True,
+                                                           render_before=False,
+                                                           render_sections=False,
+                                                           render_after=False,
+                                                           generate_csrf_token=_csrf_generation_function))
+    
     def render_section(self, name):
         return self.get_section(name).render()
 

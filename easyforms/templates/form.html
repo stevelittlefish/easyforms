@@ -1,5 +1,5 @@
-{% if render_before %}
-    <form action="{{ form.action }}" method="{{ form.method }}" class="{{ form.css_class }}"
+{% if render_open_tag %}
+	<form action="{{ form.action }}" method="{{ form.method }}" class="{{ form.css_class }}"
 	      {% if form.multipart %}enctype="multipart/form-data" autocomplete="off"{% endif %}
 	      {% if form.id %}id={{ form.id }}{% endif %}
 	      {% if form.max_width %}style="max-width: {{ form.max_width }};"{% endif %}>
@@ -7,29 +7,34 @@
 		{% if generate_csrf_token %}
 			<input name=_csrf_token type=hidden value="{{ generate_csrf_token() }}">
 		{% endif %}
-
-        {% for field in form.fields %}
-            {% if not field.render_after_sections %}
-                {{ field.render() | safe }}
-            {% endif %}
-        {% endfor %}
 {% endif %}
 
-    {% if render_sections %}
-        {# This renders each section, and then any special elements at the bottom #}
-        {% for section in form.sections %}
-            <div>
-                <h2 class="space-after">{{ section.name | title }}</h2>
-                {{ section.render() }}
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if render_before %}
+	{% for field in form.fields %}
+		{% if not field.render_after_sections %}
+			{{ field.render() | safe }}
+		{% endif %}
+	{% endfor %}
+{% endif %}
+
+{% if render_sections %}
+	{# This renders each section, and then any special elements at the bottom #}
+	{% for section in form.sections %}
+		<div>
+			<h2 class="space-after">{{ section.name | title }}</h2>
+			{{ section.render() }}
+		</div>
+	{% endfor %}
+{% endif %}
 
 {% if render_after %}
-        {% for field in form.fields %}
-            {% if field.render_after_sections %}
-                {{ field.render() | safe }}
-            {% endif %}
-        {% endfor %}
+	{% for field in form.fields %}
+		{% if field.render_after_sections %}
+			{{ field.render() | safe }}
+		{% endif %}
+	{% endfor %}
+{% endif %}
+
+{% if render_close_tag %}
     </form>
 {% endif %}
