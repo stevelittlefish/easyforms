@@ -247,6 +247,33 @@ class ListSelectField(basicfields.SelectField):
         super().__init__(name, key_pairs, **kwargs)
 
 
+class EnumSelectField(basicfields.SelectField):
+    def __init__(self, name, enum_class, **kwargs):
+        class KeyPair(object):
+            def __init__(self, x):
+                self.select_name = x.name
+                self.select_value = x.value
+
+        super().__init__(name, key_pairs=enum_class, **kwargs)
+
+        self.enum_class = enum_class
+
+    def render(self):
+        return env.get_template('advanced/enum_select.html').render(field=self)
+
+    def convert_value(self):
+        if not self.value:
+            return
+
+        for item in self.enum_class:
+            if item.value == self.value:
+                self.value = item
+                return
+
+        self.error = 'Invalid value: {}'.format(self.value)
+        self.value = None
+
+
 class DictSelectField(basicfields.SelectField):
     def __init__(self, name, dictionary, **kwargs):
         class KeyPair(object):
