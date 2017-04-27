@@ -19,16 +19,15 @@
 					</option>
 				{% endfor %}
 			</select>
-
-			<select id="{{ field.id }}-year" name="{{ field.name }}-year" size="1"
-			        style="width:120px" class="form-control pull-left">
-				<option value="">Year:</option>
-				{% for i in range(this_year, this_year-115, -1) %}
-					<option value="{{ i }}"
-					        {% if year==i %}selected="selected"{% endif %}
-							>{{ i }}</option>
-				{% endfor %}
-			</select>
+		   <select id="{{ field.id }}-year" name="{{ field.name }}-year" size="1"
+				   style="width:120px" class="form-control pull-left">
+				   <option value="">Year:</option>
+				   {% for y in field.years %}
+					   <option value="{{ y }}"
+							   {% if year==y %}selected="selected"{% endif %}
+							   >{{ y }}</option>
+				   {% endfor %}
+		   </select>
 		{% endif %}
 	</div>
 

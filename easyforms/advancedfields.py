@@ -170,8 +170,14 @@ class DateSelectField(form.Field):
 
 
 class YearMonthSelectField(form.Field):
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, years=None, **kwargs):
         super(YearMonthSelectField, self).__init__(name, **kwargs)
+        
+        if years is None:
+            this_year = datetime.datetime.now().year
+            self.years = [i for i in range(this_year, this_year - 115, -1)]
+        else:
+            self.years = years
 
     def render(self):
         return env.get_template('advanced/year_month_select.html')\
@@ -183,7 +189,7 @@ class YearMonthSelectField(form.Field):
         month_str = data['%s-month' % self.name]
         year_str = data['%s-year' % self.name]
 
-        # Validate and process date of birth
+        # Validate and process date
         if month_str and year_str:
             try:
                 day = 1
