@@ -275,13 +275,26 @@ class EnumSelectField(basicfields.SelectField):
 
 
 class DictSelectField(basicfields.SelectField):
-    def __init__(self, name, dictionary, **kwargs):
+    def __init__(self, name, dictionary, key_is_label=True, **kwargs):
+        """
+        A select (drop-down) from a dictionary
+
+        :param dictionary: The dictionary containing the values to select between
+        :param key_is_label: If True (default) then the keys in the dictionary become the option
+                             text, and the value is the submitted value.  If False, then the keys
+                             in the dictionary are the submitted value and the values are the
+                             option text
+        """
         class KeyPair(object):
             def __init__(self, select_name, select_value):
                 self.select_name = select_name
                 self.select_value = select_value
 
-        key_pairs = [KeyPair(name, value) for (name, value) in dictionary.items()]
+        if key_is_label:
+            key_pairs = [KeyPair(name, value) for (name, value) in dictionary.items()]
+        else:
+            key_pairs = [KeyPair(value, name) for (name, value) in dictionary.items()]
+
         key_pairs = sorted(key_pairs, key=lambda x: x.select_name)
 
         super().__init__(name, key_pairs, **kwargs)
