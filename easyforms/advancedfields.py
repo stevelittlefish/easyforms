@@ -152,7 +152,7 @@ class DateSelectField(form.Field):
         month_str = data['%s-month' % self.name]
         year_str = data['%s-year' % self.name]
 
-        # Validate and process date of birth
+        # Validate and process date
         if day_str and month_str and year_str:
             try:
                 day = int(day_str)
@@ -196,7 +196,10 @@ class YearMonthSelectField(form.Field):
                 month = int(month_str)
                 year = int(year_str)
 
-                self.value = datetime.date(year, month, day)
+                if year not in self.years:
+                    self.error = 'Year outside of allowed date range'
+                else:
+                    self.value = datetime.date(year, month, day)
             except Exception:
                 self.error = 'Invalid date'
 
