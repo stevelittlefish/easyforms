@@ -268,6 +268,7 @@ class ObjectListSelectField(basicfields.SelectField):
         for key_pair in self.key_pairs:
             if str(key_pair.select_value) == self.value:
                 self.value = key_pair
+                return
 
         self.error = 'Invalid Value'
 
