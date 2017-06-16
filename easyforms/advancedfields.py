@@ -256,6 +256,22 @@ class ListSelectField(basicfields.SelectField):
         super().__init__(name, key_pairs, **kwargs)
 
 
+class ObjectListSelectField(basicfields.SelectField):
+    """
+    Use this when you want to get the original key_pair from the list
+    out in the value of the form
+    """
+    def __init__(self, name, key_pairs, **kwargs):
+        super().__init__(name, key_pairs, **kwargs)
+
+    def convert_value(self):
+        for key_pair in self.key_pairs:
+            if str(key_pair.select_value) == self.value:
+                self.value = key_pair
+
+        self.error = 'Invalid Value'
+
+
 class EnumSelectField(basicfields.SelectField):
     def __init__(self, name, enum_class, **kwargs):
         class KeyPair(object):
