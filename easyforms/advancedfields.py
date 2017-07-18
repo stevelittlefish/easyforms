@@ -534,3 +534,11 @@ class SubmitCancelButton(basicfields.SubmitButton):
     def render(self):
         return env.get_template('advanced/submit_cancel.html').render(field=self)
 
+
+class CardNumberField(basicfields.TextField):
+    def __init__(self, name, **kwargs):
+        if 'type' in kwargs:
+            raise Exception('Cannot specify type for card number field')
+
+        super().__init__(name, type='text', validators=[validate.card_number], **kwargs)
+

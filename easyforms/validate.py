@@ -79,3 +79,11 @@ def url_safe(val):
     if val and not validation.validate_url_safe(val):
         return 'Must only contain letters, numbers, hyphens and underscores'
 
+
+def card_number(val):
+    if val:
+        if not validation.validate_card_number(val):
+            return 'Invalid card number. Please enter the long number on your card (without spaces)'
+        elif not validation.luhn_check(val):
+            return 'Invalid card number'
+
