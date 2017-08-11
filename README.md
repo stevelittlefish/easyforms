@@ -10,6 +10,9 @@ If you want to use this with Bootstrap 4 contact me - I will gladly add Bootstra
 Included in this repository is a sample application in the `testapp` folder.  Have a look through
 the code to see some examples of the library being used.
 
+You can view examples of the forms with this library, including most of the included fields at the
+following url: [http://littlefish.solutions/easyforms/](http://littlefish.solutions/easyforms/)
+
 ## Basic Usage
 
 To create a form and pass into the template:
