@@ -4,3 +4,6 @@ MANIFEST
 dist
 *.swp
 easyforms.egg-info
+requirements.txt
+env
+

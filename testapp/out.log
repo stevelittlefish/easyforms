@@ -1,0 +1,25 @@
+[2017-08-11 12:42:19 +0100] [29849] [INFO] Starting gunicorn 19.7.1
+[2017-08-11 12:42:19 +0100] [29849] [INFO] Listening at: http://0.0.0.0:8080 (29849)
+[2017-08-11 12:42:19 +0100] [29849] [INFO] Using worker: gthread
+[2017-08-11 12:42:19 +0100] [29852] [INFO] Booting worker with pid: 29852
+[2017-08-11 12:43:20 +0100] [29852] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:43:21 +0100] [29852] [INFO] Worker exiting (pid: 29852)
+[2017-08-11 12:43:21 +0100] [30247] [INFO] Booting worker with pid: 30247
+[2017-08-11 12:44:11 +0100] [30247] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:44:12 +0100] [30247] [INFO] Worker exiting (pid: 30247)
+[2017-08-11 12:44:12 +0100] [30537] [INFO] Booting worker with pid: 30537
+[2017-08-11 12:44:23 +0100] [30537] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:44:23 +0100] [30537] [INFO] Worker exiting (pid: 30537)
+[2017-08-11 12:44:23 +0100] [30604] [INFO] Booting worker with pid: 30604
+[2017-08-11 12:44:46 +0100] [30604] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:44:46 +0100] [30604] [INFO] Worker exiting (pid: 30604)
+[2017-08-11 12:44:46 +0100] [30727] [INFO] Booting worker with pid: 30727
+[2017-08-11 12:45:19 +0100] [30727] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:45:20 +0100] [30727] [INFO] Worker exiting (pid: 30727)
+[2017-08-11 12:45:20 +0100] [30939] [INFO] Booting worker with pid: 30939
+[2017-08-11 12:46:50 +0100] [30939] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:46:50 +0100] [30939] [INFO] Worker exiting (pid: 30939)
+[2017-08-11 12:46:50 +0100] [31401] [INFO] Booting worker with pid: 31401
+[2017-08-11 12:47:02 +0100] [31401] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 12:47:02 +0100] [31401] [INFO] Worker exiting (pid: 31401)
+[2017-08-11 12:47:03 +0100] [31482] [INFO] Booting worker with pid: 31482
