@@ -430,10 +430,10 @@ def some_view():
         CommaSeparatedListField('list', value=['hello', 'goodbye', 'testing')
     ])
 
-	if form.ready:
-		list = form['list']
-		# list is a list of strings instead of the raw string
-		print(list)
-		# prints something like: ['hello', 'goodbye', 'testing']
+    if form.ready:
+        list = form['list']
+        # list is a list of strings instead of the raw string
+        print(list)
+        # prints something like: ['hello', 'goodbye', 'testing']
 ```
 
