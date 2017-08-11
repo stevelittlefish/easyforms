@@ -29,7 +29,7 @@ def some_view_function():
 
 Then to render it, inside the template:
 
-```jinja2
+```html
 <html>
     <body>
         <h1>My Page</h1>
@@ -86,7 +86,7 @@ If we simply call `form.render()` in the template, the entire form will be rende
 headings separating each section, but this isn't usually what you want to do. You can
 also render each of the form sections yourself to create customer layouts:
 
-```jinja2
+```html
 <html>
     <body>
         <h1>Two Column Form</h1>
