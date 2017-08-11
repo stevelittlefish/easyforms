@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Custom Validation 1{% endblock %}
+
+{% block content %}
+	<p>
+		This is implemented in the view function, by checking the submitted value and setting an
+		error if the field doesn't contain "two" or "three".
+	</p>
+
+
+	{% if submitted_data %}
+		<h3>Submitted Data:</h3>
+		{{ macros.render_dict(submitted_data) }}
+	{% endif %}
+	
+	<hr>
+
+	<div class="not-too-big centered">
+		{{ form.render() }}
+	</div>
+{% endblock %}
+

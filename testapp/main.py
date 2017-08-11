@@ -135,3 +135,83 @@ def large_multisection_form():
             submitted_data[field_name] = form[field_name]
 
     return render_template('large_multisection_form.html', form=form, submitted_data=submitted_data)
+
+
+@main.route('/multisection-form-custom', methods=['GET', 'POST'])
+def multisection_form_custom():
+    form = easyforms.Form([], read_form_data=False, form_type=easyforms.VERTICAL, show_asterisks=True)
+
+    form.add_section('Section 1', [
+        easyforms.TextField('text-field', required=True,
+                            help_text='Any text will be accepted'),
+        easyforms.PasswordField('password-field', required=True),
+        easyforms.IntegerField('integer-field', min_value=1, max_value=20),
+        easyforms.DecimalField('decimal-field', min_value=-10, max_value=1000,
+                               step=decimal.Decimal('0.1'))
+    ])
+
+    form.add_section('Section 2', [
+        easyforms.BooleanCheckbox('boolean-checkbox', default=False),
+        easyforms.HiddenField('hidden-field', value='bananas'),
+        easyforms.NameField('name-field'),
+        easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True),
+        easyforms.EmailField('email-field')
+    ])
+
+    form.read_form_data()
+    
+    submitted_data = None
+
+    if form.ready:
+        log.info('The form was submitted!')
+        submitted_data = {}
+        for field_name in form.field_dict:
+            submitted_data[field_name] = form[field_name]
+
+    return render_template('multisection_form_custom.html', form=form, submitted_data=submitted_data)
+
+
+@main.route('/custom-validation-1', methods=['GET', 'POST'])
+def custom_validation_1():
+    form = easyforms.Form([
+        easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
+        easyforms.TextField('two-or-three', required=True)
+    ], form_type=easyforms.VERTICAL, max_width=700)
+    
+    submitted_data = None
+    
+    if form.submitted:
+        if form['two-or-three'] and not form.has_error('two-or-three'):
+            two_or_three = form['two-or-three']
+            if two_or_three != 'two' and two_or_three != 'three':
+                form.set_error('two-or-three', 'Please enter "two" or "three" (lower case)')
+
+    if form.ready:
+        log.info('The form was submitted!')
+        submitted_data = {}
+        for field_name in form.field_dict:
+            submitted_data[field_name] = form[field_name]
+
+    return render_template('custom_validation_1.html', form=form, submitted_data=submitted_data)
+
+
+@main.route('/custom-validation-2', methods=['GET', 'POST'])
+def custom_validation_2():
+    def is_two_or_three(val):
+        if val and val != 'two' and val != 'three':
+            return 'Please enter "two" or "three" (lower case)'
+
+    form = easyforms.Form([
+        easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
+        easyforms.TextField('two-or-three', required=True, validators=[is_two_or_three])
+    ], form_type=easyforms.VERTICAL, max_width=700)
+    
+    submitted_data = None
+    
+    if form.ready:
+        log.info('The form was submitted!')
+        submitted_data = {}
+        for field_name in form.field_dict:
+            submitted_data[field_name] = form[field_name]
+
+    return render_template('custom_validation_2.html', form=form, submitted_data=submitted_data)

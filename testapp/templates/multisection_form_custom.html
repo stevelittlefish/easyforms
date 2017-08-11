@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Multi-Section Form with Customer Layout{% endblock %}
+
+{% block content %}
+	{% if submitted_data %}
+		<h3>Submitted Data:</h3>
+		{{ macros.render_dict(submitted_data) }}
+	{% endif %}
+	
+	<hr>
+
+	{{ form.render_before_sections() }}
+		<div class="row">
+			<div class="col-md-6">
+				{{ form.render_section('Section 1') }}
+			</div>
+			<div class="col-md-6">
+				{{ form.render_section('Section 2') }}
+			</div>
+		</div>
+		<hr>
+	{{ form.render_after_sections() }}
+{% endblock %}
+
