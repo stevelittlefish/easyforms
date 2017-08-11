@@ -1,73 +1,88 @@
-[2017-08-11 12:42:19 +0100] [29849] [INFO] Starting gunicorn 19.7.1
-[2017-08-11 12:42:19 +0100] [29849] [INFO] Listening at: http://0.0.0.0:8080 (29849)
-[2017-08-11 12:42:19 +0100] [29849] [INFO] Using worker: gthread
-[2017-08-11 12:42:19 +0100] [29852] [INFO] Booting worker with pid: 29852
-[2017-08-11 12:43:20 +0100] [29852] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:43:21 +0100] [29852] [INFO] Worker exiting (pid: 29852)
-[2017-08-11 12:43:21 +0100] [30247] [INFO] Booting worker with pid: 30247
-[2017-08-11 12:44:11 +0100] [30247] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:44:12 +0100] [30247] [INFO] Worker exiting (pid: 30247)
-[2017-08-11 12:44:12 +0100] [30537] [INFO] Booting worker with pid: 30537
-[2017-08-11 12:44:23 +0100] [30537] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:44:23 +0100] [30537] [INFO] Worker exiting (pid: 30537)
-[2017-08-11 12:44:23 +0100] [30604] [INFO] Booting worker with pid: 30604
-[2017-08-11 12:44:46 +0100] [30604] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:44:46 +0100] [30604] [INFO] Worker exiting (pid: 30604)
-[2017-08-11 12:44:46 +0100] [30727] [INFO] Booting worker with pid: 30727
-[2017-08-11 12:45:19 +0100] [30727] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:45:20 +0100] [30727] [INFO] Worker exiting (pid: 30727)
-[2017-08-11 12:45:20 +0100] [30939] [INFO] Booting worker with pid: 30939
-[2017-08-11 12:46:50 +0100] [30939] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:46:50 +0100] [30939] [INFO] Worker exiting (pid: 30939)
-[2017-08-11 12:46:50 +0100] [31401] [INFO] Booting worker with pid: 31401
-[2017-08-11 12:47:02 +0100] [31401] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 12:47:02 +0100] [31401] [INFO] Worker exiting (pid: 31401)
-[2017-08-11 12:47:03 +0100] [31482] [INFO] Booting worker with pid: 31482
-[2017-08-11 14:40:54 +0100] [31482] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:40:54 +0100] [31482] [INFO] Worker exiting (pid: 31482)
-[2017-08-11 14:40:54 +0100] [10295] [INFO] Booting worker with pid: 10295
-[2017-08-11 14:41:06 +0100] [10295] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:41:06 +0100] [10295] [INFO] Worker exiting (pid: 10295)
-[2017-08-11 14:41:06 +0100] [10377] [INFO] Booting worker with pid: 10377
-[2017-08-11 14:42:51 +0100] [10377] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:42:51 +0100] [10377] [INFO] Worker exiting (pid: 10377)
-[2017-08-11 14:42:51 +0100] [10997] [INFO] Booting worker with pid: 10997
-[2017-08-11 14:43:10 +0100] [10997] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:43:11 +0100] [10997] [INFO] Worker exiting (pid: 10997)
-[2017-08-11 14:43:11 +0100] [11136] [INFO] Booting worker with pid: 11136
-[2017-08-11 14:43:30 +0100] [11136] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:43:31 +0100] [11136] [INFO] Worker exiting (pid: 11136)
-[2017-08-11 14:43:31 +0100] [11285] [INFO] Booting worker with pid: 11285
-[2017-08-11 14:44:06 +0100] [11285] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:44:06 +0100] [11285] [INFO] Worker exiting (pid: 11285)
-[2017-08-11 14:44:06 +0100] [11548] [INFO] Booting worker with pid: 11548
-[2017-08-11 14:57:38 +0100] [11548] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:57:39 +0100] [11548] [INFO] Worker exiting (pid: 11548)
-[2017-08-11 14:57:39 +0100] [15609] [INFO] Booting worker with pid: 15609
-[2017-08-11 14:57:48 +0100] [15609] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:57:49 +0100] [15609] [INFO] Worker exiting (pid: 15609)
-[2017-08-11 14:57:49 +0100] [15660] [INFO] Booting worker with pid: 15660
-[2017-08-11 14:58:15 +0100] [15660] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:58:15 +0100] [15660] [INFO] Worker exiting (pid: 15660)
-[2017-08-11 14:58:15 +0100] [15804] [INFO] Booting worker with pid: 15804
-[2017-08-11 14:59:56 +0100] [15804] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 14:59:57 +0100] [15804] [INFO] Worker exiting (pid: 15804)
-[2017-08-11 14:59:57 +0100] [16291] [INFO] Booting worker with pid: 16291
-[2017-08-11 15:02:50 +0100] [16291] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 15:02:51 +0100] [16291] [INFO] Worker exiting (pid: 16291)
-[2017-08-11 15:02:51 +0100] [17210] [INFO] Booting worker with pid: 17210
-[2017-08-11 15:03:35 +0100] [17210] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 15:03:36 +0100] [17210] [INFO] Worker exiting (pid: 17210)
-[2017-08-11 15:03:36 +0100] [17479] [INFO] Booting worker with pid: 17479
-[2017-08-11 15:04:33 +0100] [17479] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 15:04:34 +0100] [17479] [INFO] Worker exiting (pid: 17479)
-[2017-08-11 15:04:34 +0100] [17796] [INFO] Booting worker with pid: 17796
-[2017-08-11 15:08:03 +0100] [17796] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 15:08:04 +0100] [17796] [INFO] Worker exiting (pid: 17796)
-[2017-08-11 15:08:04 +0100] [18850] [INFO] Booting worker with pid: 18850
-[2017-08-11 15:09:13 +0100] [18850] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 15:09:14 +0100] [18850] [INFO] Worker exiting (pid: 18850)
-[2017-08-11 15:09:14 +0100] [19245] [INFO] Booting worker with pid: 19245
-[2017-08-11 15:09:22 +0100] [19245] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
-[2017-08-11 15:09:22 +0100] [19245] [INFO] Worker exiting (pid: 19245)
-[2017-08-11 15:09:22 +0100] [19301] [INFO] Booting worker with pid: 19301
+[2017-08-11 15:51:33 +0100] [375] [INFO] Starting gunicorn 19.7.1
+[2017-08-11 15:51:33 +0100] [375] [INFO] Listening at: http://0.0.0.0:8080 (375)
+[2017-08-11 15:51:33 +0100] [375] [INFO] Using worker: gthread
+[2017-08-11 15:51:33 +0100] [378] [INFO] Booting worker with pid: 378
+[2017-08-11 15:55:41 +0100] [378] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 15:55:42 +0100] [378] [INFO] Worker exiting (pid: 378)
+[2017-08-11 15:55:42 +0100] [1792] [INFO] Booting worker with pid: 1792
+[2017-08-11 15:55:42 +0100] [1792] [ERROR] invalid syntax (customfields.py, line 38)
+Traceback (most recent call last):
+  File "/home/steve/git/easyforms/testapp/env/lib/python3.5/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/steve/git/easyforms/testapp/env/lib/python3.5/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/steve/git/easyforms/testapp/env/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/home/steve/git/easyforms/testapp/env/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/steve/git/easyforms/testapp/env/lib/python3.5/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/home/steve/git/easyforms/testapp/wsgi.py", line 16, in <module>
+    from app import create_app
+  File "/home/steve/git/easyforms/testapp/app.py", line 13, in <module>
+    from main import main
+  File "/home/steve/git/easyforms/testapp/main.py", line 10, in <module>
+    import customfields
+  File "/home/steve/git/easyforms/testapp/customfields/__init__.py", line 5, in <module>
+    from .customfields import *
+  File "/home/steve/git/easyforms/testapp/customfields/customfields.py", line 38
+    return easyforms.
+                    ^
+SyntaxError: invalid syntax
+[2017-08-11 15:56:15 +0100] [1792] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 15:56:15 +0100] [1792] [INFO] Worker exiting (pid: 1792)
+[2017-08-11 15:56:15 +0100] [2009] [INFO] Booting worker with pid: 2009
+[2017-08-11 15:56:22 +0100] [2009] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 15:56:22 +0100] [2009] [INFO] Worker exiting (pid: 2009)
+[2017-08-11 15:56:22 +0100] [2103] [INFO] Booting worker with pid: 2103
+[2017-08-11 15:56:28 +0100] [2103] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 15:56:28 +0100] [2103] [INFO] Worker exiting (pid: 2103)
+[2017-08-11 15:56:29 +0100] [2207] [INFO] Booting worker with pid: 2207
+[2017-08-11 15:56:33 +0100] [2207] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 15:56:33 +0100] [2207] [INFO] Worker exiting (pid: 2207)
+[2017-08-11 15:56:33 +0100] [2289] [INFO] Booting worker with pid: 2289
+[2017-08-11 15:56:55 +0100] [2289] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 15:56:55 +0100] [2289] [INFO] Worker exiting (pid: 2289)
+[2017-08-11 15:56:55 +0100] [2479] [INFO] Booting worker with pid: 2479
+[2017-08-11 15:57:11 +0100] [2479] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 15:57:11 +0100] [2479] [INFO] Worker exiting (pid: 2479)
+[2017-08-11 15:57:11 +0100] [2581] [INFO] Booting worker with pid: 2581
+[2017-08-11 15:57:28 +0100] [2581] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 15:57:28 +0100] [2581] [INFO] Worker exiting (pid: 2581)
+[2017-08-11 15:57:28 +0100] [2662] [INFO] Booting worker with pid: 2662
+[2017-08-11 15:59:44 +0100] [2662] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 15:59:44 +0100] [2662] [INFO] Worker exiting (pid: 2662)
+[2017-08-11 15:59:44 +0100] [3396] [INFO] Booting worker with pid: 3396
+[2017-08-11 16:01:20 +0100] [3396] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:01:21 +0100] [3396] [INFO] Worker exiting (pid: 3396)
+[2017-08-11 16:01:21 +0100] [3954] [INFO] Booting worker with pid: 3954
+[2017-08-11 16:01:42 +0100] [3954] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:01:42 +0100] [3954] [INFO] Worker exiting (pid: 3954)
+[2017-08-11 16:01:42 +0100] [4092] [INFO] Booting worker with pid: 4092
+[2017-08-11 16:02:30 +0100] [4092] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:02:30 +0100] [4092] [INFO] Worker exiting (pid: 4092)
+[2017-08-11 16:02:30 +0100] [4537] [INFO] Booting worker with pid: 4537
+[2017-08-11 16:02:40 +0100] [4537] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:02:40 +0100] [4537] [INFO] Worker exiting (pid: 4537)
+[2017-08-11 16:02:40 +0100] [4641] [INFO] Booting worker with pid: 4641
+[2017-08-11 16:03:06 +0100] [4641] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 16:03:06 +0100] [4641] [INFO] Worker exiting (pid: 4641)
+[2017-08-11 16:03:06 +0100] [4794] [INFO] Booting worker with pid: 4794
+[2017-08-11 16:10:10 +0100] [4794] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:10:10 +0100] [4794] [INFO] Worker exiting (pid: 4794)
+[2017-08-11 16:10:11 +0100] [6983] [INFO] Booting worker with pid: 6983
+[2017-08-11 16:10:13 +0100] [6983] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:10:13 +0100] [6983] [INFO] Worker exiting (pid: 6983)
+[2017-08-11 16:10:13 +0100] [7019] [INFO] Booting worker with pid: 7019
+[2017-08-11 16:11:02 +0100] [7019] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/main.py modified
+[2017-08-11 16:11:03 +0100] [7019] [INFO] Worker exiting (pid: 7019)
+[2017-08-11 16:11:03 +0100] [7287] [INFO] Booting worker with pid: 7287
+[2017-08-11 16:11:21 +0100] [7287] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:11:21 +0100] [7287] [INFO] Worker exiting (pid: 7287)
+[2017-08-11 16:11:21 +0100] [7415] [INFO] Booting worker with pid: 7415
+[2017-08-11 16:11:45 +0100] [7415] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:11:45 +0100] [7415] [INFO] Worker exiting (pid: 7415)
+[2017-08-11 16:11:45 +0100] [7614] [INFO] Booting worker with pid: 7614
+[2017-08-11 16:12:22 +0100] [7614] [INFO] Worker reloading: /home/steve/git/easyforms/testapp/customfields/customfields.py modified
+[2017-08-11 16:12:22 +0100] [7614] [INFO] Worker exiting (pid: 7614)
+[2017-08-11 16:12:22 +0100] [7825] [INFO] Booting worker with pid: 7825

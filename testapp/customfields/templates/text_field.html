@@ -1,0 +1,22 @@
+{% import 'macros.html' as macros %}
+
+<div {{ field.form_group_attributes }}>
+	{% if field.label_width > 0 %}
+		<label for="{{ field.id }}" class="{{ field.label_column_class }}">
+			<strong class="green">[ CUSTOM FIELD ]</strong>
+			{{ field.label_html }}
+		</label>
+	{% endif %}
+
+	<div {{ field.input_column_attributes }}>
+		<input type="{{ field.type }}"
+	       class="form-control {{ field.css_class|sn }}"
+	       name="{{ field.name }}"
+	       id="{{ field.id }}" value="{{ field.value|sn }}" placeholder="{{ field.placeholder|sn }}"
+	       {% if field.readonly %}readonly{% endif %}>
+
+	</div>
+
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>

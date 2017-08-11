@@ -1,0 +1,17 @@
+{% import 'macros.html' as macros %}
+
+<div {{ field.form_group_attributes }}>
+	{{ macros.standard_label(field) }}
+
+	<div {{ field.input_column_attributes }}>
+		<input type="{{ field.type }}"
+	       class="form-control {{ field.css_class|sn }}"
+	       name="{{ field.name }}"
+	       id="{{ field.id }}" value="{{ ', '.join(field.value) if field.value else '' }}" placeholder="{{ field.placeholder|sn }}"
+	       {% if field.readonly %}readonly{% endif %}>
+
+	</div>
+
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>

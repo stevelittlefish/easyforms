@@ -3,19 +3,12 @@ Main blueprint for test app
 """
 
 import logging
-import os
-import sys
 import decimal
 
 from flask import Blueprint, render_template
 
-path = os.path.dirname(os.path.realpath(__file__))
-include_path = os.path.abspath(os.path.join(path, '..'))
-
-print('Including path: %s' % include_path)
-sys.path.append(include_path)
-
-import easyforms  # noqa
+import customfields
+import easyforms
 
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -40,6 +33,17 @@ EXAMPLE_KEY_PAIRS = [
 ]
 
 
+def get_submitted_data(form):
+    submitted_data = None
+
+    if form.ready:
+        submitted_data = {}
+        for field_name in form.field_dict:
+            submitted_data[field_name] = form[field_name]
+
+    return submitted_data
+
+
 @main.route('/')
 def index():
     return render_template('index.html')
@@ -53,16 +57,11 @@ def simple_form():
         easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
                               optional=True)
     ], form_type=easyforms.VERTICAL, max_width=700)
-    
-    submitted_data = None
 
     if form.ready:
-        log.info('The form was submitted!')
-        submitted_data = {}
-        for field_name in form.field_dict:
-            submitted_data[field_name] = form[field_name]
-
-    return render_template('simple_form.html', form=form, submitted_data=submitted_data)
+        log.info('The form was submitted and passed validation!')
+    
+    return render_template('simple_form.html', form=form, submitted_data=get_submitted_data(form))
 
 
 @main.route('/large-multisection-form', methods=['GET', 'POST'])
@@ -126,15 +125,10 @@ def large_multisection_form():
     
     form.read_form_data()
     
-    submitted_data = None
-
     if form.ready:
-        log.info('The form was submitted!')
-        submitted_data = {}
-        for field_name in form.field_dict:
-            submitted_data[field_name] = form[field_name]
-
-    return render_template('large_multisection_form.html', form=form, submitted_data=submitted_data)
+        log.info('The form was submitted and passed validation!')
+    
+    return render_template('large_multisection_form.html', form=form, submitted_data=get_submitted_data(form))
 
 
 @main.route('/multisection-form-custom', methods=['GET', 'POST'])
@@ -160,15 +154,10 @@ def multisection_form_custom():
 
     form.read_form_data()
     
-    submitted_data = None
-
     if form.ready:
-        log.info('The form was submitted!')
-        submitted_data = {}
-        for field_name in form.field_dict:
-            submitted_data[field_name] = form[field_name]
-
-    return render_template('multisection_form_custom.html', form=form, submitted_data=submitted_data)
+        log.info('The form was submitted and passed validation!')
+    
+    return render_template('multisection_form_custom.html', form=form, submitted_data=get_submitted_data(form))
 
 
 @main.route('/custom-validation-1', methods=['GET', 'POST'])
@@ -178,8 +167,6 @@ def custom_validation_1():
         easyforms.TextField('two-or-three', required=True)
     ], form_type=easyforms.VERTICAL, max_width=700)
     
-    submitted_data = None
-    
     if form.submitted:
         if form['two-or-three'] and not form.has_error('two-or-three'):
             two_or_three = form['two-or-three']
@@ -187,12 +174,9 @@ def custom_validation_1():
                 form.set_error('two-or-three', 'Please enter "two" or "three" (lower case)')
 
     if form.ready:
-        log.info('The form was submitted!')
-        submitted_data = {}
-        for field_name in form.field_dict:
-            submitted_data[field_name] = form[field_name]
-
-    return render_template('custom_validation_1.html', form=form, submitted_data=submitted_data)
+        log.info('The form was submitted and passed validation!')
+    
+    return render_template('custom_validation_1.html', form=form, submitted_data=get_submitted_data(form))
 
 
 @main.route('/custom-validation-2', methods=['GET', 'POST'])
@@ -206,12 +190,27 @@ def custom_validation_2():
         easyforms.TextField('two-or-three', required=True, validators=[is_two_or_three])
     ], form_type=easyforms.VERTICAL, max_width=700)
     
-    submitted_data = None
-    
     if form.ready:
-        log.info('The form was submitted!')
-        submitted_data = {}
-        for field_name in form.field_dict:
-            submitted_data[field_name] = form[field_name]
+        log.info('The form was submitted and passed validation!')
+    
+    return render_template('custom_validation_2.html', form=form, submitted_data=get_submitted_data(form))
 
-    return render_template('custom_validation_2.html', form=form, submitted_data=submitted_data)
+
+@main.route('/custom-fields', methods=['GET', 'POST'])
+def custom_fields():
+    default_list = ['hello', 'goodbye', 'foo']
+
+    form = easyforms.Form([
+        customfields.BasicCustomTextField('username', required=True),
+        customfields.CustomTextField('another-text-field', required=True),
+        customfields.CommaSeparatedListField('list', value=default_list),
+        customfields.UpperCaseTextField('upper-case', required=True,
+                                        help_text='Whatever\'s entered into this will be converted '
+                                        'to upper case')
+    ], form_type=easyforms.VERTICAL)
+
+    if form.ready:
+        log.info('The form was submitted and passed validation!')
+        log.info('This is a list: {}'.format(form['list']))
+    
+    return render_template('custom_fields.html', form=form, submitted_data=get_submitted_data(form))
