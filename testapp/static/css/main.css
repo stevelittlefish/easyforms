@@ -98,4 +98,20 @@ table.fields > tbody > tr:hover > td {
 	background-color: #ddddee !important;
 }
 
+ul.links, ul.list {
+	padding-left: 0;
+}
 
+ul.links li, ul.list li {
+	list-style: none;
+	padding: 4px 0;
+}
+
+.main-panel {
+	max-width: 800px;
+	margin: 50px auto 15px;
+}
+
+.panel-heading h1 {
+	margin: 10px 0;
+}

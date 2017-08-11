@@ -2,7 +2,19 @@
 
 {% block title %}Easyforms Test App{% endblock %}
 
+{% block h1 %}{% endblock %}
+
 {% block content %}
-	HELLO
+	<div class="main-panel panel panel-default">
+		<div class="panel-heading">
+			<h1>{{ self.title() }}</h1>
+		</div>
+		<div class="panel-body">
+			<ul class="links">
+				<li><a href="{{ url_for('main.simple_form') }}">Simple Form</a></li>
+				<li><a href="{{ url_for('main.large_multisection_form') }}">Large Multi-Section Form</a></li>
+			</ul>
+		</div>
+	</div>
 {% endblock %}
 
