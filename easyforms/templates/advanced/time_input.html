@@ -6,10 +6,9 @@
 	<div {{ field.input_column_attributes }}>
 		<div class="clearfix">
 			{% if field.readonly %}
-				<input type="hidden" name="{{ field.name }}-hour" value="{{ field.value.hour() if field.value else None }}">
-				<input type="hidden" name="{{ field.name }}-minute" value="{{ month }}">
-				<input type="hidden" name="{{ field.name }}-year" value="{{ year }}">
-				<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') }}">
+				<input type="hidden" name="{{ field.name }}-hour" value="{{ field.value.hour() if field.value else '' }}">
+				<input type="hidden" name="{{ field.name }}-minute" value="{{ field.value.minut() if field.value else '' }}">
+				<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') if field.value else '' }}">
 			{% else %}
 				<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-hour"
 						   id="{{ field.id }}-hour" value="{{ field.value.hour if field.value != None else '' }}"

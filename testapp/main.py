@@ -131,6 +131,67 @@ def large_multisection_form():
     return render_template('large_multisection_form.html', form=form, submitted_data=get_submitted_data(form))
 
 
+@main.route('/readonly-form', methods=['GET', 'POST'])
+def readonly_form():
+    form = easyforms.Form([
+        easyforms.TextField('text-field', required=True,
+                            help_text='Any text will be accepted'),
+        easyforms.PasswordField('password-field', required=True, width=4),
+        easyforms.IntegerField('integer-field', width=2, min_value=1, max_value=20),
+        easyforms.DecimalField('decimal-field', min_value=-10, max_value=1000,
+                               step=decimal.Decimal('0.1'), width=2),
+        easyforms.BooleanCheckbox('boolean-checkbox', default=False),
+        easyforms.HiddenField('hidden-field', value='bananas'),
+        easyforms.NameField('name-field', width=4),
+        easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True),
+
+        easyforms.CodeField('code-field', width=6),
+        easyforms.EmailField('email-field', width=6),
+        easyforms.UrlField('url-field'),
+        easyforms.PhoneNumberField('phone-number-field'),
+        easyforms.PostcodeField('postcode-field', width=4),
+        easyforms.GenderField('gender-field',
+                              help_text='You must include images static/img/male-symbol.png and '
+                              'static/img/female-symbol.png for this to work'),
+        easyforms.DateSelectField('date-select-field'),
+        easyforms.YearMonthSelectField('year-month-select-field'),
+        easyforms.DatePickerField('date-picker-field',
+                                  help_text='Required jquery ui and the following line of javascript: '
+                                  '$(".date-picker").datepicker({ dateFormat: "dd/mm/yy" });'),
+        easyforms.ListSelectField('list-select-field', ['Option 1', 'Option 2', 'Another Option'],
+                                  width=3),
+        easyforms.DictSelectField('dict-select-field', {
+            'key1': 'value1',
+            'key2': 'value2',
+            'key3': 'value3'
+        }, width=3),
+
+        easyforms.DictSelectField('dict-select-field-2', {
+            'key1': 'value1',
+            'key2': 'value2',
+            'key3': 'value3'
+        }, width=3, key_is_label=False, help_text='key_is_label=False switched the keys and values'),
+        
+        easyforms.TitleSelectField('title-select-field'),
+        easyforms.HtmlField('html-field', help_text='This required CKEditor to be installed in '
+                            'static/ckeditor'),
+        easyforms.TimeInputField('time-input-field'),
+        easyforms.FileUploadField('file-upload-field', '.pdf'),
+        easyforms.ImageUploadField('image-upload-field', min_width=100, min_height=100,
+                                   max_height=200, max_width=200,
+                                   help_text='This allows restrictions on image size. This example '
+                                   'accepts images from 100x100 to 200x200'),
+        easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
+        easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
+    ], form_type=easyforms.VERTICAL, max_width=700, readonly=True)
+
+    if form.ready:
+        raise Exception('Readonly form was somehow submitted!')
+    
+    return render_template('simple_form.html', form=form, submitted_data=get_submitted_data(form))
+
+
+
 @main.route('/multisection-form-custom', methods=['GET', 'POST'])
 def multisection_form_custom():
     form = easyforms.Form([], read_form_data=False, form_type=easyforms.VERTICAL, show_asterisks=True)

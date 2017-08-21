@@ -2,6 +2,6 @@
 	<div class="{{ field.input_no_label_column_class }}">
 		<input type="submit" class="btn {{ field.css_class }}"
 		       name="{{ field.name }}" value="{{ field.submit_text }}"
-		       id="{{ field.id }}">
+			   id="{{ field.id }}" {% if field.readonly %}disabled{% endif %}>
 	</div>
 </div>

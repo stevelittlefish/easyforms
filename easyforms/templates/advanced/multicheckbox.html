@@ -8,7 +8,9 @@
 			<div class="checkbox">
 				<label>
 					<input type="checkbox" name="{{ field.name }}" value="{{ value.select_value }}"
-						   {% if value.select_value in field._checked_select_values %}checked{% endif %}>
+						   {% if value.select_value in field._checked_select_values %}checked{% endif %}
+						   {% if field.readonly %}disabled{% endif %}
+						   >
 					{{ value.select_name }}
 				</label>
 			</div>

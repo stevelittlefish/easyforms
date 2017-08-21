@@ -51,7 +51,9 @@ class Field(object):
         :param id: The id for the input.  If None, the name is used
         :param optional: If True, '(optional)' is rendered next to the label.  Defaults to False
         :param css_class: If set, adds extra css classes to the input (space separate inside string)
-        :param readonly: The True, makes the input readonly.  Defaults to False
+        :param readonly: If True, makes this field readonly.  If the parent form.readonly is True,
+                         then that will take precendence over this and this field will also be
+                         readonly.  Defaults to False
         :param help_text: Text rendered beside the input
         :param strip_value: If True (by default) strips whitespace off of the submitted value
         :param convert_empty_to_none: If True (by default) converts empty strings to None in submitted values
@@ -94,7 +96,7 @@ class Field(object):
         self.value = value
         self.optional = optional
         self.css_class = css_class
-        self.readonly = readonly
+        self._readonly = readonly
         self.help_text = help_text
         self.strip_value = strip_value
         self.convert_empty_to_none = convert_empty_to_none
@@ -163,6 +165,17 @@ class Field(object):
     def column_breakpoint(self, val):
         self._column_breakpoint = val
 
+    @property
+    def readonly(self):
+        if self.form and self.form.readonly is True:
+            return True
+
+        return self._readonly
+    
+    @readonly.setter
+    def readonly(self, val):
+        self._readonly = val
+
     def render(self):
         return '<div class="alert alert-warning">Render not implemented for {}!</div>'.format(self.__class__.__name__)
 
@@ -210,7 +223,7 @@ class Field(object):
 
         # Convert the value to the correct data type
         self.convert_value()
-   
+
     @property
     def form_type(self):
         return self.form.form_type if self.form else None
@@ -347,7 +360,7 @@ class Form(object):
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
                  read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
                  id=None, submit_css_class='btn-primary', column_breakpoint='sm',
-                 show_asterisks=False, max_width=None, disable_csrf=False):
+                 show_asterisks=False, max_width=None, disable_csrf=False, readonly=False):
         """
         :param fields: List of Field objects
         :param action: Action field in generated form
@@ -367,6 +380,10 @@ class Form(object):
         :param max_width: Maximum width, either an integer value representing the number of pixels
                           or a string containing a units i.e. '50%' or '240px'
         :param disable_csrf: Set to True to remove the CSRF field (if applicable)
+        :param readonly: If set to True, all fields will be readonly, and it's garunteed that the
+                         fields values will not change when the form is submitted.  Allows the
+                         form to be rendered, without accepting user input.  If readonly is True,
+                         ready and submitted will always return False
         """
         if method != 'POST' and method != 'GET':
             raise ValueError('Invalid method: %s.  Valid options are GET and POST' % method)
@@ -406,6 +423,7 @@ class Form(object):
             self.max_width = '{}px'.format(self.max_width)
 
         self.disable_csrf = disable_csrf
+        self.readonly = readonly
 
         # Record whether or not we have any validation errors
         self.has_errors = False
@@ -570,6 +588,9 @@ class Form(object):
         """Attempt to read the form data from the request"""
         if self.processed_data:
             raise exceptions.AlreadyProcessed('The data has already been processed for this form')
+        
+        if self.readonly:
+            return
 
         if request.method == self.method:
             if self.method == 'POST':
@@ -661,11 +682,11 @@ class Form(object):
     @property
     def ready(self):
         """Has the data been processed and validated?"""
-        return self.processed_data and not self.has_errors
+        return not self.readonly and self.processed_data and not self.has_errors
 
     @property
     def submitted(self):
-        return self.processed_data
+        return not self.readonly and self.processed_data
 
     def clear(self):
         for field in self.all_fields:

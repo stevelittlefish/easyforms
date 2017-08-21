@@ -7,7 +7,7 @@
 		{% if field.readonly %}
 			<input type="hidden" name="{{ field.name }}-month" value="{{ month }}">
 			<input type="hidden" name="{{ field.name }}-year" value="{{ year }}">
-			<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') }}">
+			<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') if field.value else '' }}">
 		{% else %}
 			<select id="{{ field.id }}-month" name="{{ field.name }}-month" size="1"
 			        style="width:120px" class="form-control pull-left">
