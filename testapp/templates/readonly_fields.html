@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Read Only Fields{% endblock %}
+
+{% block content %}
+	{% if submitted_data %}
+		<h3>Submitted Data:</h3>
+		{{ macros.render_dict(submitted_data) }}
+	{% endif %}
+	
+	<hr>
+
+	<p>
+		The readonly fields cannot be changed.  Even if you edit the page with the developer
+		tools in your browser, once submitted the original values will be returned.
+	</p>
+
+	<div class="not-too-big centered">
+		{{ form.render() }}
+	</div>
+{% endblock %}
+

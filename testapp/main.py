@@ -131,6 +131,25 @@ def large_multisection_form():
     return render_template('large_multisection_form.html', form=form, submitted_data=get_submitted_data(form))
 
 
+@main.route('/readonly-fields', methods=['GET', 'POST'])
+def readonly_fields():
+    form = easyforms.Form([
+        easyforms.TextField('some-text', required=True),
+        easyforms.TextField('readonly-text', readonly=True, value='You can\'t change me!'),
+        easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
+        easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
+                              optional=True),
+        easyforms.SelectField('pick-another-value', EXAMPLE_KEY_PAIRS, readonly=True,
+                              value=EXAMPLE_KEY_PAIRS[1], help_text='This field cannot be changed'),
+    ], form_type=easyforms.VERTICAL, max_width=700)
+
+    if form.ready:
+        log.info('The form was submitted and passed validation!')
+    
+    return render_template('readonly_fields.html', form=form, submitted_data=get_submitted_data(form))
+
+
+
 @main.route('/readonly-form', methods=['GET', 'POST'])
 def readonly_form():
     form = easyforms.Form([
@@ -188,7 +207,7 @@ def readonly_form():
     if form.ready:
         raise Exception('Readonly form was somehow submitted!')
     
-    return render_template('simple_form.html', form=form, submitted_data=get_submitted_data(form))
+    return render_template('readonly_form.html', form=form, submitted_data=get_submitted_data(form))
 
 
 

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Read Only Form{% endblock %}
+
+{% block content %}
+	{% if submitted_data %}
+		<h3>Submitted Data:</h3>
+		{{ macros.render_dict(submitted_data) }}
+	{% endif %}
+	
+	<hr>
+
+	<p>
+		This entire form has been set to readonly - even if you edit the page with the developer
+		tools in your browser, the form will never be processed.
+	</p>
+
+	<div class="not-too-big centered">
+		{{ form.render() }}
+	</div>
+{% endblock %}
+
