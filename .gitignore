@@ -6,3 +6,4 @@ dist
 easyforms.egg-info
 env
 out.log
+testapp/config.py

@@ -28,6 +28,7 @@ setup(
         'littlefish>=0.0.3',
         'Flask>=0.12.0',
         'Jinja2>=2.9.0',
+        'requests>=2.18.3'
     ],
 )
 

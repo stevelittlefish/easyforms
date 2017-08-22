@@ -5,7 +5,7 @@ Main blueprint for test app
 import logging
 import decimal
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app
 
 import customfields
 import easyforms
@@ -294,3 +294,18 @@ def custom_fields():
         log.info('This is a list: {}'.format(form['list']))
     
     return render_template('custom_fields.html', form=form, submitted_data=get_submitted_data(form))
+
+
+@main.route('/captcha', methods=['GET', 'POST'])
+def captcha():
+    form = easyforms.Form([
+        easyforms.TextField('required-text-field', required=True),
+        easyforms.TextField('optional-text-field'),
+        easyforms.RecaptchaField('recaptcha', site_key=current_app.config['RECAPTCHA_SITE_KEY'],
+                                 secret_key=current_app.config['RECAPTCHA_SECRET_KEY'])
+    ], show_asterisks=True)
+
+    if form.ready:
+        log.info('The form was submitted and passed validation!')
+
+    return render_template('captcha.html', form=form, submitted_data=get_submitted_data(form))

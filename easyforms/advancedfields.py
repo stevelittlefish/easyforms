@@ -8,12 +8,13 @@ import re
 import io
 
 from flask import request
+from littlefish import timetool
+import requests
 
 from . import basicfields
 from . import validate
 from . import form
 from .env import env
-from littlefish import timetool
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -541,4 +542,57 @@ class CardNumberField(basicfields.TextField):
             raise Exception('Cannot specify type for card number field')
 
         super().__init__(name, type='text', validators=[validate.card_number], **kwargs)
+
+
+class RecaptchaField(form.Field):
+    """
+    Adds a Recaptcha to the form.  This will not work if you add it more than once.
+
+    If the recaptcha is not completed, form.ready will not return True and there will be a validation
+    error. This field will always return 'True' if it was completed, or None if validation wasn't
+    completed.
+
+    :param name: The form name - really only used for the label
+    :param site_key: The site key for the recaptcha (see ReCaptcha documentation)
+    :param secret_key: The secret key for the recaptcha
+    """
+    def __init__(self, name, site_key, secret_key, **kwargs):
+        if 'value' in kwargs:
+            raise ValueError('Can\'t set value of RecaptchaField')
+
+        if 'required' in kwargs:
+            raise ValueError('Can\'t set required of RecaptchaField (it\'s always required!)')
+
+        super().__init__(name, value=None, required=True, **kwargs)
+        
+        self.site_key = site_key
+        self.secret_key = secret_key
+    
+    def render(self):
+        return env.get_template('advanced/recaptcha.html').render(field=self)
+    
+    def extract_value(self, data):
+        recaptcha_response = data.get('g-recaptcha-response')
+        if recaptcha_response:
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            data = {
+                'secret': self.secret_key,
+                'response': recaptcha_response,
+                'remoteip': request.remote_addr
+            }
+
+            r = requests.post(url, data)
+
+            if r.status_code != 200:
+                log.debug('Recaptcha failed with response code {}'.format(r.status_code))
+            else:
+                # log.debug('Recaptcha response: {}'.format(r.text))
+                resp = r.json()
+                success = resp['success']
+                error_codes = resp.get('error-codes')
+                if success:
+                    # Passed the recaptcha
+                    self.value = True
+                else:
+                    log.debug('Recaptcha failed with error codes: {}'.format(', '.join(error_codes)))
 

@@ -20,17 +20,27 @@ log = logging.getLogger(__name__)
 
 
 def create_app():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     # Create the webapp
     app = Flask(__name__)
     app.secret_key = 'TestAppSecretKeyWhoCaresWhatThisIs'
     app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.config['RECAPTCHA_SITE_KEY'] = 'TODO: Override in config.py'
+    app.config['RECAPTCHA_SECRET_KEY'] = 'TODO: Override in config.py'
     
     log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     log.info(' Test App Starting')
     log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     
+    log.info('Trying to load testapp/config.py...')
+    try:
+        app.config.from_object('config')
+        log.info('Local config loaded')
+    except Exception as e:
+        log.info('Config not found or invalid')
+
+
     # Don't allow output of undefined variables in jinja templates
     app.jinja_env.undefined = jinja2.StrictUndefined
     
@@ -53,4 +63,8 @@ def create_app():
 
         return render_template('error_page.html', title=title, message=message, preformat=True)
 
+    log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    log.info(' Startup Complete!')
+    log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    
     return app

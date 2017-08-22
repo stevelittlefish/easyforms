@@ -1,0 +1,14 @@
+{% import 'macros.html' as macros %}
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+<div {{ field.form_group_attributes }}>
+	{{ macros.standard_label(field) }}
+
+	<div {{ field.input_column_attributes }}>
+		<div class="g-recaptcha" data-sitekey="{{ field.site_key }}"></div>
+	</div>
+
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>
