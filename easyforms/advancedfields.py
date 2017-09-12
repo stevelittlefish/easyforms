@@ -9,6 +9,7 @@ import io
 
 from flask import request
 from littlefish import timetool
+from littlefish import htmlutil
 import requests
 
 from . import basicfields
@@ -361,9 +362,6 @@ class HtmlField(basicfields.TextAreaField):
             self.value = re.sub(r'<p>\s*</p>', '', self.value)
 
         if self.value is not None and self.pretty_print:
-            # Import beautiful soup here, so that the library doesn't become dependant on it
-            # if pretty printing is not used
-            from lfs import htmlutil
             self.value = htmlutil.pretty_print(self.value,
                                                max_line_length=self.pretty_print_line_length)
 
