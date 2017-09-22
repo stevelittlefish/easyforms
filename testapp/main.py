@@ -149,7 +149,6 @@ def readonly_fields():
     return render_template('readonly_fields.html', form=form, submitted_data=get_submitted_data(form))
 
 
-
 @main.route('/readonly-form', methods=['GET', 'POST'])
 def readonly_form():
     form = easyforms.Form([
@@ -208,7 +207,6 @@ def readonly_form():
         raise Exception('Readonly form was somehow submitted!')
     
     return render_template('readonly_form.html', form=form, submitted_data=get_submitted_data(form))
-
 
 
 @main.route('/multisection-form-custom', methods=['GET', 'POST'])
@@ -309,3 +307,27 @@ def captcha():
         log.info('The form was submitted and passed validation!')
 
     return render_template('captcha.html', form=form, submitted_data=get_submitted_data(form))
+
+
+@main.route('/single-button-clone', methods=['GET', 'POST'])
+def single_button_clone():
+    form = easyforms.Form([
+        easyforms.TextField('some-text', required=True),
+        easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
+        easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
+                              optional=True),
+        easyforms.BooleanCheckbox('boolean')
+    ], form_type=easyforms.VERTICAL, max_width=700)
+
+    if form.ready:
+        log.info('The form was submitted and passed validation!')
+
+    button1 = form.create_single_button_clone('All The Same Values')
+    button2 = form.create_single_button_clone('Some Text = FooBar')
+    button2.set_value('some-text', 'FooBar')
+    
+    return render_template('single_button_clone.html', form=form, button1=button1, button2=button2,
+                           submitted_data=get_submitted_data(form))
+
+
+

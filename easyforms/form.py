@@ -703,3 +703,38 @@ class Form(object):
 
     def get_field(self, name):
         return self.field_dict.get(name)
+
+    def create_single_button_clone(self, submit_text='Submit', submit_css_class='btn-primary',
+                                   read_form_data=True, form_type=None):
+        """
+        This will create a copy of this form, with all of inputs replaced with hidden inputs,
+        and with a single submit button.  This allows you to easily create a "button" that
+        will submit a post request which is identical to the current state of the form.
+        You could then, if required, change some of the values in the hidden inputs.
+
+        Note: Submit buttons are not included, and the submit button value will change
+        """
+        from .basicfields import BooleanCheckbox, HiddenField, SubmitButton
+
+        fields = []
+        for field in self.all_fields:
+            # If it's valid for the field to be missing, and the value of the field is empty,
+            # then don't add it, otherwise create a hidden input
+            if field.allow_missing:
+                if field.value is None or field.value == '':
+                    continue
+                elif isinstance(field, BooleanCheckbox) and not field.value:
+                    continue
+                # TODO: is this right?
+                elif isinstance(field, SubmitButton):
+                    continue
+
+            # If we get here, we need to add this field to the list
+            fields.append(HiddenField(field.name, field.value))
+        
+        form = Form(fields, action=self.action, method=self.method, submit_css_class=submit_css_class,
+                    submit_text=submit_text, read_form_data=read_form_data,
+                    disable_csrf=self.disable_csrf, readonly=False,
+                    form_type=form_type if form_type else self.form_type)
+
+        return form

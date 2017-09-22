@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Single Button Clone{% endblock %}
+
+{% block content %}
+	{% if submitted_data %}
+		<h3>Submitted Data:</h3>
+		{{ macros.render_dict(submitted_data) }}
+	{% endif %}
+	
+	<hr>
+
+	<div class="not-too-big centered">
+		{{ form.render() }}
+	</div>
+
+	<hr>
+
+	<p>These buttons will re-submit the last submitted (or default) values</p>
+
+	<p>This button will submit exactly the same values that have already been submitted:</p>
+	
+	<div class="not-too-big centered">
+		{{ button1.render() }}
+	</div>
+	
+	<p>This button will submit the same values but replacing the text field with "FooBar":</p>
+	
+	<div class="not-too-big centered">
+		{{ button2.render() }}
+	</div>
+{% endblock %}
+
