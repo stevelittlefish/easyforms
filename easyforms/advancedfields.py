@@ -416,13 +416,13 @@ class FileUploadField(form.Field):
 
 
 class ImageUploadField(FileUploadField):
-    def __init__(self, name, accept='image/*', min_width=None, min_height=None, max_width=None, max_height=None, **kwargs):
+    def __init__(self, name, accept='image/*', min_image_width=None, min_image_height=None, max_image_width=None, max_image_height=None, **kwargs):
         super(ImageUploadField, self).__init__(name, accept, value=None, **kwargs)
 
-        self.min_width = min_width
-        self.min_height = min_height
-        self.max_width = max_width
-        self.max_height = max_height
+        self.min_image_width = min_image_width
+        self.min_image_height = min_image_height
+        self.max_image_width = max_image_width
+        self.max_image_height = max_image_height
         self.raw_image_data = None
 
     def convert_value(self):
@@ -449,37 +449,37 @@ class ImageUploadField(FileUploadField):
             width = image.size[0]
             height = image.size[1]
 
-            if (self.min_width is not None and width < self.min_width) or \
-                    (self.max_width is not None and width > self.max_width) or \
-                    (self.min_height is not None and height < self.min_height) or \
-                    (self.max_height is not None and height > self.max_height):
+            if (self.min_image_width is not None and width < self.min_image_width) or \
+                    (self.max_image_width is not None and width > self.max_image_width) or \
+                    (self.min_image_height is not None and height < self.min_image_height) or \
+                    (self.max_image_height is not None and height > self.max_image_height):
 
-                if self.min_width is not None and self.min_width == self.max_width and self.min_height is not None and self.min_height == self.max_height:
-                    self.error = 'Image must be %s x %s pixels' % (self.min_width, self.min_height)
+                if self.min_image_width is not None and self.min_image_width == self.max_image_width and self.min_image_height is not None and self.min_image_height == self.max_image_height:
+                    self.error = 'Image must be %s x %s pixels' % (self.min_image_width, self.min_image_height)
                 else:
                     self.error = ''
 
-                    if self.min_width is not None:
-                        if self.max_width is not None:
-                            if self.min_width == self.max_width:
+                    if self.min_image_width is not None:
+                        if self.max_image_width is not None:
+                            if self.min_image_width == self.max_image_width:
                                 self.error += 'Image width must be %s pixels. '
                             else:
-                                self.error += 'Image width must be between %s and %s pixels. ' % (self.min_width, self.max_width)
+                                self.error += 'Image width must be between %s and %s pixels. ' % (self.min_image_width, self.max_image_width)
                         else:
-                            self.error += 'Image must be at least %s pixels wide. ' % self.min_width
-                    elif self.max_width is not None:
-                        self.error += 'Image width must be at most %s pixels wide. ' % self.max_width
+                            self.error += 'Image must be at least %s pixels wide. ' % self.min_image_width
+                    elif self.max_image_width is not None:
+                        self.error += 'Image width must be at most %s pixels wide. ' % self.max_image_width
 
-                    if self.min_height is not None:
-                        if self.max_height is not None:
-                            if self.min_height == self.max_height:
+                    if self.min_image_height is not None:
+                        if self.max_image_height is not None:
+                            if self.min_image_height == self.max_image_height:
                                 self.error += 'Image height must be %s pixels.'
                             else:
-                                self.error += 'Image height must be between %s and %s pixels.' % (self.min_height, self.max_height)
+                                self.error += 'Image height must be between %s and %s pixels.' % (self.min_image_height, self.max_image_height)
                         else:
-                            self.error += 'Image must be at least %s pixels tall.' % self.min_height
-                    elif self.max_height is not None:
-                        self.error += 'Image height must be at most %s pixels tall.' % self.max_height
+                            self.error += 'Image must be at least %s pixels tall.' % self.min_image_height
+                    elif self.max_image_height is not None:
+                        self.error += 'Image height must be at most %s pixels tall.' % self.max_image_height
 
         if self.error:
             self.value = None
