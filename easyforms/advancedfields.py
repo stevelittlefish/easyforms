@@ -7,7 +7,7 @@ import datetime
 import re
 import io
 
-from flask import request
+from flask import request, url_for
 from littlefish import timetool
 from littlefish import htmlutil
 import requests
@@ -338,7 +338,9 @@ class TitleSelectField(ListSelectField):
 class HtmlField(basicfields.TextAreaField):
     def __init__(self, name, no_smiley=True, no_image=True, no_nbsp=True, height=None,
                  on_change=None, pretty_print=False, strip_empty_paragraphs=True,
-                 entities_latin=True, pretty_print_line_length=110, **kwargs):
+                 entities_latin=True, pretty_print_line_length=110,
+                 ckeditor_url_override=None, **kwargs):
+
         super(HtmlField, self).__init__(name, **kwargs)
 
         self.no_smiley = no_smiley
@@ -350,6 +352,10 @@ class HtmlField(basicfields.TextAreaField):
         self.pretty_print_line_length = pretty_print_line_length
         self.strip_empty_paragraphs = strip_empty_paragraphs
         self.entities_latin = entities_latin
+        if ckeditor_url_override:
+            self.ckeditor_url = ckeditor_url_override
+        else:
+            self.ckeditor_url = url_for('static', filename='ckeditor/ckeditor.js')
 
     def render(self):
         return env.get_template('advanced/ckeditor.html').render(field=self)

@@ -19,7 +19,7 @@
 		{{ macros.standard_help_text(field) }}
 	{% endif %}
 
-	<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+	<script src="{{ field.ckeditor_url }}"></script>
 	<script>
 		{% if field.no_smiley or field.no_image %}
 			CKEDITOR.config.removePlugins = "";
