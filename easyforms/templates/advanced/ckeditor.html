@@ -38,6 +38,12 @@
 			{% if config.extra_allowed_content %}
 				extraAllowedContent: "{{ config.extra_allowed_content }}",
 			{% endif %}
+			{% if config.custom_styles_js_url %}
+				stylesSet: "default:{{ config.custom_styles_js_url }}",
+			{% endif %}
+			{% if config.custom_contents_css_url %}
+				contentsCss: "{{ config.custom_contents_css_url }}",
+			{% endif %}
 			removeButtons: "{{ config.remove_buttons }}",
 			extraPlugins: "{{ config.extra_plugins }}",
 			removePlugins: "{{ config.remove_plugins }}",

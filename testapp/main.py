@@ -5,7 +5,7 @@ Main blueprint for test app
 import logging
 import decimal
 
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, url_for
 
 import customfields
 import easyforms
@@ -314,7 +314,9 @@ def ckeditor():
     config = easyforms.CkeditorConfig(
         default_height=300,
         filemanager_url=None,
-        codesnippet_enabled=True
+        codesnippet_enabled=True,
+        custom_styles_js_url=url_for('static', filename='js/ckeditor_styles.js'),
+        custom_contents_css_url=url_for('static', filename='css/ckeditor_contents.css')
     )
 
     form = easyforms.Form([

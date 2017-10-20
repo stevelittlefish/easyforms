@@ -24,6 +24,7 @@ class CkeditorConfig(object):
             paste_enabled=False,
             undo_enabled=False,
             redo_enabled=False,
+            anchor_enabled=False,
             image_enabled=True,
             codesnippet_enabled=False,
             allow_all_extra_content=False,
@@ -33,7 +34,9 @@ class CkeditorConfig(object):
             strip_nbsp=True,
             entities_latin=True,
             default_height=None,
-            format_tags='p;h2;h3;h4;pre'
+            format_tags='p;h2;h3;h4;pre',
+            custom_styles_js_url=None,
+            custom_contents_css_url=None
     ):
         """
         Used to configure the CkeditorField
@@ -48,6 +51,7 @@ class CkeditorConfig(object):
         :param paste_enabled: Enable the past button
         :param undo_enabled: Enable the undo button
         :param redo_enabled: Enable the redo button
+        :param anchor_enabled: Enable the anchor button
         :param image_enabled: Enable the image button
         :param codesnippet_enabled: Enable the codesnippet button
         :param allow_all_extra_content: Allow all extra css classes and attributes to be saved.  This
@@ -60,6 +64,8 @@ class CkeditorConfig(object):
         :param entities_latin: Hmmm...
         :param default_height: Height to use if height field is not specified in field
         :param format_tags: Semicolon separated list of tags for format drop-down
+        :param custom_styles_js_url: URL to custom styles.js
+        :param custom_contents_css_url: URL to custom contents.css
         """
         self._ckeditor_url = ckeditor_url
         self.filemanager_url = filemanager_url
@@ -71,6 +77,7 @@ class CkeditorConfig(object):
         self.paste_enabled = paste_enabled
         self.undo_enabled = undo_enabled
         self.redo_enabled = redo_enabled
+        self.anchor_enabled = anchor_enabled
         self.image_enabled = image_enabled
         self.codesnippet_enabled = codesnippet_enabled
         self.allow_all_extra_content = allow_all_extra_content
@@ -81,6 +88,8 @@ class CkeditorConfig(object):
         self.entities_latin = entities_latin
         self.default_height = default_height
         self.format_tags = format_tags
+        self.custom_styles_js_url = custom_styles_js_url
+        self.custom_contents_css_url = custom_contents_css_url
 
     @property
     def ckeditor_url(self):
@@ -112,6 +121,8 @@ class CkeditorConfig(object):
             buttons.append('Undo')
         if not self.redo_enabled:
             buttons.append('Redo')
+        if not self.anchor_enabled:
+            buttons.append('Anchor')
         
         return ','.join(buttons)
 

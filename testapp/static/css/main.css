@@ -115,3 +115,18 @@ ul.links li, ul.list li {
 .panel-heading h1 {
 	margin: 10px 0;
 }
+
+.red-box {
+	border: 2px red solid;
+	background-color: rgba(255, 61, 76, 0.5);
+	padding: 15px;
+
+}
+
+.green-box {
+	border: 2px green solid;
+	background-color: rgba(70, 255, 76, 0.5);
+	padding: 15px;
+}
+
+
