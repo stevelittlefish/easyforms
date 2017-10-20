@@ -128,6 +128,8 @@ class CkeditorConfig(object):
         plugins = []
         if not self.image_enabled:
             plugins.append('image')
+        if not self.codesnippet_enabled:
+            plugins.append('codesnippet')
 
     @property
     def extra_allowed_content(self):
