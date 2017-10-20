@@ -25,7 +25,7 @@ class CkeditorConfig(object):
             undo_enabled=False,
             redo_enabled=False,
             image_enabled=True,
-            codesnippet_enabled=True,
+            codesnippet_enabled=False,
             allow_all_extra_content=False,
             pretty_print_html=True,
             pretty_print_html_line_length=110,
