@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 
 class CmsHtmlField(advancedfields.HtmlField):
+    """This field is deprecated and should no longer be used"""
     def __init__(self, name, **kwargs):
         super(CmsHtmlField, self).__init__(name, **kwargs)
 

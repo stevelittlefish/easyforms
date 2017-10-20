@@ -114,8 +114,8 @@ def large_multisection_form():
                             'static/ckeditor'),
         easyforms.TimeInputField('time-input-field'),
         easyforms.FileUploadField('file-upload-field', '.pdf'),
-        easyforms.ImageUploadField('image-upload-field', min_width=100, min_height=100,
-                                   max_height=200, max_width=200,
+        easyforms.ImageUploadField('image-upload-field', min_image_width=100, min_image_height=100,
+                                   max_image_height=200, max_image_width=200,
                                    help_text='This allows restrictions on image size. This example '
                                    'accepts images from 100x100 to 200x200'),
         easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
@@ -195,8 +195,8 @@ def readonly_form():
                             'static/ckeditor'),
         easyforms.TimeInputField('time-input-field'),
         easyforms.FileUploadField('file-upload-field', '.pdf'),
-        easyforms.ImageUploadField('image-upload-field', min_width=100, min_height=100,
-                                   max_height=200, max_width=200,
+        easyforms.ImageUploadField('image-upload-field', min_image_width=100, min_image_height=100,
+                                   max_image_height=200, max_image_width=200,
                                    help_text='This allows restrictions on image size. This example '
                                    'accepts images from 100x100 to 200x200'),
         easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
@@ -308,6 +308,21 @@ def captcha():
 
     return render_template('captcha.html', form=form, submitted_data=get_submitted_data(form))
 
+
+@main.route('/ckeditor', methods=['GET', 'POST'])
+def ckeditor():
+    config = easyforms.CkeditorConfig(
+        default_height=300,
+        filemanager_url=None,
+        codesnippet_enabled=True
+    )
+
+    form = easyforms.Form([
+        easyforms.CkeditorField('ckeditor', config=config),
+    ], form_type=easyforms.VERTICAL)
+
+    return render_template('ckeditor.html', form=form, submitted_data=get_submitted_data(form))
+    
 
 @main.route('/single-button-clone', methods=['GET', 'POST'])
 def single_button_clone():

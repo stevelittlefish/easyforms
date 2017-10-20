@@ -1,5 +1,7 @@
 {% import 'macros.html' as macros %}
 
+{% set config = field.config %}
+
 <div {{ field.form_group_attributes }}>
 	{{ macros.standard_label(field) }}
 
@@ -19,12 +21,32 @@
 		{{ macros.standard_help_text(field) }}
 	{% endif %}
 
-	<script src="{{ field.ckeditor_url }}"></script>
+	<script src="{{ config.ckeditor_url }}"></script>
 	<script>
+		{#
 		{% if field.no_smiley or field.no_image %}
 			CKEDITOR.config.removePlugins = "";
 		{% endif %}
 
 		CKEDITOR.replace("{{ field.id }}", {removePlugins: "{% if field.no_smiley %}smiley,{% endif %}{% if field.no_image %}image,{% endif %}codesnippet"});
+		#}
+
+		var editor = CKEDITOR.replace("{{ field.id }}", {
+			{% if config.filemanager_url %}
+				filebrowserBrowseUrl: "{{ config.filemanager_url }}",
+			{% endif %}
+			{% if config.extra_allowed_content %}
+				extraAllowedContent: "{{ config.extra_allowed_content }}",
+			{% endif %}
+			removeButtons: "{{ config.remove_buttons }}",
+			extraPlugins: "{{ config.extra_plugins }}",
+			removePlugins: "{{ config.remove_plugins }}",
+			{% if field.get_height() %}height: "{{ field.get_height() }}",{% endif %}
+			entities_latin: {{ 'true' if config.entities_latin else 'false' }}
+		});
+		
+		{% if field.on_change %}
+			editor.on("change", {{ field.on_change }});
+		{% endif %}
 	</script>
 </div>

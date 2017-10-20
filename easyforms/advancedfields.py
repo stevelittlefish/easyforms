@@ -16,6 +16,7 @@ from . import basicfields
 from . import validate
 from . import form
 from .env import env
+from .config import CkeditorConfig
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -335,7 +336,52 @@ class TitleSelectField(ListSelectField):
         super().__init__(name, titles, **kwargs)
 
 
+class CkeditorField(basicfields.TextAreaField):
+    """
+    HTML Editor using CKEditor
+    """
+    def __init__(self, name, config=CkeditorConfig(), height=None, on_change=None, **kwargs):
+
+        super().__init__(name, **kwargs)
+        
+        self.config = config
+        self.height = height
+        self.on_change = on_change
+
+    def render(self):
+        return env.get_template('advanced/ckeditor.html').render(field=self)
+
+    def convert_value(self):
+        if self.value is not None and self.config.strip_nbsp:
+            self.value = re.sub(r'\s?&nbsp;\s?', ' ', self.value)
+
+        if self.value and self.config.strip_empty_paragraphs:
+            self.value = re.sub(r'<p>\s*</p>', '', self.value)
+
+        if self.value is not None and self.config.pretty_print_html:
+            self.value = htmlutil.pretty_print(
+                self.value, max_line_length=self.config.pretty_print_html_line_length
+            )
+
+    def get_height(self):
+        height = self.config.default_height
+        if self.height:
+            height = height
+
+        if height is None:
+            return None
+
+        if isinstance(height, int):
+            return '{}px'.format(height)
+
+        return height
+
+
 class HtmlField(basicfields.TextAreaField):
+    """
+    This field is deprecated and should no longer be used.  Please us CkeditorField
+    instead
+    """
     def __init__(self, name, no_smiley=True, no_image=True, no_nbsp=True, height=None,
                  on_change=None, pretty_print=False, strip_empty_paragraphs=True,
                  entities_latin=True, pretty_print_line_length=110,
@@ -358,7 +404,7 @@ class HtmlField(basicfields.TextAreaField):
             self.ckeditor_url = url_for('static', filename='ckeditor/ckeditor.js')
 
     def render(self):
-        return env.get_template('advanced/ckeditor.html').render(field=self)
+        return env.get_template('advanced/deprecated_html_field.html').render(field=self)
 
     def convert_value(self):
         if self.value is not None and self.no_nbsp:

@@ -10,4 +10,4 @@ from .advancedfields import *
 from .cmsfields import *
 from .dbfields import *
 from .formtype import *
-
+from .config import CkeditorConfig
