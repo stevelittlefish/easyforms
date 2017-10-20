@@ -131,6 +131,8 @@ class CkeditorConfig(object):
         if not self.codesnippet_enabled:
             plugins.append('codesnippet')
 
+        return ','.join(plugins)
+
     @property
     def extra_allowed_content(self):
         if self.allow_all_extra_content:
