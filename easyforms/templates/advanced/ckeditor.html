@@ -42,6 +42,7 @@
 			extraPlugins: "{{ config.extra_plugins }}",
 			removePlugins: "{{ config.remove_plugins }}",
 			{% if field.get_height() %}height: "{{ field.get_height() }}",{% endif %}
+			format_tags: "{{ config.format_tags }}",
 			entities_latin: {{ 'true' if config.entities_latin else 'false' }}
 		});
 		
