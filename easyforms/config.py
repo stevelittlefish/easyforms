@@ -39,7 +39,8 @@ class CkeditorConfig(object):
             default_height=None,
             format_tags='p;h2;h3;h4;pre',
             custom_styles_js_url=None,
-            custom_contents_css_url=None
+            custom_contents_css_url=None,
+            force_paste_as_plain_text=False
     ):
         """
         Used to configure the CkeditorField
@@ -72,6 +73,7 @@ class CkeditorConfig(object):
         :param format_tags: Semicolon separated list of tags for format drop-down
         :param custom_styles_js_url: URL to custom styles.js
         :param custom_contents_css_url: URL to custom contents.css
+        :param force_paste_as_plain_text: Should all pasted text have the formatting removed?
         """
         self._ckeditor_url = ckeditor_url
         self.filemanager_url = filemanager_url
@@ -98,6 +100,7 @@ class CkeditorConfig(object):
         self.format_tags = format_tags
         self.custom_styles_js_url = custom_styles_js_url
         self.custom_contents_css_url = custom_contents_css_url
+        self.force_paste_as_plain_text = force_paste_as_plain_text
 
     def clone(self, **kwargs):
         out = copy.deepcopy(self)
