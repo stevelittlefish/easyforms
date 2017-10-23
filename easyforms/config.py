@@ -3,6 +3,7 @@ Classes for configuration of some of the more advanced fields
 """
 
 import logging
+import copy
 
 from flask import url_for
 
@@ -28,6 +29,8 @@ class CkeditorConfig(object):
             image_enabled=True,
             codesnippet_enabled=False,
             allow_all_extra_content=False,
+            allowed_content=None,
+            disallowed_content=None,
             pretty_print_html=True,
             pretty_print_html_line_length=110,
             strip_empty_paragraphs=True,
@@ -56,7 +59,10 @@ class CkeditorConfig(object):
         :param codesnippet_enabled: Enable the codesnippet button
         :param allow_all_extra_content: Allow all extra css classes and attributes to be saved.  This
                                         may be necessary if you have old content that you want to
-                                        edit without totally trashing
+                                        edit without totally trashing. This is ignored if
+                                        allowed_content is set
+        :param allowed_content: String defining elements that are allowed.  See CKEditor docs for info
+        :param disallowed_content: String defininte elements that are not allowed
         :param pretty_print_html: Should the resulting html be formatted to be readable?
         :param pretty_print_html_line_length: What line length should be used for pretty printing
         :param strip_empty_paragraphs: Should empty paragraphs be removed
@@ -81,6 +87,8 @@ class CkeditorConfig(object):
         self.image_enabled = image_enabled
         self.codesnippet_enabled = codesnippet_enabled
         self.allow_all_extra_content = allow_all_extra_content
+        self.allowed_content = allowed_content
+        self.disallowed_content = disallowed_content
         self.pretty_print_html = pretty_print_html
         self.pretty_print_html_line_length = pretty_print_html_line_length
         self.strip_empty_paragraphs = strip_empty_paragraphs
@@ -90,6 +98,17 @@ class CkeditorConfig(object):
         self.format_tags = format_tags
         self.custom_styles_js_url = custom_styles_js_url
         self.custom_contents_css_url = custom_contents_css_url
+
+    def clone(self, **kwargs):
+        out = copy.deepcopy(self)
+
+        for attr in kwargs:
+            if hasattr(out, attr):
+                setattr(out, attr, kwargs[attr])
+            else:
+                raise TypeError('{} is an invalid keyword argument for this function'.format(attr))
+
+        return out
 
     @property
     def ckeditor_url(self):
@@ -146,6 +165,9 @@ class CkeditorConfig(object):
 
     @property
     def extra_allowed_content(self):
-        if self.allow_all_extra_content:
+        if self.allowed_content:
+            return self.allowed_content
+        elif self.allow_all_extra_content:
             return '*(*);*{*}'
         return ''
+

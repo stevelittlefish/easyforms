@@ -38,6 +38,9 @@
 			{% if config.extra_allowed_content %}
 				extraAllowedContent: "{{ config.extra_allowed_content }}",
 			{% endif %}
+			{% if config.disallowed_content %}
+				disallowedContent: "{{ config.disallowed_content }}",
+			{% endif %}
 			{% if config.custom_styles_js_url %}
 				stylesSet: "default:{{ config.custom_styles_js_url }}",
 			{% endif %}
