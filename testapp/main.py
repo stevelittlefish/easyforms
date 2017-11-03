@@ -347,4 +347,22 @@ def single_button_clone():
                            submitted_data=get_submitted_data(form))
 
 
+@main.route('/getaddress', methods=['GET', 'POST'])
+def getaddress():
+    form = easyforms.Form([
+        easyforms.NameField('first-name', required=True),
+        easyforms.NameField('last-name', required=True),
+        easyforms.GetaddressPostcodeField(
+            'postcode', current_app.config['GETADDRESS_API_KEY'], required=True,
+            line1_id='address-line-1', line2_id='address-line-2', line3_id='address-line-3',
+            town_id='city'
+        ),
+        easyforms.TextField('address-line-1', required=True),
+        easyforms.TextField('address-line-2'),
+        easyforms.TextField('address-line-3'),
+        easyforms.TextField('city', label='Town/City', required=True),
+        easyforms.TextField('billing-phone-no', required=True, label='Contact Phone No.')
+    ], form_type=easyforms.VERTICAL, max_width=700)
+
+    return render_template('getaddress.html', form=form, submitted_data=get_submitted_data(form))
 

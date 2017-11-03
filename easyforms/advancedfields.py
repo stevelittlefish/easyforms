@@ -646,3 +646,29 @@ class RecaptchaField(form.Field):
                 else:
                     log.debug('Recaptcha failed with error codes: {}'.format(', '.join(error_codes)))
 
+
+class GetaddressPostcodeField(PostcodeField):
+    def __init__(self, name, api_key, line1_id, line2_id, line3_id, town_id,
+                 county_id='--getaddress-ignore',
+                 include_script=True, button_class='btn btn-primary', **kwargs):
+        """
+        Postcode field with getaddress.io address lookup
+
+        :param api_key: The getaddress.io API key
+        :param include_script: Whether or not to include the script tag that imports getaddress.io.
+                               Set this to false on all but the first of these fields if you have
+                               more than one of them on the same page
+        """
+        super().__init__(name, **kwargs)
+        
+        self.api_key = api_key
+        self.line1_id = line1_id
+        self.line2_id = line2_id
+        self.line3_id = line3_id
+        self.town_id = town_id
+        self.county_id = county_id
+        self.include_script = include_script
+        self.button_class = button_class
+
+    def render(self):
+        return env.get_template('advanced/getaddress_postcode_field.html').render(field=self)

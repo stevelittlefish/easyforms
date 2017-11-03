@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}Getaddress Postcode Lookup{% endblock %}
+
+{% block head_extra %}
+{% endblock head_extra %}
+
+{% block content %}
+	{% if submitted_data %}
+		<h3>Submitted Data:</h3>
+		{{ macros.render_dict(submitted_data) }}
+	{% endif %}
+	
+	<hr>
+
+	<div class="not-too-big centered">
+		{{ form.render() }}
+	</div>
+{% endblock %}
+

@@ -28,6 +28,7 @@ def create_app():
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['RECAPTCHA_SITE_KEY'] = 'TODO: Override in config.py'
     app.config['RECAPTCHA_SECRET_KEY'] = 'TODO: Override in config.py'
+    app.config['GETADDRESS_API_KEY'] = 'TODO: Override in config.py'
     
     log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     log.info(' Test App Starting')

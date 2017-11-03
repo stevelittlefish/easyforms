@@ -1,0 +1,48 @@
+{% import 'macros.html' as macros %}
+
+<div {{ field.form_group_attributes }}>
+	{% if field.label_width > 0 %}
+		<label for="{{ field.id }}" class="{{ field.label_column_class }}">
+			{{ field.label_html }}
+		</label>
+	{% endif %}
+
+	<div {{ field.input_column_attributes }} id="{{ field.id}}-container">
+	</div>
+
+	{{ macros.standard_error(field) }}
+	{{ macros.standard_help_text(field) }}
+</div>
+<input type="hidden" id="--getaddress-ignore">
+
+{% if field.include_script %}
+	<script src="https://getaddress.io/js/jquery.getAddress-2.0.7.min.js"></script>
+{% endif %}
+
+<script>
+	$(document).ready(function() {
+		$('#{{ field.id }}-container').getAddress({
+			api_key: '{{ field.api_key }}',
+			output_fields:{
+				line_1: '#{{ field.line1_id }}',
+				line_2: '#{{ field.line2_id }}',
+				line_3: '#{{ field.line3_id }}',
+				post_town: '#{{ field.town_id }}',
+				county: '#{{ field.county_id }}',
+				postcode: '#{{ field.id }}'
+			},
+			input_class: 'form-control',
+			button_class: '{{ field.button_class }}',
+			dropdown_class: 'form-control',
+			error_message_class: 'help-block',
+			input_id: '{{ field.id }}',
+			input_name: '{{ field.name }}',
+			button_id: '{{ field.id }}-button',
+			dropdown_id: '{{ field.id }}-select'
+		});
+		
+		{% if field.value %}
+			$("#{{ field.id }}").val("{{ field.value }}");
+		{% endif %}
+	});
+</script>
