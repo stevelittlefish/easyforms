@@ -648,16 +648,14 @@ class RecaptchaField(form.Field):
 
 
 class GetaddressPostcodeField(PostcodeField):
-    def __init__(self, name, api_key, line1_id, line2_id, line3_id, town_id,
-                 county_id='--getaddress-ignore',
-                 include_script=True, button_class='btn btn-primary', **kwargs):
+    def __init__(self, name, api_key, line1_id, line2_id=None, line3_id=None, town_id=None,
+                 county_id=None,
+                 button_class='btn btn-primary', button_text='Find Address',
+                 **kwargs):
         """
         Postcode field with getaddress.io address lookup
 
         :param api_key: The getaddress.io API key
-        :param include_script: Whether or not to include the script tag that imports getaddress.io.
-                               Set this to false on all but the first of these fields if you have
-                               more than one of them on the same page
         """
         super().__init__(name, **kwargs)
         
@@ -667,8 +665,8 @@ class GetaddressPostcodeField(PostcodeField):
         self.line3_id = line3_id
         self.town_id = town_id
         self.county_id = county_id
-        self.include_script = include_script
         self.button_class = button_class
+        self.button_text = button_text
 
     def render(self):
         return env.get_template('advanced/getaddress_postcode_field.html').render(field=self)

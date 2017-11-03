@@ -1,48 +1,206 @@
 {% import 'macros.html' as macros %}
 
 <div {{ field.form_group_attributes }}>
-	{% if field.label_width > 0 %}
-		<label for="{{ field.id }}" class="{{ field.label_column_class }}">
-			{{ field.label_html }}
-		</label>
-	{% endif %}
+	{{ macros.standard_label(field) }}
 
-	<div {{ field.input_column_attributes }} id="{{ field.id}}-container">
+	<div {{ field.input_column_attributes }}>
+    	<input type="{{ field.type }}"
+		       class="form-control {{ field.css_class|sn }}"
+		       name="{{ field.name }}"
+		       id="{{ field.id }}" value="{{ field.value|sn }}" placeholder="{{ field.placeholder|sn }}"
+		       {% if field.readonly %}readonly{% endif %}>
 	</div>
 
 	{{ macros.standard_error(field) }}
 	{{ macros.standard_help_text(field) }}
-</div>
-<input type="hidden" id="--getaddress-ignore">
 
-{% if field.include_script %}
-	<script src="https://getaddress.io/js/jquery.getAddress-2.0.7.min.js"></script>
-{% endif %}
+	<div class="{{ field.error_column_class }}" id="{{ field.id }}-ajax-error" style="display: none;">
+		<p class="help-block">
+			{# This invisible label pushed the validation message to be in line with the input #}
+			{% if field.form.form_type == formtype.INLINE %}
+				<span style="visibility: hidden">
+					{{ standard_label(field) }}
+				</span>
+			{% endif %}
+			<span class="error-content">
+			</span>
+		</p>
+	</div>
+
+</div>
+
+<div {{ field.form_group_attributes }}>
+	<div {{ field.input_column_attributes }}>
+		<button id="{{ field.id }}-search-button" class="{{ field.button_class }}">
+			{{ field.button_text }}
+		</button>
+	</div>
+</div>
+
+<div id="{{ field.id }}-result-group" style="display: none;">
+	<div {{ field.form_group_attributes }}>
+		<div {{ field.input_column_attributes }}>
+			<select class="form-control" id="{{ field.id }}-result-select">
+			
+			</select>
+		</div>
+	</div>
+</div>
+
 
 <script>
 	$(document).ready(function() {
-		$('#{{ field.id }}-container').getAddress({
-			api_key: '{{ field.api_key }}',
-			output_fields:{
-				line_1: '#{{ field.line1_id }}',
-				line_2: '#{{ field.line2_id }}',
-				line_3: '#{{ field.line3_id }}',
-				post_town: '#{{ field.town_id }}',
-				county: '#{{ field.county_id }}',
-				postcode: '#{{ field.id }}'
-			},
-			input_class: 'form-control',
-			button_class: '{{ field.button_class }}',
-			dropdown_class: 'form-control',
-			error_message_class: 'help-block',
-			input_id: '{{ field.id }}',
-			input_name: '{{ field.name }}',
-			button_id: '{{ field.id }}-button',
-			dropdown_id: '{{ field.id }}-select'
-		});
+		var errors = {
+			404: 'No addresses could be found for this postcode',
+			400: 'The postcode you entered is not valid',
+			401: 'Invalid API key',
+			429: 'This service has run out of available requests - try again tomorrow',
+			500: 'Your request could not be processed due to an error in the postcode lookup service'
+		};
+
+		var apiEndpoint = "https://api.getAddress.io/find";
+		var field = $("#{{ field.id }}");
+		var button = $("#{{ field.id }}-search-button");
+		var apiKey = "{{ field.api_key }}";
+		var lastSearch = null;
+		var resultGroup = $("#{{ field.id }}-result-group");
+		var resultSelect = $("#{{ field.id }}-result-select");
+		var buttonText = "{{ field.button_text }}";
+		var errorDiv = $("#{{ field.id }}-ajax-error");
+		var formGroup = field.closest('.form-group');
 		
-		{% if field.value %}
-			$("#{{ field.id }}").val("{{ field.value }}");
+		{% if field.line1_id %}
+			var line1Input = $("#{{ field.line1_id }}");
+		{% else %}
+			var line1Input = null;
 		{% endif %}
+		
+		{% if field.line2_id %}
+			var line2Input = $("#{{ field.line2_id }}");
+		{% else %}
+			var line2Input = null;
+		{% endif %}
+		
+		{% if field.line3_id %}
+			var line3Input = $("#{{ field.line3_id }}");
+		{% else %}
+			var line3Input = null;
+		{% endif %}
+		
+		{% if field.town_id %}
+			var townInput = $("#{{ field.town_id }}");
+		{% else %}
+			var townInput = null;
+		{% endif %}
+		
+		{% if field.county_id %}
+			var countyInput = $("#{{ field.county_id }}");
+		{% else %}
+			var countyInput = null;
+		{% endif %}
+		
+
+		var lookupAddress = function() {
+			var postcode = field.val();
+			
+			// don't allow multiple searches for the same thing
+			if (postcode == lastSearch) {
+				return false;
+			}
+			lastSearch = postcode;
+			
+			button.text('Searching...');
+			button.prop('disabled', true);
+			resultGroup.hide();
+			errorDiv.hide();
+			formGroup.removeClass('has-error');
+
+			var url = apiEndpoint + '/' + postcode;
+			var data = {
+				'api-key': apiKey,
+				'format': true
+			};
+
+			$.ajax({
+				url: url,
+				data: data,
+				success: handleLookupAddress,
+				error: handleLookupAddressError,
+				dataType: 'json'
+			});
+
+			return false;
+		};
+
+		var handleLookupAddressError = function(result) {
+			button.prop('disabled', false);
+			button.text(buttonText);
+			formGroup.addClass('has-error');
+
+			var statusCode = result.status;
+			var error = 'Something went wrong!';
+			if (typeof errors[statusCode] !== 'undefined') {
+				error = errors[statusCode];
+			}
+			errorDiv.find('p').text(error);
+			errorDiv.show();
+		};
+
+		var handleLookupAddress = function(result) {
+			button.prop('disabled', false);
+			button.text(buttonText);
+
+			resultSelect.html('');
+			resultSelect.append($("<option>Select an address</option>"));
+
+			for (var i=0; i<result.addresses.length; i++ ) {
+				var address = result.addresses[i];
+				var option = $("<option>");
+				var label = '';
+				for (var j=0; j<address.length; j++) {
+					var part = address[j];
+					if (part) {
+						if (label) {
+							label += ', ';
+						}
+						label += part;
+					}
+				}
+				option.text(label);
+				option.data('line1', address[0]);
+				option.data('line2', address[1]);
+				option.data('line3', address[2]);
+				option.data('town', address[3]);
+				option.data('county', address[4]);
+
+				resultSelect.append(option);
+			}
+			resultGroup.show();
+		};
+
+		var handleAddressSelect = function(event) {
+			var option = resultSelect.find(":checked");
+			if (option.data('line1')) {
+				// This was an address
+				if (line1Input) {
+					line1Input.val(option.data('line1'));
+				}
+				if (line2Input) {
+					line2Input.val(option.data('line2'));
+				}
+				if (line3Input) {
+					line3Input.val(option.data('line3'));
+				}
+				if (townInput) {
+					townInput.val(option.data('town'));
+				}
+				if (countyInput) {
+					countyInput.val(option.data('county'));
+				}
+			}
+		};
+
+		button.click(lookupAddress);
+		resultSelect.change(handleAddressSelect);
 	});
 </script>
