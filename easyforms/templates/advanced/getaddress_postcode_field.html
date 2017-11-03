@@ -19,7 +19,7 @@
 			{# This invisible label pushed the validation message to be in line with the input #}
 			{% if field.form.form_type == formtype.INLINE %}
 				<span style="visibility: hidden">
-					{{ standard_label(field) }}
+					{{ macros.standard_label(field) }}
 				</span>
 			{% endif %}
 			<span class="error-content">
@@ -30,7 +30,7 @@
 </div>
 
 <div {{ field.form_group_attributes }}>
-	<div {{ field.input_column_attributes }}>
+	<div class="{{ field.help_text_column_class }}">
 		<button id="{{ field.id }}-search-button" class="{{ field.button_class }}">
 			{{ field.button_text }}
 		</button>
@@ -39,7 +39,7 @@
 
 <div id="{{ field.id }}-result-group" style="display: none;">
 	<div {{ field.form_group_attributes }}>
-		<div {{ field.input_column_attributes }}>
+		<div class="{{ field.help_text_column_class }}">
 			<select class="form-control" id="{{ field.id }}-result-select">
 			
 			</select>
@@ -99,9 +99,24 @@
 			var countyInput = null;
 		{% endif %}
 		
+		var setError = function(error) {
+			formGroup.addClass('has-error');
+			errorDiv.find('p').text(error);
+			errorDiv.show();
+		};
+
+		var clearError = function() {
+			errorDiv.hide();
+			formGroup.removeClass('has-error');
+		}
 
 		var lookupAddress = function() {
 			var postcode = field.val();
+
+			if (postcode.trim() == "") {
+				setError('Please enter a postcode');
+				return false;
+			}
 			
 			// don't allow multiple searches for the same thing
 			if (postcode == lastSearch) {
@@ -112,8 +127,7 @@
 			button.text('Searching...');
 			button.prop('disabled', true);
 			resultGroup.hide();
-			errorDiv.hide();
-			formGroup.removeClass('has-error');
+			clearError();
 
 			var url = apiEndpoint + '/' + postcode;
 			var data = {
@@ -135,15 +149,14 @@
 		var handleLookupAddressError = function(result) {
 			button.prop('disabled', false);
 			button.text(buttonText);
-			formGroup.addClass('has-error');
 
 			var statusCode = result.status;
 			var error = 'Something went wrong!';
 			if (typeof errors[statusCode] !== 'undefined') {
 				error = errors[statusCode];
 			}
-			errorDiv.find('p').text(error);
-			errorDiv.show();
+
+			setError(error);
 		};
 
 		var handleLookupAddress = function(result) {

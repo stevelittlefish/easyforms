@@ -362,7 +362,7 @@ def getaddress():
         easyforms.TextField('address-line-3'),
         easyforms.TextField('city', label='Town/City', required=True),
         easyforms.TextField('billing-phone-no', required=True, label='Contact Phone No.')
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.HORIZONTAL, max_width=700)
 
     return render_template('getaddress.html', form=form, submitted_data=get_submitted_data(form))
 
