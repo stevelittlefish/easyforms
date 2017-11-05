@@ -59,5 +59,55 @@
 		{% if field.on_change %}
 			editor.on("change", {{ field.on_change }});
 		{% endif %}
+
+		{# Filemanager integration #}
+		{% if config.filemanager_iframe %}
+			CKEDITOR.on('dialogDefinition', function (event) {
+				var editor = event.editor;
+				var dialogDefinition = event.data.definition;
+				var dialogName = event.data.name;
+
+				var cleanUpFuncRef = CKEDITOR.tools.addFunction(function () {
+					// Do the clean-up of filemanager here (called when an image was selected or cancel was clicked)
+					$('#fm-iframe-{{ field.id }}').remove();
+					$("body").css("overflow-y", "scroll");
+				});
+
+				var tabCount = dialogDefinition.contents.length;
+				for (var i = 0; i < tabCount; i++) {
+					var browseButton = dialogDefinition.contents[i].get('browse');
+
+					if (browseButton !== null) {
+						browseButton.hidden = false;
+						browseButton.onClick = function (dialog, i) {
+							editor._.filebrowserSe = this;
+							var iframe = $("<iframe id='fm-iframe-{{ field.id }}' class='fm-modal'/>").attr({
+								src: '{{ config.filemanager_url }}' +
+								'?CKEditorFuncNum=' + CKEDITOR.instances[event.editor.name]._.filebrowserFn +
+								'&CKEditorCleanUpFuncNum=' + cleanUpFuncRef +
+								'&langCode=en' +
+								'&CKEditor=' + event.editor.name
+							});
+
+							// CSS
+							iframe.css('z-index', '10011');
+							iframe.css('width', '80%');
+							iframe.css('height', '80%');
+							iframe.css('top', '10%');
+							iframe.css('left', '10%');
+							iframe.css('border', '0');
+							iframe.css('position', 'fixed');
+							iframe.css('-moz-box-shadow', '0px 1px 5px 0px #656565');
+							iframe.css('-webkit-box-shadow', '0px 1px 5px 0px #656565');
+							iframe.css('-o-box-shadow', '0px 1px 5px 0px #656565');
+							iframe.css('box-shadow', '0px 1px 5px 0px #656565');
+
+							$("body").append(iframe);
+							$("body").css("overflow-y", "hidden");  // Get rid of possible scrollbars in containing document
+						}
+					}
+				}
+			});
+		{% endif %}
 	</script>
 </div>

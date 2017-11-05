@@ -17,6 +17,7 @@ class CkeditorConfig(object):
             self,
             ckeditor_url=None,
             filemanager_url='/fm/index.html',
+            filemanager_iframe=True,
             underline_enabled=False,
             subscript_enabled=False,
             superscript_enabled=False,
@@ -47,6 +48,7 @@ class CkeditorConfig(object):
 
         :param ckeditor_url: Url of ckeditor.js
         :param filemanager_url: Url of filebrowser for image widget
+        :param filemanager_iframe: Whether or not to use flaskfilemanager iframe mode (recommended)
         :param underline_enabled: Enable the underline button
         :param subscript_enabled: Enable the subscript button
         :param superscript_enabled: Enable the superscript button
@@ -77,6 +79,7 @@ class CkeditorConfig(object):
         """
         self._ckeditor_url = ckeditor_url
         self.filemanager_url = filemanager_url
+        self.filemanager_iframe = filemanager_iframe
         self.underline_enabled = underline_enabled
         self.subscript_enabled = subscript_enabled
         self.superscript_enabled = superscript_enabled
