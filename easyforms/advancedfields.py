@@ -649,13 +649,21 @@ class RecaptchaField(form.Field):
 
 class GetaddressPostcodeField(PostcodeField):
     def __init__(self, name, api_key, line1_id, line2_id=None, line3_id=None, town_id=None,
-                 county_id=None,
+                 county_id=None, sort_addresses=True,
                  button_class='btn btn-primary', button_text='Find Address',
                  **kwargs):
         """
         Postcode field with getaddress.io address lookup
 
         :param api_key: The getaddress.io API key
+        :param line1_id: The id of the field to be populated with line 1 of the address
+        :param line2_id: The id of the field to be populated with line 2 of the address
+        :param line3_id: The id of the field to be populated with line 3 of the address
+        :param town_id: The id of the field to be populated with the town of the address
+        :param county_id: The id of the field to be populated with the county of the address
+        :param button_class: CSS class for the search button
+        :param button_text: Text to display on the search button
+        :param sort_addresses: Whether or not to numerically sort the addresses (in the API call)
         """
         super().__init__(name, **kwargs)
         
@@ -667,6 +675,7 @@ class GetaddressPostcodeField(PostcodeField):
         self.county_id = county_id
         self.button_class = button_class
         self.button_text = button_text
+        self.sort_addresses = sort_addresses
 
     def render(self):
         return env.get_template('advanced/getaddress_postcode_field.html').render(field=self)

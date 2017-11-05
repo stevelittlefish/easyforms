@@ -68,6 +68,7 @@
 		var buttonText = "{{ field.button_text }}";
 		var errorDiv = $("#{{ field.id }}-ajax-error");
 		var formGroup = field.closest('.form-group');
+		var sortAddresses = {{ 'true' if field.sort_addresses else 'false' }};
 		
 		{% if field.line1_id %}
 			var line1Input = $("#{{ field.line1_id }}");
@@ -132,7 +133,8 @@
 			var url = apiEndpoint + '/' + postcode;
 			var data = {
 				'api-key': apiKey,
-				'format': true
+				'format': true,
+				'sort': sortAddresses
 			};
 
 			$.ajax({
