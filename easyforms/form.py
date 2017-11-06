@@ -291,17 +291,39 @@ class Field(object):
         if self.max_width:
             style.append('max-width: {};'.format(self.max_width))
         return ' '.join(style)
+    
+    def get_input_column_attributes(self, extra_classes=None):
+        """
+        :param extra_classes: String with space separated list of classes or None
+        """
+        all_classes = []
+        css_class = self.input_column_class
+        if css_class:
+            all_classes.append(css_class)
+        if extra_classes:
+            all_classes.append(extra_classes)
+
+        style = self.input_column_style
+        parts = []
+
+        if all_classes:
+            parts.append('class="{}"'.format(' '.join(all_classes)))
+
+        if style:
+            parts.append('style="{}"'.format(style))
+
+        return Markup(' '.join(parts))
 
     @property
     def input_column_attributes(self):
-        css_class = self.input_column_class
-        style = self.input_column_style
-        parts = []
-        if css_class:
-            parts.append('class="{}"'.format(css_class))
-        if style:
-            parts.append('style="{}"'.format(style))
-        return Markup(' '.join(parts))
+        return self.get_input_column_attributes()
+
+    @property
+    def input_column_no_label_attributes(self):
+        extra_classes = None
+        if self.form_type == formtype.HORIZONTAL and self.label_width > 0:
+            extra_classes = 'col-{}-offset-{}'.format(self.column_breakpoint, self.label_width)
+        return self.get_input_column_attributes(extra_classes=extra_classes)
 
     @property
     def form_group_classes(self):

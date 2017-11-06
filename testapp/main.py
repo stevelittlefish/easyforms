@@ -355,7 +355,7 @@ def getaddress():
         easyforms.GetaddressPostcodeField(
             'postcode', current_app.config['GETADDRESS_API_KEY'], required=True,
             line1_id='address-line-1', line2_id='address-line-2', line3_id='address-line-3',
-            town_id='city'
+            town_id='city', width=5
         ),
         easyforms.TextField('address-line-1', required=True),
         easyforms.TextField('address-line-2'),

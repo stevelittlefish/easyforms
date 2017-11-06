@@ -30,7 +30,7 @@
 </div>
 
 <div {{ field.form_group_attributes }}>
-	<div class="{{ field.help_text_column_class }}">
+	<div {{ field.input_column_no_label_attributes }}>
 		<button id="{{ field.id }}-search-button" class="{{ field.button_class }}">
 			{{ field.button_text }}
 		</button>
@@ -39,7 +39,7 @@
 
 <div id="{{ field.id }}-result-group" style="display: none;">
 	<div {{ field.form_group_attributes }}>
-		<div class="{{ field.help_text_column_class }}">
+		<div {{ field.input_column_no_label_attributes }}>
 			<select class="form-control" id="{{ field.id }}-result-select">
 			
 			</select>
