@@ -651,6 +651,7 @@ class GetaddressPostcodeField(PostcodeField):
     def __init__(self, name, api_key, line1_id, line2_id=None, line3_id=None, town_id=None,
                  county_id=None, sort_addresses=True,
                  button_class='btn btn-primary', button_text='Find Address',
+                 inline_button=False,
                  **kwargs):
         """
         Postcode field with getaddress.io address lookup
@@ -664,6 +665,8 @@ class GetaddressPostcodeField(PostcodeField):
         :param button_class: CSS class for the search button
         :param button_text: Text to display on the search button
         :param sort_addresses: Whether or not to numerically sort the addresses (in the API call)
+        :param inline_button: If True, the button will be rendered next to the main input
+                              (you will probably need to add some css rules to make this look right)
         """
         super().__init__(name, **kwargs)
         
@@ -676,6 +679,10 @@ class GetaddressPostcodeField(PostcodeField):
         self.button_class = button_class
         self.button_text = button_text
         self.sort_addresses = sort_addresses
+        self.inline_button = inline_button
 
     def render(self):
+        if self.readonly:
+            return super().render()
+
         return env.get_template('advanced/getaddress_postcode_field.html').render(field=self)

@@ -1,5 +1,11 @@
 {% import 'macros.html' as macros %}
 
+{% macro search_button() %}
+	<button id="{{ field.id }}-search-button" class="{{ field.button_class }}">
+		{{ field.button_text }}
+	</button>
+{% endmacro %}
+
 <div {{ field.form_group_attributes }}>
 	{{ macros.standard_label(field) }}
 
@@ -9,6 +15,10 @@
 		       name="{{ field.name }}"
 		       id="{{ field.id }}" value="{{ field.value|sn }}" placeholder="{{ field.placeholder|sn }}"
 		       {% if field.readonly %}readonly{% endif %}>
+
+		{% if field.inline_button %}
+			{{ search_button() }}
+		{% endif %}
 	</div>
 
 	{{ macros.standard_error(field) }}
@@ -29,13 +39,13 @@
 
 </div>
 
-<div {{ field.form_group_attributes }}>
-	<div {{ field.input_column_no_label_attributes }}>
-		<button id="{{ field.id }}-search-button" class="{{ field.button_class }}">
-			{{ field.button_text }}
-		</button>
+{% if not field.inline_button %}
+	<div {{ field.form_group_attributes }}>
+		<div {{ field.input_column_no_label_attributes }}>
+			{{ search_button() }}
+		</div>
 	</div>
-</div>
+{% endif %}
 
 <div id="{{ field.id }}-result-group" style="display: none;">
 	<div {{ field.form_group_attributes }}>
