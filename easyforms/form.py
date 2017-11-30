@@ -271,7 +271,7 @@ class Field(object):
 
     @property
     def error_column_class(self):
-        return self.help_text_column_class
+        return 'ef-error {}'.format(self.help_text_column_class)
 
     @property
     def input_column_class(self):
