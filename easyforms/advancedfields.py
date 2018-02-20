@@ -6,6 +6,7 @@ import logging
 import datetime
 import re
 import io
+from collections import OrderedDict
 
 from flask import request, url_for
 from littlefish import timetool
@@ -306,7 +307,8 @@ class EnumSelectField(basicfields.SelectField):
 class DictSelectField(basicfields.SelectField):
     def __init__(self, name, dictionary, key_is_label=True, **kwargs):
         """
-        A select (drop-down) from a dictionary
+        A select (drop-down) from a dictionary.  The items will be sorted unless you pass in an
+        OrderedDict.
 
         :param dictionary: The dictionary containing the values to select between
         :param key_is_label: If True (default) then the keys in the dictionary become the option
@@ -323,8 +325,9 @@ class DictSelectField(basicfields.SelectField):
             key_pairs = [KeyPair(name, value) for (name, value) in dictionary.items()]
         else:
             key_pairs = [KeyPair(value, name) for (name, value) in dictionary.items()]
-
-        key_pairs = sorted(key_pairs, key=lambda x: x.select_name)
+        
+        if not isinstance(dictionary, OrderedDict):
+            key_pairs = sorted(key_pairs, key=lambda x: x.select_name)
 
         super().__init__(name, key_pairs, **kwargs)
 
