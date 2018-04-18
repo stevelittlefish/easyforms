@@ -11,7 +11,12 @@
 
 
 {% macro standard_error(field) %}
-	{% if field.error %}
+	{{ bs3_error(field) }}
+{% endmacro %}
+
+
+{% macro bs3_error(field) %}
+	{% if field.error and field.bootstrap_version == 3 %}
 		<div class="{{ field.error_column_class }}">
 			<p class="help-block">
 				{# This invisible label pushed the validation message to be in line with the input #}
@@ -27,12 +32,36 @@
 {% endmacro %}
 
 
-{% macro standard_help_text(field) %}
-	{% if field.help_text %}
+{% macro bs4_error(field) %}
+	{% if field.error and field.bootstrap_version == 4 %}
+		<div class="invalid-feedback">
+			{{ field.error }}
+		</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro bs3_help_text(field) %}
+	{% if field.help_text and field.bootstrap_version == 3 %}
 		<div class="{{ field.help_text_column_class }}">
 			<p class="help-block">
 				{{ field.help_text }}
 			</p>
 		</div>
 	{% endif %}
+{% endmacro %}
+
+
+{% macro bs4_help_text(field) %}
+	{% if field.help_text and field.bootstrap_version == 4 %}
+		<small class="form-text text-muted">
+			{{ field.help_text }}
+		</small>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro standard_help_text(field) %}
+	{{ bs3_help_text(field) }}
+	{{ bs4_help_text(field) }}
 {% endmacro %}

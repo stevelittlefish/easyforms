@@ -67,7 +67,7 @@ def simple_form():
         easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
         easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
                               optional=True)
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, bootstrap_version=sessionutil.get_bs_version())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')

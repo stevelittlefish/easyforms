@@ -2,13 +2,15 @@
 
 {% macro render_input() %}
     <input type="{{ field.type }}"
-	       class="form-control {{ field.css_class|sn }}"
+	       class="{{ field.input_classes }}"
 	       name="{{ field.name }}"
 	       id="{{ field.id }}" value="{{ field.value|sn }}" placeholder="{{ field.placeholder|sn }}"
 	       {% if field.readonly %}readonly{% endif %}
 	       {% if field.min_value is defined and field.min_value != None %}min="{{ field.min_value }}"{% endif %}
 	       {% if field.max_value is defined and field.max_value != None %}max="{{ field.max_value }}"{% endif %}
 	       {% if field.step is defined and field.step != None %}step="{{ field.step }}"{% endif %}>
+	{{ macros.bs4_error(field) }}
+	{{ macros.bs4_help_text(field) }}
 {% endmacro %}
 
 {% set pre_units=None %}
@@ -33,6 +35,6 @@
 		{% endif %}
 	</div>
 
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
+	{{ macros.bs3_error(field) }}
+	{{ macros.bs3_help_text(field) }}
 </div>

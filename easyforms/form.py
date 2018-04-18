@@ -229,6 +229,10 @@ class Field(object):
         return self.form.form_type if self.form else None
 
     @property
+    def bootstrap_version(self):
+        return self.form.bootstrap_version if self.form else None
+
+    @property
     def label_column_class(self):
         if self.form.form_type == formtype.HORIZONTAL:
             if self.label_width == 0:
@@ -337,9 +341,24 @@ class Field(object):
         """
         classes = ['form-group']
         if self.error:
-            classes.append('has-error')
+            if self.bootstrap_version == 3:
+                classes.append('has-error')
         if self.form_group_css_class:
             classes.append(self.form_group_css_class)
+
+        return ' '.join(classes)
+
+    @property
+    def input_classes(self):
+        """
+        Full list of classes for the class attribute of the input, returned as a string with
+        spaces separating each class.
+        """
+        classes = ['form-control']
+        if self.css_class:
+            classes.append(self.css_class)
+        if self.bootstrap_version == 4 and self.error:
+            classes.append('is-invalid')
 
         return ' '.join(classes)
 
@@ -382,7 +401,8 @@ class Form(object):
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
                  read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
                  id=None, submit_css_class='btn-primary', column_breakpoint='sm',
-                 show_asterisks=False, max_width=None, disable_csrf=False, readonly=False):
+                 show_asterisks=False, max_width=None, disable_csrf=False, readonly=False,
+                 bootstrap_version=3):
         """
         :param fields: List of Field objects
         :param action: Action field in generated form
@@ -406,9 +426,13 @@ class Form(object):
                          fields values will not change when the form is submitted.  Allows the
                          form to be rendered, without accepting user input.  If readonly is True,
                          ready and submitted will always return False
+        :param bootstrap_version: Which bootstrap version to target. Only 3 and 4 are supported
         """
         if method != 'POST' and method != 'GET':
             raise ValueError('Invalid method: %s.  Valid options are GET and POST' % method)
+
+        if bootstrap_version != 3 and bootstrap_version != 4:
+            raise ValueError('Invalid bootstrap version: {}. Only 3 and 4 are supported'.format(bootstrap_version))
         
         # List of all fields not in a sections
         self.fields = []
@@ -446,6 +470,7 @@ class Form(object):
 
         self.disable_csrf = disable_csrf
         self.readonly = readonly
+        self.bootstrap_version = bootstrap_version
 
         # Record whether or not we have any validation errors
         self.has_errors = False
