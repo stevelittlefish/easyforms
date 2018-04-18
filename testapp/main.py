@@ -5,10 +5,11 @@ Main blueprint for test app
 import logging
 import decimal
 
-from flask import Blueprint, render_template, current_app, url_for
+from flask import Blueprint, render_template, current_app, url_for, request
 
 import customfields
 import easyforms
+import sessionutil
 
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -29,7 +30,7 @@ EXAMPLE_KEY_PAIRS = [
     KeyValue('Example Label 2', 'example-value-2'),
     KeyValue('Another Label', 'another-value'),
     KeyValue('Short', 'short'),
-    KeyValue('Looooooooooooooong label text to amke things wide', 'long')
+    KeyValue('Looooooooooooooong label text to make things wide', 'long')
 ]
 
 
@@ -42,6 +43,16 @@ def get_submitted_data(form):
             submitted_data[field_name] = form[field_name]
 
     return submitted_data
+
+
+@main.before_request
+def main_before_request():
+    new_bs_version = request.args.get('--bs-ver')
+
+    if new_bs_version == '3':
+        sessionutil.set_bs_version(3)
+    elif new_bs_version == '4':
+        sessionutil.set_bs_version(4)
 
 
 @main.route('/')

@@ -1,15 +1,15 @@
-{% extends 'base.html' %}
+{% extends base_template %}
 
 {% block title %}Easyforms Test App{% endblock %}
 
 {% block h1 %}{% endblock %}
 
 {% block content %}
-	<div class="main-panel panel panel-default">
-		<div class="panel-heading">
+	<div class="main-panel panel panel-default card">
+		<div class="panel-heading card-header">
 			<h1>{{ self.title() }}</h1>
 		</div>
-		<div class="panel-body">
+		<div class="panel-body card-body">
 			<ul class="links">
 				<li><a href="{{ url_for('main.simple_form') }}">Simple Form</a></li>
 				<li><a href="{{ url_for('main.large_multisection_form') }}">Large Multi-Section Form</a></li>

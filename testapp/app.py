@@ -11,6 +11,7 @@ import jinja2
 from littlefish import timetool
 
 from main import main
+import sessionutil
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -38,9 +39,8 @@ def create_app():
     try:
         app.config.from_object('config')
         log.info('Local config loaded')
-    except Exception as e:
+    except Exception:
         log.info('Config not found or invalid')
-
 
     # Don't allow output of undefined variables in jinja templates
     app.jinja_env.undefined = jinja2.StrictUndefined
@@ -50,9 +50,13 @@ def create_app():
     
     @app.context_processor
     def add_global_context():
+        bs_version = sessionutil.get_bs_version()
+
         return {
             'date': datetime.datetime.now(),
-            'CACHE_BUSTER': CACHE_BUSTER
+            'CACHE_BUSTER': CACHE_BUSTER,
+            'base_template': 'base_bs{}.html'.format(bs_version),
+            'bs_version': bs_version
         }
 
     @app.errorhandler(Exception)
