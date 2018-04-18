@@ -77,7 +77,7 @@ def simple_form():
 
 @main.route('/large-multisection-form', methods=['GET', 'POST'])
 def large_multisection_form():
-    form = easyforms.Form([], read_form_data=False)
+    form = easyforms.Form([], read_form_data=False, bootstrap_version=sessionutil.get_bs_version())
 
     form.add_section('Basic Fields', [
         easyforms.TextField('text-field', required=True,
@@ -86,10 +86,12 @@ def large_multisection_form():
         easyforms.IntegerField('integer-field', width=2, min_value=1, max_value=20),
         easyforms.DecimalField('decimal-field', min_value=-10, max_value=1000,
                                step=decimal.Decimal('0.1'), width=2),
-        easyforms.BooleanCheckbox('boolean-checkbox', default=False),
+        easyforms.BooleanCheckbox('boolean-checkbox', default=False,
+                                  help_text='This is a checkbox'),
         easyforms.HiddenField('hidden-field', value='bananas'),
         easyforms.NameField('name-field', width=4),
-        easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True)
+        easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True,
+                              help_text='Choose something from the drop-down')
     ])
 
     form.add_section('Advanced Fields', [
@@ -135,6 +137,10 @@ def large_multisection_form():
     ])
     
     form.read_form_data()
+
+    if form.submitted:
+        if 'boolean-checkbox' not in request.form:
+            form.set_error('boolean-checkbox', 'You must tick this box!')
     
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -152,7 +158,7 @@ def readonly_fields():
                               optional=True),
         easyforms.SelectField('pick-another-value', EXAMPLE_KEY_PAIRS, readonly=True,
                               value=EXAMPLE_KEY_PAIRS[1], help_text='This field cannot be changed'),
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, bootstrap_version=sessionutil.get_bs_version())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -212,7 +218,7 @@ def readonly_form():
                                    'accepts images from 100x100 to 200x200'),
         easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
         easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
-    ], form_type=easyforms.VERTICAL, max_width=700, readonly=True)
+    ], form_type=easyforms.VERTICAL, max_width=700, readonly=True, bootstrap_version=sessionutil.get_bs_version())
 
     if form.ready:
         raise Exception('Readonly form was somehow submitted!')
@@ -222,7 +228,7 @@ def readonly_form():
 
 @main.route('/multisection-form-custom', methods=['GET', 'POST'])
 def multisection_form_custom():
-    form = easyforms.Form([], read_form_data=False, form_type=easyforms.VERTICAL, show_asterisks=True)
+    form = easyforms.Form([], read_form_data=False, form_type=easyforms.VERTICAL, show_asterisks=True, bootstrap_version=sessionutil.get_bs_version())
 
     form.add_section('Section 1', [
         easyforms.TextField('text-field', required=True,
@@ -254,7 +260,7 @@ def custom_validation_1():
     form = easyforms.Form([
         easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
         easyforms.TextField('two-or-three', required=True)
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, bootstrap_version=sessionutil.get_bs_version())
     
     if form.submitted:
         if form['two-or-three'] and not form.has_error('two-or-three'):
@@ -277,7 +283,7 @@ def custom_validation_2():
     form = easyforms.Form([
         easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
         easyforms.TextField('two-or-three', required=True, validators=[is_two_or_three])
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, bootstrap_version=sessionutil.get_bs_version())
     
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -296,7 +302,7 @@ def custom_fields():
         customfields.UpperCaseTextField('upper-case', required=True,
                                         help_text='Whatever\'s entered into this will be converted '
                                         'to upper case')
-    ], form_type=easyforms.VERTICAL)
+    ], form_type=easyforms.VERTICAL, bootstrap_version=sessionutil.get_bs_version())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -312,7 +318,7 @@ def captcha():
         easyforms.TextField('optional-text-field'),
         easyforms.RecaptchaField('recaptcha', site_key=current_app.config['RECAPTCHA_SITE_KEY'],
                                  secret_key=current_app.config['RECAPTCHA_SECRET_KEY'])
-    ], show_asterisks=True)
+    ], show_asterisks=True, bootstrap_version=sessionutil.get_bs_version())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -332,7 +338,7 @@ def ckeditor():
 
     form = easyforms.Form([
         easyforms.CkeditorField('ckeditor', config=config),
-    ], form_type=easyforms.VERTICAL)
+    ], form_type=easyforms.VERTICAL, bootstrap_version=sessionutil.get_bs_version())
 
     return render_template('ckeditor.html', form=form, submitted_data=get_submitted_data(form))
     
@@ -345,7 +351,7 @@ def single_button_clone():
         easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
                               optional=True),
         easyforms.BooleanCheckbox('boolean')
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, bootstrap_version=sessionutil.get_bs_version())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -373,7 +379,7 @@ def getaddress():
         easyforms.TextField('address-line-3'),
         easyforms.TextField('city', label='Town/City', required=True),
         easyforms.TextField('billing-phone-no', required=True, label='Contact Phone No.')
-    ], form_type=easyforms.HORIZONTAL, max_width=700)
+    ], form_type=easyforms.HORIZONTAL, max_width=700, bootstrap_version=sessionutil.get_bs_version())
 
     return render_template('getaddress.html', form=form, submitted_data=get_submitted_data(form))
 

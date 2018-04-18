@@ -43,7 +43,8 @@ class Field(object):
                  validators=[], required=False, render_after_sections=False, allow_missing=False,
                  width=9, help_text_width=9, label_width=None, units=None, pre_units=None,
                  form_group_css_class=None, noclear=False, requires_multipart=False,
-                 column_breakpoint=None, max_width=None, multiple_inputs=False):
+                 column_breakpoint=None, max_width=None, multiple_inputs=False,
+                 base_input_css_class='form-control'):
         """
         :param name: The name of the field (the name field in the generated input)
         :param label: The label text.  If None, is automatically generated from the name
@@ -80,6 +81,8 @@ class Field(object):
                                 name.  This will cause value to be an list of strings after
                                 processing form data, with each element containing one of the
                                 submitted values
+        :param base_input_css_class: The default css class to put on the input. Defaults to
+                                     form-control
         """
         self.name = name
 
@@ -117,6 +120,7 @@ class Field(object):
         if isinstance(self.max_width, int):
             self.max_width = '{}px'.format(self.max_width)
         self.multiple_inputs = multiple_inputs
+        self.base_input_css_class = base_input_css_class
 
         # This should get set by the form when we add it
         self.form = None
@@ -250,7 +254,10 @@ class Field(object):
         if self.form.form_type == formtype.HORIZONTAL:
             classes = []
             if self.label_width > 0:
-                classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
+                if self.bootstrap_version == 3:
+                    classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
+                elif self.bootstrap_version == 4:
+                    classes.append('offset-{}-{}'.format(self.column_breakpoint, self.label_width))
 
             classes.append('col-{}-{}'.format(self.column_breakpoint, self.width))
 
@@ -340,12 +347,13 @@ class Field(object):
         'form-group has-error custom-class'
         """
         classes = ['form-group']
+        if self.bootstrap_version == 4 and self.form_type == formtype.HORIZONTAL:
+            classes.append('row')
         if self.error:
             if self.bootstrap_version == 3:
                 classes.append('has-error')
         if self.form_group_css_class:
             classes.append(self.form_group_css_class)
-
         return ' '.join(classes)
 
     @property
@@ -354,7 +362,7 @@ class Field(object):
         Full list of classes for the class attribute of the input, returned as a string with
         spaces separating each class.
         """
-        classes = ['form-control']
+        classes = [self.base_input_css_class]
         if self.css_class:
             classes.append(self.css_class)
         if self.bootstrap_version == 4 and self.error:

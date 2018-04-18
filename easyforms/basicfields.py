@@ -121,7 +121,9 @@ class SelectField(form.Field):
 
 class BooleanCheckbox(form.Field):
     def __init__(self, name, default=False, **kwargs):
-        super(BooleanCheckbox, self).__init__(name, required=False, allow_missing=True, value=default, **kwargs)
+        super(BooleanCheckbox, self).__init__(name, required=False, allow_missing=True,
+                                              value=default, base_input_css_class='form-check-input',
+                                              **kwargs)
 
     def render(self):
         return env.get_template('basic/checkbox.html').render(field=self)

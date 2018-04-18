@@ -2,17 +2,20 @@
 
 <div {{ field.form_group_attributes }}>
 	<div class="{{ field.input_no_label_column_class }}">
-		<div class="checkbox">
-			<label>
+		<div class="checkbox form-check">
+			<label class="form-check-label">
 				<input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="true"
+				       class="{{ field.input_classes }}"
 				       {% if field.value %}checked{% endif %}
 					   {% if field.readonly %}disabled{% endif %}
 					   >
 				{{ field.label }}
+			{{ macros.bs4_error(field) }}
+			{{ macros.bs4_help_text(field) }}
 			</label>
 		</div>
 	</div>
 	
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
+	{{ macros.bs3_error(field) }}
+	{{ macros.bs3_help_text(field) }}
 </div>
