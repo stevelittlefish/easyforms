@@ -129,4 +129,23 @@ ul.links li, ul.list li {
 	padding: 15px;
 }
 
+/* Bootstrap 3 Stuff *********************************************************/
 
+.navbar-inverse .navbar-nav > li > a {
+    color: rgba(255,255,255,.8);
+}
+
+.navbar-inverse .navbar-nav > li.bs3-navbar-text {
+	color: rgba(255, 255, 255, 0.5);
+	margin: 15px 5px;
+}
+
+/* Bootstrap 4 Stuff *********************************************************/
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,.8);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: rgba(255,255,255,1);
+}
