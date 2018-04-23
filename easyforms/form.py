@@ -422,12 +422,7 @@ class Form(object):
         self.method = method
         self.action = action
         if css_class is None:
-            if form_type == formtype.HORIZONTAL:
-                self.css_class = 'form-horizontal'
-            elif form_type == formtype.INLINE:
-                self.css_class = 'form-inline'
-            else:
-                self.css_class = ''
+            self.css_class = self.get_default_css_class(form_type)
         else:
             self.css_class = css_class
 
@@ -457,6 +452,15 @@ class Form(object):
 
         if read_form_data:
             self.read_form_data()
+
+    @staticmethod
+    def get_default_css_class(form_type):
+        if form_type == formtype.HORIZONTAL:
+            return 'form-horizontal'
+        elif form_type == formtype.INLINE:
+            return 'form-inline'
+        else:
+            return ''
 
     def add_submit(self, submit_text, css_class='btn-primary'):
         from .basicfields import SubmitButton
@@ -761,7 +765,7 @@ class Form(object):
 
         return form
     
-    def set_type(self, form_type):
+    def set_type(self, form_type, css_class=None):
         """
         Maybe you have a site where you're not allowed to change the python code,
         and for some reason you need to change the form_type in a template, not
@@ -769,8 +773,18 @@ class Form(object):
         don't really have a choice.  Then this function was made for you.
 
         Sorry
+
+        :param form_type: The new form_type
+        :param css_class: If None (default) derrive this from the form_type.
+                          If a value is passed in this will be the new css_class
+                          for the form
         """
         self.form_type = form_type
+        
+        if css_class is None:
+            self.css_class = self.get_default_css_class(form_type)
+        else:
+            self.css_class = css_class
         
         return ''
 
