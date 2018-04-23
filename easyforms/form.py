@@ -760,3 +760,17 @@ class Form(object):
                     form_type=form_type if form_type else self.form_type)
 
         return form
+    
+    def set_type(self, form_type):
+        """
+        Maybe you have a site where you're not allowed to change the python code,
+        and for some reason you need to change the form_type in a template, not
+        because you want to (because it seems like a bit of a hack) but maybe you
+        don't really have a choice.  Then this function was made for you.
+
+        Sorry
+        """
+        self.form_type = form_type
+        
+        return ''
+
