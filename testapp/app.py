@@ -50,13 +50,13 @@ def create_app():
     
     @app.context_processor
     def add_global_context():
-        bs_version = sessionutil.get_bs_version()
+        render_style = sessionutil.get_render_style()
 
         return {
             'date': datetime.datetime.now(),
             'CACHE_BUSTER': CACHE_BUSTER,
-            'base_template': 'base_bs{}.html'.format(bs_version),
-            'bs_version': bs_version
+            'base_template': 'base_{}.html'.format(render_style),
+            'render_style': render_style
         }
 
     @app.errorhandler(Exception)

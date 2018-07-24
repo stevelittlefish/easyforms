@@ -10,6 +10,7 @@ from flask import Blueprint, render_template, current_app, url_for, request
 import customfields
 import easyforms
 import sessionutil
+import constants
 
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -47,12 +48,10 @@ def get_submitted_data(form):
 
 @main.before_request
 def main_before_request():
-    new_bs_version = request.args.get('--bs-ver')
-
-    if new_bs_version == '3':
-        sessionutil.set_bs_version(3)
-    elif new_bs_version == '4':
-        sessionutil.set_bs_version(4)
+    new_render_style = request.args.get('--render-style')
+    
+    if new_render_style in constants.ALL_STYLES:
+        sessionutil.set_render_style(new_render_style)
 
 
 @main.route('/')
