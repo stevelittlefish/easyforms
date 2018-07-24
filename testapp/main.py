@@ -10,7 +10,7 @@ from flask import Blueprint, render_template, current_app, url_for, request
 import customfields
 import easyforms
 import sessionutil
-import constants
+from easyforms import styles
 
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -50,7 +50,7 @@ def get_submitted_data(form):
 def main_before_request():
     new_render_style = request.args.get('--render-style')
     
-    if new_render_style in constants.ALL_STYLES:
+    if new_render_style in styles.ALL_STYLES:
         sessionutil.set_render_style(new_render_style)
 
 
@@ -63,10 +63,10 @@ def index():
 def simple_form():
     form = easyforms.Form([
         easyforms.TextField('some-text', required=True),
-        easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
+        easyforms.IntegerField('an-integer', help_text='Any whole number!', optional=True),
         easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
-                              optional=True)
-    ], form_type=easyforms.VERTICAL, max_width=700)
+                              required=True)
+    ], form_type=easyforms.VERTICAL, max_width=700, style=sessionutil.get_render_style())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')

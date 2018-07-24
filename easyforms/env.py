@@ -10,6 +10,7 @@ import jinja2
 from flask import url_for
 
 from . import formtype
+from . import styles
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -31,5 +32,6 @@ env.filters['sn'] = _suppress_none
 env.globals['url_for'] = url_for
 env.globals['hasattr'] = hasattr
 env.globals['formtype'] = formtype
+env.globals['styles'] = styles
 
 

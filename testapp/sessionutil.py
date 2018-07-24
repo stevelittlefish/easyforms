@@ -6,7 +6,7 @@ import logging
 
 from flask import session
 
-import constants
+from easyforms import styles
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -17,11 +17,11 @@ KEY_RENDER_STYLE = 'render-style'
 
 def get_render_style():
     # Default to bs4
-    return session.get(KEY_RENDER_STYLE, constants.STYLE_BS4)
+    return session.get(KEY_RENDER_STYLE, styles.BOOTSTRAP_4)
 
 
 def set_render_style(render_style):
-    if render_style not in constants.ALL_STYLES:
+    if render_style not in styles.ALL_STYLES:
         raise ValueError('Invalid Render Style: {}'.format(render_style))
 
     session[KEY_RENDER_STYLE] = render_style

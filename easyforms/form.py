@@ -11,6 +11,7 @@ from flask import Markup, request
 from . import validate
 from . import exceptions
 from . import formtype
+from . import styles
 from .env import env
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
@@ -43,7 +44,8 @@ class Field(object):
                  validators=[], required=False, render_after_sections=False, allow_missing=False,
                  width=9, help_text_width=9, label_width=None, units=None, pre_units=None,
                  form_group_css_class=None, noclear=False, requires_multipart=False,
-                 column_breakpoint=None, max_width=None, multiple_inputs=False):
+                 column_breakpoint=None, max_width=None, multiple_inputs=False,
+                 base_input_css_class='form-control'):
         """
         :param name: The name of the field (the name field in the generated input)
         :param label: The label text.  If None, is automatically generated from the name
@@ -80,6 +82,8 @@ class Field(object):
                                 name.  This will cause value to be an list of strings after
                                 processing form data, with each element containing one of the
                                 submitted values
+        :param base_input_css_class: The default css class to put on the input. Defaults to
+                                     form-control
         """
         self.name = name
 
@@ -117,6 +121,7 @@ class Field(object):
         if isinstance(self.max_width, int):
             self.max_width = '{}px'.format(self.max_width)
         self.multiple_inputs = multiple_inputs
+        self.base_input_css_class = base_input_css_class
 
         # This should get set by the form when we add it
         self.form = None
@@ -226,7 +231,17 @@ class Field(object):
 
     @property
     def form_type(self):
+        """
+        Form type - i.e. vertical, horizontal, inline
+        """
         return self.form.form_type if self.form else None
+
+    @property
+    def style(self):
+        """
+        Style - i.e. Bootstrap 3, Bootstrap 4
+        """
+        return self.form.style if self.form else None
 
     @property
     def label_column_class(self):
@@ -336,10 +351,27 @@ class Field(object):
         'form-group has-error custom-class'
         """
         classes = ['form-group']
-        if self.error:
+        if self.style == styles.BOOTSTRAP_4 and self.form_type == formtype.HORIZONTAL:
+            classes.append('row')
+        if self.error and self.style == styles.BOOTSTRAP_3:
             classes.append('has-error')
         if self.form_group_css_class:
             classes.append(self.form_group_css_class)
+
+        return ' '.join(classes)
+
+    @property
+    def input_classes(self):
+        """
+        Full list of classes for the class attribute of the input, returned as a string with
+        spaces separating each class.
+        """
+        classes = [self.base_input_css_class]
+        if self.css_class:
+            classes.append(self.css_class)
+
+        if self.style == styles.BOOTSTRAP_4 and self.error:
+            classes.append('is-invalid')
 
         return ' '.join(classes)
 
@@ -382,7 +414,8 @@ class Form(object):
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
                  read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
                  id=None, submit_css_class='btn-primary', column_breakpoint='sm',
-                 show_asterisks=False, max_width=None, disable_csrf=False, readonly=False):
+                 show_asterisks=False, max_width=None, disable_csrf=False, readonly=False,
+                 style=styles.BOOTSTRAP_3):
         """
         :param fields: List of Field objects
         :param action: Action field in generated form
@@ -406,10 +439,19 @@ class Form(object):
                          fields values will not change when the form is submitted.  Allows the
                          form to be rendered, without accepting user input.  If readonly is True,
                          ready and submitted will always return False
+        :param style: The "style" of form to render. This determines how the fields are laid out
+                      and some of the CSS classes that are used. Bootstrap 3 or Bootstrap 4 are
+                      the current supported values.  Use a constant in styles.py
         """
         if method != 'POST' and method != 'GET':
             raise ValueError('Invalid method: %s.  Valid options are GET and POST' % method)
         
+        if style not in styles.ALL_STYLES:
+            raise ValueError('Invalid style: {}.  Only the following values are '
+                             'supported: {}'.format(
+                                 ', '.join(styles.ALL_STYLES)
+                             ))
+
         # List of all fields not in a sections
         self.fields = []
 
@@ -422,7 +464,12 @@ class Form(object):
         self.method = method
         self.action = action
         if css_class is None:
-            self.css_class = self.get_default_css_class(form_type)
+            if form_type == formtype.HORIZONTAL:
+                self.css_class = 'form-horizontal'
+            elif form_type == formtype.INLINE:
+                self.css_class = 'form-inline'
+            else:
+                self.css_class = ''
         else:
             self.css_class = css_class
 
@@ -441,6 +488,7 @@ class Form(object):
 
         self.disable_csrf = disable_csrf
         self.readonly = readonly
+        self.style = style
 
         # Record whether or not we have any validation errors
         self.has_errors = False
@@ -452,15 +500,6 @@ class Form(object):
 
         if read_form_data:
             self.read_form_data()
-
-    @staticmethod
-    def get_default_css_class(form_type):
-        if form_type == formtype.HORIZONTAL:
-            return 'form-horizontal'
-        elif form_type == formtype.INLINE:
-            return 'form-inline'
-        else:
-            return ''
 
     def add_submit(self, submit_text, css_class='btn-primary'):
         from .basicfields import SubmitButton

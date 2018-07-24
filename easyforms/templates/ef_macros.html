@@ -1,0 +1,99 @@
+{% macro standard_input(field) %}
+    <input type="{{ field.type }}"
+		   class="{{ field.input_classes }}"
+	       name="{{ field.name }}"
+	       id="{{ field.id }}" value="{{ field.value|sn }}" placeholder="{{ field.placeholder|sn }}"
+	       {% if field.readonly %}readonly{% endif %}
+	       {% if field.min_value is defined and field.min_value != None %}min="{{ field.min_value }}"{% endif %}
+	       {% if field.max_value is defined and field.max_value != None %}max="{{ field.max_value }}"{% endif %}
+	       {% if field.step is defined and field.step != None %}step="{{ field.step }}"{% endif %}>
+{% endmacro %}
+
+
+{% macro input_group(pre_units=None, units=None) %}
+	{% if pre_units or units %}
+		<div class="input-group">
+	{% endif %}
+		{% if pre_units %}
+			<span class="input-group-addon">{{ pre_units }}</span>
+		{% endif %}
+
+		{{ caller() }}
+
+		{% if units %}
+			<span class="input-group-addon">{{ units }}</span>
+		{% endif %}
+	{% if pre_units or units %}
+		</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro standard_label(field) %}
+	{% if field.label_width > 0 %}
+		<label for="{{ field.id }}" class="{{ field.label_column_class }}">
+			{{ field.label_html }}
+			{% if field.optional %}
+				<span class="info">(optional)</span>
+			{% endif %}
+		</label>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro standard_error(field) %}
+	{{ bs3_error(field) }}
+{% endmacro %}
+
+
+{% macro bs3_error(field) %}
+	{% if field.error and field.style == styles.BOOTSTRAP_3 %}
+		<div class="{{ field.error_column_class }}">
+			<p class="help-block">
+				{# This invisible label pushed the validation message to be in line with the input #}
+				{% if field.form.form_type == formtype.INLINE %}
+					<span style="visibility: hidden">
+						{{ standard_label(field) }}
+					</span>
+				{% endif %}
+				{{ field.error }}
+			</p>
+		</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro bs4_error(field) %}
+	{% if field.error and field.style == styles.BOOTSTRAP_4 %}
+		<div class="invalid-feedback">
+			{{ field.error }}
+		</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro bs3_help_text(field) %}
+	{% if field.help_text and field.style == styles.BOOTSTRAP_3 %}
+ 		<div class="{{ field.help_text_column_class }}">
+ 			<p class="help-block">
+ 				{{ field.help_text }}
+ 			</p>
+ 		</div>
+ 	{% endif %}
+ {% endmacro %}
+
+
+{% macro bs4_help_text(field) %}
+	{% if field.help_text and field.style == styles.BOOTSTRAP_4 %}
+		<small class="form-text text-muted">
+			{{ field.help_text }}
+		</small>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro standard_help_text(field) %}
+	{{ bs3_help_text(field) }}
+	{{ bs4_help_text(field) }}
+{% endmacro %}
+

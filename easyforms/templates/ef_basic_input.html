@@ -1,0 +1,30 @@
+{% import 'ef_macros.html' as ef_macros %}
+
+{% block form_control %}
+	<div {{ field.form_group_attributes }}>
+		{% block label %}
+			{{ ef_macros.standard_label(field) }}
+		{% endblock label %}
+
+		<div {{ field.input_column_attributes }}>
+			{% call ef_macros.input_group(field.pre_units, field.units) %}
+				{% block input %}
+					{{ ef_macros.standard_input(field) }}
+				{% endblock input %}
+				{% block bs4_error %}
+					{{ ef_macros.bs4_error(field) }}
+				{% endblock bs4_error %}
+				{% block bs4_help_text %}
+					{{ ef_macros.bs4_help_text(field) }}
+				{% endblock bs4_help_text %}
+			{% endcall %}
+		</div>
+		
+		{% block bs3_error %}
+			{{ ef_macros.bs3_error(field) }}
+		{% endblock bs3_error %}
+		{% block bs3_help_text %}
+			{{ ef_macros.bs3_help_text(field) }}
+		{% endblock bs3_help_text %}
+	</div>
+{% endblock form_control %}

@@ -27,7 +27,7 @@ class TextField(form.Field):
         self.placeholder = placeholder
 
     def render(self):
-        return env.get_template('basic/basic_input.html').render(field=self)
+        return env.get_template('ef_basic_input.html').render(field=self)
 
 
 class PasswordField(TextField):
