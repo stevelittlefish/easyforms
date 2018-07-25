@@ -82,6 +82,8 @@ def large_multisection_form():
         easyforms.TextField('text-field', required=True,
                             help_text='Any text will be accepted'),
         easyforms.PasswordField('password-field', required=True, width=4),
+        easyforms.TextAreaField('text-area', required=True,
+                                help_text='You can enter multiple lines of text!'),
         easyforms.IntegerField('integer-field', width=2, min_value=1, max_value=20),
         easyforms.DecimalField('decimal-field', min_value=-10, max_value=1000,
                                step=decimal.Decimal('0.1'), width=2),
@@ -138,6 +140,13 @@ def large_multisection_form():
                                      help_text='Please select at least one of the above options'),
         easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
         
+    ])
+
+    form.add_section('Input Groups', [
+        easyforms.IntegerField('units', units='%', width=3),
+        easyforms.IntegerField('pre-units', pre_units='£', width=4),
+        easyforms.IntegerField('both-units', pre_units='£', units='.00', width=4, required=True,
+                               help_text='Make sure you fill this one in')
     ])
     
     form.read_form_data()

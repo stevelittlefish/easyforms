@@ -15,7 +15,12 @@
 		<div class="input-group">
 	{% endif %}
 		{% if pre_units %}
-			<span class="input-group-addon">{{ pre_units }}</span>
+			{% if field.style == styles.BOOTSTRAP_3 %}
+				<span class="input-group-addon">{{ pre_units }}</span>
+			{% elif field.style == styles.BOOTSTRAP_4 %}
+				<div class="input-group-prepend">
+					<span class="input-group-text">{{ pre_units }}</span>
+				</div>
 		{% endif %}
 
 		{{ caller() }}

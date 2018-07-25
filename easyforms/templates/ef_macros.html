@@ -10,21 +10,37 @@
 {% endmacro %}
 
 
-{% macro input_group(pre_units=None, units=None) %}
-	{% if pre_units or units %}
+{% macro input_group(field) %}
+	{% if field.pre_units or field.units %}
 		<div class="input-group">
 	{% endif %}
-		{% if pre_units %}
-			<span class="input-group-addon">{{ pre_units }}</span>
+		{% if field.pre_units %}
+			{% if field.style == styles.BOOTSTRAP_3 %}
+				<span class="input-group-addon">{{ field.pre_units }}</span>
+			{% elif field.style == styles.BOOTSTRAP_4 %}
+				<div class="input-group-prepend">
+					<span class="input-group-text">{{ field.pre_units }}</span>
+				</div>
+			{% endif %}
 		{% endif %}
 
 		{{ caller() }}
 
-		{% if units %}
-			<span class="input-group-addon">{{ units }}</span>
+		{% if field.units %}
+			{% if field.style == styles.BOOTSTRAP_3 %}
+				<span class="input-group-addon">{{ field.units }}</span>
+			{% elif field.style == styles.BOOTSTRAP_4 %}
+				<div class="input-group-append">
+					<span class="input-group-text">{{ field.units }}</span>
+				</div>
+			{% endif %}
 		{% endif %}
-	{% if pre_units or units %}
+	{% if field.pre_units or field.units %}
 		</div>
+		{# Hack for validation message to appear properly #}
+		{% if field.style == styles.BOOTSTRAP_4 and field.error %}
+			<span class="{{ field.input_classes }}" style="display: none;"></span>
+		{% endif %}
 	{% endif %}
 {% endmacro %}
 

@@ -9,7 +9,7 @@
 		{% block input_column %}
 			<div {{ field.input_column_attributes }}>
 				{% block input_column_content %}
-					{% call ef_macros.input_group(field.pre_units, field.units) %}
+					{% call ef_macros.input_group(field) %}
 						{% block input %}
 							{{ ef_macros.standard_input(field) }}
 						{% endblock input %}
