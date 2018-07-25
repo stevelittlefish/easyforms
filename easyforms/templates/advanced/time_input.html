@@ -1,26 +1,17 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
-
-	<div {{ field.input_column_attributes }}>
-		<div class="clearfix">
-			{% if field.readonly %}
-				<input type="hidden" name="{{ field.name }}-hour" value="{{ field.value.hour() if field.value else '' }}">
-				<input type="hidden" name="{{ field.name }}-minute" value="{{ field.value.minut() if field.value else '' }}">
-				<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') if field.value else '' }}">
-			{% else %}
-				<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-hour"
-						   id="{{ field.id }}-hour" value="{{ field.value.hour if field.value != None else '' }}"
-						   placeholder="Hour" min="0" max="23" style="width: 100px; display: inline">
-				:
-				<input type="number" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}-minute"
-						   id="{{ field.id }}-minute" value="{{ field.value.minute if field.value != None else '' }}"
-						   placeholder="Minute" min="0" max="59" style="width: 100px; display: inline">
-			{% endif %}
-		</div>
-	</div>
-
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
-</div>
+{% block input %}
+	{% if field.readonly %}
+		<input type="hidden" name="{{ field.name }}-hour" value="{{ field.value.hour() if field.value else '' }}">
+		<input type="hidden" name="{{ field.name }}-minute" value="{{ field.value.minut() if field.value else '' }}">
+		<input type="text" disabled value="{{ field.value.strftime('%H:%M') if field.value else '' }}">
+	{% else %}
+		<input type="number" class="{{ field.input_classes }}" name="{{ field.name }}-hour"
+				   id="{{ field.id }}-hour" value="{{ field.value.hour if field.value != None else '' }}"
+				   placeholder="Hour" min="0" max="23" style="width: 100px; display: inline">
+		:
+		<input type="number" class="{{ field.input_classes }}" name="{{ field.name }}-minute"
+				   id="{{ field.id }}-minute" value="{{ field.value.minute if field.value != None else '' }}"
+				   placeholder="Minute" min="0" max="59" style="width: 100px; display: inline">
+	{% endif %}
+{% endblock input %}

@@ -1,46 +1,40 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+{% block input %}
+	{% if field.readonly %}
+		<input type="hidden" name="{{ field.name }}-day" value="{{ day }}">
+		<input type="hidden" name="{{ field.name }}-month" value="{{ month }}">
+		<input type="hidden" name="{{ field.name }}-year" value="{{ year }}">
+		<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') if field.value else '' }}">
+	{% else %}
+		<select id="{{ field.id }}-day" name="{{ field.name }}-day" size="1" style="width:130px" class="{{ field.input_classes }} pull-left float-left">
+			<option value="">Day:</option>
+			{% for i in range(1, 32) %}
+				<option value="{{ i }}"
+						{% if day == i %}selected="selected"{% endif %}
+						>{{ i }}</option>
+			{% endfor %}
+		</select>
+		<select id="{{ field.id }}-month" name="{{ field.name }}-month" size="1"
+				style="width:130px" class="{{ field.input_classes }} pull-left float-left">
+			<option value="">Month:</option>
+			{% for month_name in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+							 'October', 'November', 'December'] %}
+				<option value="{{ loop.index }}" {% if month == loop.index %}selected="selected"{% endif %}>
+					{{ month_name }}
+				</option>
+			{% endfor %}
+		</select>
 
-	<div class="{{ field.input_column_class }} clearfix">
-		{% if field.readonly %}
-			<input type="hidden" name="{{ field.name }}-day" value="{{ day }}">
-			<input type="hidden" name="{{ field.name }}-month" value="{{ month }}">
-			<input type="hidden" name="{{ field.name }}-year" value="{{ year }}">
-			<input type="text" disabled value="{{ field.value.strftime('%d/%m/%Y') if field.value else '' }}">
-		{% else %}
-			<select id="{{ field.id }}-day" name="{{ field.name }}-day" size="1" style="width:120px" class="form-control pull-left">
-				<option value="">Day:</option>
-				{% for i in range(1, 32) %}
-					<option value="{{ i }}"
-					        {% if day == i %}selected="selected"{% endif %}
-							>{{ i }}</option>
-				{% endfor %}
-			</select>
-			<select id="{{ field.id }}-month" name="{{ field.name }}-month" size="1"
-			        style="width:120px" class="form-control pull-left">
-				<option value="">Month:</option>
-				{% for month_name in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-				                 'October', 'November', 'December'] %}
-					<option value="{{ loop.index }}" {% if month == loop.index %}selected="selected"{% endif %}>
-						{{ month_name }}
-					</option>
-				{% endfor %}
-			</select>
-
-			<select id="{{ field.id }}-year" name="{{ field.name }}-year" size="1"
-			        style="width:120px" class="form-control pull-left">
-				<option value="">Year:</option>
-				{% for i in field.years %}
-					<option value="{{ i }}"
-					        {% if year==i %}selected="selected"{% endif %}
-							>{{ i }}</option>
-				{% endfor %}
-			</select>
-		{% endif %}
-	</div>
-
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
-</div>
+		<select id="{{ field.id }}-year" name="{{ field.name }}-year" size="1"
+				style="width:130px" class="{{ field.input_classes }} pull-left float-left">
+			<option value="">Year:</option>
+			{% for i in field.years %}
+				<option value="{{ i }}"
+						{% if year==i %}selected="selected"{% endif %}
+						>{{ i }}</option>
+			{% endfor %}
+		</select>
+		<br style="clear: both">
+	{% endif %}
+{% endblock input %}

@@ -1,28 +1,33 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+{% block input %}
+	<input type="file" class="{{ field.input_classes }}" name="{{ field.name }}"
+		   id="{{ field.id }}"
+		   {% if field.readonly %}readonly{% endif %}
+		   accept="{{ field.accept }}">
+{% endblock input %}
 
-	<div {{ field.input_column_attributes }}>
-			<input type="file" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
-			       id="{{ field.id }}"
-			       {% if field.readonly %}readonly{% endif %}
-			       accept="{{ field.accept }}">
-	</div>
 
-	{% if field.error %}
-		<div class="{{ field.error_column_class }}">
-			<p class="help-block">
-				{{ field.error }}
-			</p>
-		</div>
-	{% elif field.submitted %}
+{% block bs3_help_text %}
+	{% if not field.error and field.submitted %}
 		<div class="{{ field.help_text_column_class }}">
 			<p class="help-block">
-				Due to the way your browser handles file uploads, you will need to select your file again.
+				{% block warning_message %}
+					Due to the way your browser handles file uploads, you will need to select your file again.
+				{% endblock warning_message %}
 			</p>
 		</div>
 	{% endif %}
+	{{ super() }}
+{% endblock bs3_help_text %}
 
-	{{ macros.standard_help_text(field) }}
-</div>
+
+{% block bs4_help_text %}
+	{% if not field.error and field.submitted %}
+		<small class="form-text text-muted">
+			{{ self.warning_message() }}
+		</small>
+	{% endif %}
+	{{ super() }}
+{% endblock %}
+

@@ -245,23 +245,29 @@ class Field(object):
 
     @property
     def label_column_class(self):
-        if self.form.form_type == formtype.HORIZONTAL:
-            if self.label_width == 0:
-                return 'control-label'
-            else:
-                return 'col-{breakpoint}-{width} control-label'.format(
-                    breakpoint=self.column_breakpoint,
-                    width=self.label_width
-                )
-        else:
-            return 'control-label'
+        classes = []
+        if self.style == styles.BOOTSTRAP_3:
+            classes.append('control-label')
+        elif self.style == styles.BOOTSTRAP_4:
+            classes.append('col-form-label')
+
+        if self.form.form_type == formtype.HORIZONTAL and self.label_width > 0:
+            classes.append('col-{breakpoint}-{width}'.format(
+                breakpoint=self.column_breakpoint,
+                width=self.label_width
+            ))
+
+        return ' '.join(classes)
 
     @property
     def input_no_label_column_class(self):
         if self.form.form_type == formtype.HORIZONTAL:
             classes = []
             if self.label_width > 0:
-                classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
+                if self.style == styles.BOOTSTRAP_3:
+                    classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
+                elif self.style == styles.BOOTSTRAP_4:
+                    classes.append('offset-{}-{}'.format(self.column_breakpoint, self.label_width))
 
             classes.append('col-{}-{}'.format(self.column_breakpoint, self.width))
 

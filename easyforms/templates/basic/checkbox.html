@@ -1,18 +1,37 @@
-{% import 'macros.html' as macros %}
+{% import 'ef_macros.html' as ef_macros %}
+
+{% macro render_input(field, css_classes=None) %}
+	<input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="true"
+	       {% if css_classes %}class="{{ css_classes }}"{% endif %}
+		   {% if field.value %}checked{% endif %}
+		   {% if field.readonly %}disabled{% endif %}
+		   >
+{% endmacro %}
+
 
 <div {{ field.form_group_attributes }}>
-	<div class="{{ field.input_no_label_column_class }}">
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="true"
-				       {% if field.value %}checked{% endif %}
-					   {% if field.readonly %}disabled{% endif %}
-					   >
-				{{ field.label }}
-			</label>
+	{% if field.style == styles.BOOTSTRAP_4 %}
+		<div class="{{ field.input_no_label_column_class }}">
+			<div class="form-check">
+				{{ render_input(field, field.input_classes.replace('form-control', 'form-check-input')) }}
+				<label class="form-check-label" for="{{ field.id }}">
+					{{ field.label }}
+				</label>
+				{{ ef_macros.bs4_error(field) }}
+				{{ ef_macros.bs4_help_text(field) }}
+			</div>
 		</div>
-	</div>
-	
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
+	{% else %}
+		<div class="{{ field.input_no_label_column_class }}">
+			<div class="checkbox">
+				<label>
+					{{ render_input(field) }}
+					{{ field.label }}
+				</label>
+			</div>
+		</div>
+		
+		{{ ef_macros.bs3_error(field) }}
+		{{ ef_macros.bs3_help_text(field) }}
+	{% endif %}
 </div>

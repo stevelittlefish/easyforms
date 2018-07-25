@@ -1,30 +1,37 @@
-{% import 'macros.html' as macros %}
+{% import 'ef_macros.html' as macros %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+{% if field.style == styles.BOOTSTRAP_3 %}
+	<div {{ field.form_group_attributes }}>
+		{{ macros.standard_label(field) }}
 
-	{% if field.form_type == formtype.VERTICAL %}
-		{{ macros.standard_help_text(field) }}
-	{% endif %}
-
-	<div class="{{ field.input_column_class }}">
-		<textarea class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
-				  id="{{ field.id }}" placeholder="{{ field.placeholder|sn }}" rows="{{ field.rows }}"
-				  {% if field.readonly %}readonly{% endif %}>{{ field.value|sn }}</textarea>
-	</div>
-	
-	{{ macros.standard_error(field) }}
-
-	{% if field.form_type != formtype.VERTICAL %}
-		{{ macros.standard_help_text(field) }}
-	{% endif %}
-
-	<script src="{{ field.ckeditor_url }}"></script>
-	<script>
-		{% if field.no_smiley or field.no_image %}
-			CKEDITOR.config.removePlugins = "";
+		{% if field.form_type == formtype.VERTICAL %}
+			{{ macros.standard_help_text(field) }}
 		{% endif %}
 
-		CKEDITOR.replace("{{ field.id }}", {removePlugins: "{% if field.no_smiley %}smiley,{% endif %}{% if field.no_image %}image,{% endif %}codesnippet"});
-	</script>
-</div>
+		<div class="{{ field.input_column_class }}">
+			<textarea class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
+					  id="{{ field.id }}" placeholder="{{ field.placeholder|sn }}" rows="{{ field.rows }}"
+					  {% if field.readonly %}readonly{% endif %}>{{ field.value|sn }}</textarea>
+		</div>
+		
+		{{ macros.standard_error(field) }}
+
+		{% if field.form_type != formtype.VERTICAL %}
+			{{ macros.standard_help_text(field) }}
+		{% endif %}
+
+		<script src="{{ field.ckeditor_url }}"></script>
+		<script>
+			{% if field.no_smiley or field.no_image %}
+				CKEDITOR.config.removePlugins = "";
+			{% endif %}
+
+			CKEDITOR.replace("{{ field.id }}", {removePlugins: "{% if field.no_smiley %}smiley,{% endif %}{% if field.no_image %}image,{% endif %}codesnippet"});
+		</script>
+	</div>
+{% else %}
+	<div class="alert alert-danger">
+		This field (HTML Field) is deprecated and not supported by bootstrap 4
+	</div>
+	<input type="hidden" value="{{ field.value }}" name="{{ field.name }}" id="{{ field.id }}">
+{% endif %}

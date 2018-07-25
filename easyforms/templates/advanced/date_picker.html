@@ -1,33 +1,7 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-{% macro render_input() %}
-    <input type="text" class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
+{% block input %}
+    <input type="text" class="{{ field.input_classes }}" name="{{ field.name }}"
 				       id="{{ field.id }}" value="{{ date|sn }}"
 				       {% if field.readonly %}readonly{% endif %}>
-{% endmacro %}
-
-{% set pre_units=None %}
-{% set units=None %}
-
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
-
-	<div {{ field.input_column_attributes }}>
-		{% if units or pre_units %}
-			<div class="input-group">
-				{% if pre_units %}
-					<span class="input-group-addon">{{ pre_units }}</span>
-				{% endif %}
-				{{ render_input() }}
-				{% if units %}
-					<span class="input-group-addon">{{ units }}</span>
-				{% endif %}
-			</div>
-		{% else %}
-			{{ render_input() }}
-		{% endif %}
-	</div>
-	
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
-</div>
+{% endblock input %}

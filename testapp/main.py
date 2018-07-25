@@ -76,7 +76,7 @@ def simple_form():
 
 @main.route('/large-multisection-form', methods=['GET', 'POST'])
 def large_multisection_form():
-    form = easyforms.Form([], read_form_data=False)
+    form = easyforms.Form([], read_form_data=False, style=sessionutil.get_render_style())
 
     form.add_section('Basic Fields', [
         easyforms.TextField('text-field', required=True,
@@ -85,10 +85,13 @@ def large_multisection_form():
         easyforms.IntegerField('integer-field', width=2, min_value=1, max_value=20),
         easyforms.DecimalField('decimal-field', min_value=-10, max_value=1000,
                                step=decimal.Decimal('0.1'), width=2),
-        easyforms.BooleanCheckbox('boolean-checkbox', default=False),
+        easyforms.BooleanCheckbox('boolean-checkbox', default=False,
+                                  help_text='This is required'),
         easyforms.HiddenField('hidden-field', value='bananas'),
         easyforms.NameField('name-field', width=4),
-        easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True)
+        easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True,
+                              help_text='You must select something otherwise you will get '
+                                        'a validation error')
     ])
 
     form.add_section('Advanced Fields', [
@@ -97,11 +100,13 @@ def large_multisection_form():
         easyforms.UrlField('url-field'),
         easyforms.PhoneNumberField('phone-number-field'),
         easyforms.PostcodeField('postcode-field', width=4),
-        easyforms.GenderField('gender-field',
+        easyforms.GenderField('gender-field', required=True,
                               help_text='You must include images static/img/male-symbol.png and '
                               'static/img/female-symbol.png for this to work'),
-        easyforms.DateSelectField('date-select-field'),
-        easyforms.YearMonthSelectField('year-month-select-field'),
+        easyforms.DateSelectField('date-select-field', required=True,
+                                  help_text='Enter a date please'),
+        easyforms.YearMonthSelectField('year-month-select-field', required=True,
+                                       help_text='This field accepts a year and month only'),
         easyforms.DatePickerField('date-picker-field',
                                   help_text='Required jquery ui and the following line of javascript: '
                                   '$(".date-picker").datepicker({ dateFormat: "dd/mm/yy" });'),
@@ -122,18 +127,23 @@ def large_multisection_form():
         easyforms.TitleSelectField('title-select-field'),
         easyforms.HtmlField('html-field', help_text='This required CKEditor to be installed in '
                             'static/ckeditor'),
-        easyforms.TimeInputField('time-input-field'),
-        easyforms.FileUploadField('file-upload-field', '.pdf'),
+        easyforms.TimeInputField('time-input-field', help_text='Enter a time in format HH:MM',
+                                 required=True),
+        easyforms.FileUploadField('file-upload-field', ''),
         easyforms.ImageUploadField('image-upload-field', min_image_width=100, min_image_height=100,
                                    max_image_height=200, max_image_width=200,
                                    help_text='This allows restrictions on image size. This example '
                                    'accepts images from 100x100 to 200x200'),
-        easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
-        easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
+        # easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
+        # easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
         
     ])
     
     form.read_form_data()
+
+    if form.submitted:
+        if not form['boolean-checkbox']:
+            form.set_error('boolean-checkbox', 'Please tick this box')
     
     if form.ready:
         log.info('The form was submitted and passed validation!')

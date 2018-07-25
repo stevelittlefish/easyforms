@@ -1,36 +1,33 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+{% block input %}
+	{% if not field.readonly or field.value == 'male' %}
+		<div>
+			<input id="{{ field.id }}-male" name="{{ field.name }}" type="radio"
+				   value="male"
+				   {% if field.value == 'male' %}checked="checked"{% endif %}>
+			<label for="{{ field.id }}-male">
+				<img src="{{ url_for('static', filename='img/male-symbol.png') }}"
+					 alt="Male Symbol" height="30px">
+				Male
+			</label>
+		</div>
+	{% endif %}
 
-	<div {{ field.input_column_attributes }}>
-		{% if not field.readonly or field.value == 'male' %}
-			<div>
-				<input id="{{ field.id }}-male" name="{{ field.name }}" type="radio"
-				       value="male"
-				       {% if field.value == 'male' %}checked="checked"{% endif %}>
-				<label for="{{ field.id }}-male">
-					<img src="{{ url_for('static', filename='img/male-symbol.png') }}"
-					     alt="Male Symbol" height="30px">
-					Male
-				</label>
-			</div>
-		{% endif %}
+	{% if not field.readonly or field.value == 'female' %}
+		<div>
+			<input id="{{ field.id }}-female" name="{{ field.name }}" type="radio"
+				   value="female"
+				   {% if field.value == 'female' %}checked="checked"{% endif %}>
+			<label for="{{ field.id }}-female">
+				<img src="{{ url_for('static', filename='img/female-symbol.png') }}"
+					 alt="Female Symbol" height="30px">
+				Female
+			</label>
+		</div>
+	{% endif %}
 
-		{% if not field.readonly or field.value == 'female' %}
-			<div>
-				<input id="{{ field.id }}-female" name="{{ field.name }}" type="radio"
-				       value="female"
-				       {% if field.value == 'female' %}checked="checked"{% endif %}>
-				<label for="{{ field.id }}-female">
-					<img src="{{ url_for('static', filename='img/female-symbol.png') }}"
-					     alt="Female Symbol" height="30px">
-					Female
-				</label>
-			</div>
-		{% endif %}
-	</div>
-
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
-</div>
+	{% if field.style == styles.BOOTSTRAP_4 and field.error %}
+		<span class="{{ field.input_classes }}" style="display: none;"></span>
+	{% endif %}
+{% endblock input %}
