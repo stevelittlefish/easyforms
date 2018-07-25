@@ -1,6 +1,7 @@
 {% extends 'ef_basic_input.html' %}
 
 {% block input %}
+	{# TODO: this needs improving for BS4 #}
 	{% if not field.readonly or field.value == 'male' %}
 		<div>
 			<input id="{{ field.id }}-male" name="{{ field.name }}" type="radio"

@@ -1,8 +1,6 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
-	
+{% block input_column %}
 	<div {{ field.input_column_attributes }} id="{{ field.id }}">
 		{% for value in field.values %}
 			<div class="checkbox">
@@ -15,8 +13,17 @@
 				</label>
 			</div>
 		{% endfor %}
+		
+		{% if field.style == styles.BOOTSTRAP_4 %}
+			{% if field.error %}
+				<span class="{{ field.input_classes }}" style="display: none;"></span>
+			{% endif %}
+			{% block bs4_error %}
+				{{ ef_macros.bs4_error(field) }}
+			{% endblock bs4_error %}
+			{% block bs4_help_text %}
+				{{ ef_macros.bs4_help_text(field) }}
+			{% endblock bs4_help_text %}
+		{% endif %}
 	</div>
-
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
-</div>
+{% endblock input_column %}

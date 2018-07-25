@@ -134,8 +134,9 @@ def large_multisection_form():
                                    max_image_height=200, max_image_width=200,
                                    help_text='This allows restrictions on image size. This example '
                                    'accepts images from 100x100 to 200x200'),
-        # easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
-        # easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
+        easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS,
+                                     help_text='Please select at least one of the above options'),
+        easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
         
     ])
     
@@ -144,6 +145,9 @@ def large_multisection_form():
     if form.submitted:
         if not form['boolean-checkbox']:
             form.set_error('boolean-checkbox', 'Please tick this box')
+
+        if not form['multi-checkbox-field']:
+            form.set_error('multi-checkbox-field', 'You must select at least one of the above options')
     
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -161,7 +165,7 @@ def readonly_fields():
                               optional=True),
         easyforms.SelectField('pick-another-value', EXAMPLE_KEY_PAIRS, readonly=True,
                               value=EXAMPLE_KEY_PAIRS[1], help_text='This field cannot be changed'),
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, style=sessionutil.get_render_style())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -221,7 +225,7 @@ def readonly_form():
                                    'accepts images from 100x100 to 200x200'),
         easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS),
         easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
-    ], form_type=easyforms.VERTICAL, max_width=700, readonly=True)
+    ], form_type=easyforms.VERTICAL, max_width=700, readonly=True, style=sessionutil.get_render_style())
 
     if form.ready:
         raise Exception('Readonly form was somehow submitted!')
@@ -231,7 +235,7 @@ def readonly_form():
 
 @main.route('/multisection-form-custom', methods=['GET', 'POST'])
 def multisection_form_custom():
-    form = easyforms.Form([], read_form_data=False, form_type=easyforms.VERTICAL, show_asterisks=True)
+    form = easyforms.Form([], read_form_data=False, form_type=easyforms.VERTICAL, show_asterisks=True, style=sessionutil.get_render_style())
 
     form.add_section('Section 1', [
         easyforms.TextField('text-field', required=True,
@@ -263,7 +267,7 @@ def custom_validation_1():
     form = easyforms.Form([
         easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
         easyforms.TextField('two-or-three', required=True)
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, style=sessionutil.get_render_style())
     
     if form.submitted:
         if form['two-or-three'] and not form.has_error('two-or-three'):
@@ -286,7 +290,7 @@ def custom_validation_2():
     form = easyforms.Form([
         easyforms.IntegerField('an-integer', help_text='Any whole number!', required=True),
         easyforms.TextField('two-or-three', required=True, validators=[is_two_or_three])
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, style=sessionutil.get_render_style())
     
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -305,7 +309,7 @@ def custom_fields():
         customfields.UpperCaseTextField('upper-case', required=True,
                                         help_text='Whatever\'s entered into this will be converted '
                                         'to upper case')
-    ], form_type=easyforms.VERTICAL)
+    ], form_type=easyforms.VERTICAL, style=sessionutil.get_render_style())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -321,7 +325,7 @@ def captcha():
         easyforms.TextField('optional-text-field'),
         easyforms.RecaptchaField('recaptcha', site_key=current_app.config['RECAPTCHA_SITE_KEY'],
                                  secret_key=current_app.config['RECAPTCHA_SECRET_KEY'])
-    ], show_asterisks=True)
+    ], show_asterisks=True, style=sessionutil.get_render_style())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -340,8 +344,9 @@ def ckeditor():
     )
 
     form = easyforms.Form([
-        easyforms.CkeditorField('ckeditor', config=config),
-    ], form_type=easyforms.VERTICAL)
+        easyforms.CkeditorField('ckeditor', config=config, required=True,
+                                help_text='Use this editor to edit rich HTML based content'),
+    ], form_type=easyforms.VERTICAL, style=sessionutil.get_render_style())
 
     return render_template('ckeditor.html', form=form, submitted_data=get_submitted_data(form))
     
@@ -354,7 +359,7 @@ def single_button_clone():
         easyforms.SelectField('pick-a-value', EXAMPLE_KEY_PAIRS, empty_option=True,
                               optional=True),
         easyforms.BooleanCheckbox('boolean')
-    ], form_type=easyforms.VERTICAL, max_width=700)
+    ], form_type=easyforms.VERTICAL, max_width=700, style=sessionutil.get_render_style())
 
     if form.ready:
         log.info('The form was submitted and passed validation!')
@@ -382,7 +387,7 @@ def getaddress():
         easyforms.TextField('address-line-3'),
         easyforms.TextField('city', label='Town/City', required=True),
         easyforms.TextField('billing-phone-no', required=True, label='Contact Phone No.')
-    ], form_type=easyforms.HORIZONTAL, max_width=700)
+    ], form_type=easyforms.HORIZONTAL, max_width=700, style=sessionutil.get_render_style())
 
     return render_template('getaddress.html', form=form, submitted_data=get_submitted_data(form))
 

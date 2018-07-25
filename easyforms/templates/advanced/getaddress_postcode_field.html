@@ -1,4 +1,4 @@
-{% import 'macros.html' as macros %}
+{% import 'ef_macros.html' as ef_macros %}
 
 {% macro search_button() %}
 	<button id="{{ field.id }}-search-button" class="{{ field.button_class }}">
@@ -7,11 +7,11 @@
 {% endmacro %}
 
 <div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+	{{ ef_macros.standard_label(field) }}
 
 	<div {{ field.input_column_attributes }}>
     	<input type="{{ field.type }}"
-		       class="form-control {{ field.css_class|sn }}"
+		       class="{{ field.input_classes }}"
 		       name="{{ field.name }}"
 		       id="{{ field.id }}" value="{{ field.value|sn }}" placeholder="{{ field.placeholder|sn }}"
 		       {% if field.readonly %}readonly{% endif %}>
@@ -19,22 +19,32 @@
 		{% if field.inline_button %}
 			{{ search_button() }}
 		{% endif %}
+
+		{{ ef_macros.bs4_error(field) }}
+		{{ ef_macros.bs4_help_text(field) }}
 	</div>
 
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
+	{{ ef_macros.bs3_error(field) }}
+	{{ ef_macros.bs3_help_text(field) }}
 
 	<div class="{{ field.error_column_class }}" id="{{ field.id }}-ajax-error" style="display: none;">
-		<p class="help-block">
-			{# This invisible label pushed the validation message to be in line with the input #}
-			{% if field.form.form_type == formtype.INLINE %}
-				<span style="visibility: hidden">
-					{{ macros.standard_label(field) }}
+		{% if field.style == styles.BOOTSTRAP_3 %}
+			<p class="help-block">
+				{# This invisible label pushed the validation message to be in line with the input #}
+				{% if field.form.form_type == formtype.INLINE %}
+					<span style="visibility: hidden">
+						{{ ef_macros.standard_label(field) }}
+					</span>
+				{% endif %}
+				<span class="error-content">
 				</span>
-			{% endif %}
-			<span class="error-content">
-			</span>
-		</p>
+			</p>
+		{% elif field.style == styles.BOOTSTRAP_4 %}
+			{# this is a hack for bootstrap 4 #}
+			<span class="form-control is-invalid" style="display: none;"></span>
+			<p class="invalid-feedback">
+			</p>
+		{% endif %}
 	</div>
 
 </div>

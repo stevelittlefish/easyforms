@@ -1,24 +1,30 @@
-{% import 'macros.html' as macros %}
+{% import 'ef_macros.html' as ef_macros %}
 
 {% set config = field.config %}
 
 <div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+	{{ ef_macros.standard_label(field) }}
 
 	{% if field.form_type == formtype.VERTICAL %}
-		{{ macros.standard_help_text(field) }}
+		{{ ef_macros.standard_help_text(field) }}
 	{% endif %}
 
 	<div class="{{ field.input_column_class }}">
-		<textarea class="form-control {{ field.css_class|sn }}" name="{{ field.name }}"
-				  id="{{ field.id }}" placeholder="{{ field.placeholder|sn }}" rows="{{ field.rows }}"
-				  {% if field.readonly %}readonly{% endif %}>{{ field.value|sn }}</textarea>
+		<div {% if field.style == styles.BOOTSTRAP_4 and field.error %}class="{{ field.input_classes }}" style="padding:0;"{% endif %}>
+			<textarea class="{{ field.input_classes }}" name="{{ field.name }}"
+					  id="{{ field.id }}" placeholder="{{ field.placeholder|sn }}" rows="{{ field.rows }}"
+					  {% if field.readonly %}readonly{% endif %}>{{ field.value|sn }}</textarea>
+		</div>
+		{% if field.form_type != formtype.VERTICAL %}
+			{{ ef_macros.bs4_help_text(field) }}
+		{% endif %}
+		{{ ef_macros.bs4_error(field) }}
 	</div>
 	
-	{{ macros.standard_error(field) }}
+	{{ ef_macros.bs3_error(field) }}
 
 	{% if field.form_type != formtype.VERTICAL %}
-		{{ macros.standard_help_text(field) }}
+		{{ ef_macros.bs3_help_text(field) }}
 	{% endif %}
 
 	<script src="{{ config.ckeditor_url }}"></script>

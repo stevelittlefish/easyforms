@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 import jinja2
 
 from easyforms import formtype
+from easyforms import styles
 
 __author__ = 'Stephen Brown (Little Fish Solutions LTD)'
 
@@ -31,4 +32,5 @@ env.undefined = jinja2.StrictUndefined
 # Custom filter to replace None with empty string
 env.filters['sn'] = _suppress_none
 env.globals['formtype'] = formtype
+env.globals['styles'] = styles
 

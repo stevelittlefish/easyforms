@@ -282,7 +282,10 @@ class Field(object):
         elif self.form.form_type == formtype.HORIZONTAL:
             classes = []
             if self.label_width > 0:
-                classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
+                if self.style == styles.BOOTSTRAP_3:
+                    classes.append('col-{}-offset-{}'.format(self.column_breakpoint, self.label_width))
+                elif self.style == styles.BOOTSTRAP_4:
+                    classes.append('offset-{}-{}'.format(self.column_breakpoint, self.label_width))
 
             classes.append('col-{}-{}'.format(self.column_breakpoint, self.help_text_width))
 
@@ -343,7 +346,10 @@ class Field(object):
     def input_column_no_label_attributes(self):
         extra_classes = None
         if self.form_type == formtype.HORIZONTAL and self.label_width > 0:
-            extra_classes = 'col-{}-offset-{}'.format(self.column_breakpoint, self.label_width)
+            if self.style == styles.BOOTSTRAP_3:
+                extra_classes = 'col-{}-offset-{}'.format(self.column_breakpoint, self.label_width)
+            elif self.style == styles.BOOTSTRAP_4:
+                extra_classes = 'offset-{}-{}'.format(self.column_breakpoint, self.label_width)
         return self.get_input_column_attributes(extra_classes=extra_classes)
 
     @property

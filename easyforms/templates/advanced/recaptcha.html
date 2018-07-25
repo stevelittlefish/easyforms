@@ -1,14 +1,12 @@
-{% import 'macros.html' as macros %}
+{% extends 'ef_basic_input.html' %}
 
-<script src='https://www.google.com/recaptcha/api.js'></script>
+{% block form_control %}
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	{{ super() }}
+{% endblock form_control %}
 
-<div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
-
-	<div {{ field.input_column_attributes }}>
-		<div class="g-recaptcha" data-sitekey="{{ field.site_key }}"></div>
-	</div>
-
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
-</div>
+{% block input %}
+	<div class="g-recaptcha {% if field.error %}{{ field.input_classes }}{% endif %}"
+	     style="padding: 0; height: auto;"
+	     data-sitekey="{{ field.site_key }}"></div>
+{% endblock input %}

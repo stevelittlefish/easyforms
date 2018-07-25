@@ -1,17 +1,22 @@
-{% import 'macros.html' as macros %}
+{% import 'ef_macros.html' as ef_macros %}
 
 <div {{ field.form_group_attributes }}>
-	{{ macros.standard_label(field) }}
+	{{ ef_macros.standard_label(field) }}
 
 	<div {{ field.input_column_attributes }}>
 		<input type="{{ field.type }}"
-	       class="form-control {{ field.css_class|sn }}"
+	       class="{{ field.input_classes }}"
 	       name="{{ field.name }}"
 	       id="{{ field.id }}" value="{{ ', '.join(field.value) if field.value else '' }}" placeholder="{{ field.placeholder|sn }}"
 	       {% if field.readonly %}readonly{% endif %}>
+		
+		{% if field.style == styles.BOOTSTRAP_4 %}
+			{{ ef_macros.bs4_error(field) }}
+			{{ ef_macros.bs4_help_text(field) }}
+		{% endif %}
 
 	</div>
 
-	{{ macros.standard_error(field) }}
-	{{ macros.standard_help_text(field) }}
+	{{ ef_macros.bs3_error(field) }}
+	{{ ef_macros.bs3_help_text(field) }}
 </div>
