@@ -1,7 +1,7 @@
 {% extends 'ef_basic_input.html' %}
 
 {% block input %}
-	<select name="{{ field.name }}" id="{{ field.id }}" class="{{ field.input_classes }}" {% if field.readonly %}disabled{% endif %}>
+	<select name="{{ field.name }}" id="{{ field.id }}" class="{{ field.input_classes }}" {% if field.readonly %}readonly{% endif %}>
 		{% if field.empty_option %}
 			<option value="" {% if field.value == None %}selected="selected"{% endif %}>
 				{{ field.empty_option_name }}
