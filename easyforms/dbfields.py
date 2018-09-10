@@ -19,6 +19,9 @@ class DbCodeSelectField(basicfields.SelectField):
         if values is None:
             # This will only work if the model has a name field
             values = db_model.query.order_by(db_model.name).all()
+            self.valid_codes = None
+        else:
+            self.valid_codes = [v.code for v in values]
 
         super(DbCodeSelectField, self).__init__(name, values, **kwargs)
 
@@ -27,13 +30,16 @@ class DbCodeSelectField(basicfields.SelectField):
 
     def convert_value(self):
         if self.value:
-            loaded_value = self.db_model.query.filter(self.db_model.code == self.value).first()
-
-            if loaded_value:
-                self.value = loaded_value
+            if self.valid_codes and self.value != self.valid_codes:
+                self.error = 'Invalid selection'
             else:
-                self.error = 'Invalid value: %s' % self.value
-                self.value = None
+                loaded_value = self.db_model.query.filter(self.db_model.code == self.value).first()
+
+                if loaded_value:
+                    self.value = loaded_value
+                else:
+                    self.error = 'Invalid value: %s' % self.value
+                    self.value = None
 
 
 class DbIdSelectField(basicfields.SelectField):
@@ -44,6 +50,9 @@ class DbIdSelectField(basicfields.SelectField):
         if values is None:
             # This will only work if the model has a name field
             values = db_model.query.order_by(db_model.name).all()
+            self.valid_ids = None
+        else:
+            self.valid_ids = [v.id for v in values]
 
         super(DbIdSelectField, self).__init__(name, values, **kwargs)
 
@@ -52,11 +61,24 @@ class DbIdSelectField(basicfields.SelectField):
 
     def convert_value(self):
         if self.value:
-            loaded_value = self.db_model.query.filter(self.db_model.id == self.value).first()
+            int_value = None
+            try:
+                int_value = int(self.value)
+            except ValueError:
+                pass
 
-            if loaded_value:
-                self.value = loaded_value
-            else:
-                self.error = 'Invalid value: %s' % self.value
-                self.value = None
+            if int_value is None:
+                self.error = 'Invalid'
+                
+            if not self.error and self.valid_ids and int_value not in self.valid_ids:
+                self.error = 'Invalid selection'
+
+            if not self.error:
+                loaded_value = self.db_model.query.filter(self.db_model.id == self.value).first()
+
+                if loaded_value:
+                    self.value = loaded_value
+                else:
+                    self.error = 'Invalid value: %s' % self.value
+                    self.value = None
 
