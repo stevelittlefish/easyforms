@@ -20,6 +20,8 @@ log = logging.getLogger(__name__)
 
 _csrf_generation_function = None
 
+_default_form_type = formtype.HORIZONTAL
+
 
 def init_csrf(csrf_generation_function):
     """
@@ -36,6 +38,15 @@ def init_csrf(csrf_generation_function):
 def convert_name_to_label(name):
     """Convert hyphen separated field names to label text"""
     return name.replace('-', ' ').title()
+
+
+def set_default_form_type(form_type):
+    global _default_form_type
+
+    if form_type not in formtype.ALL_FORM_TYPES:
+        raise ValueError('Invalid form type: {}'.format(form_type))
+
+    _default_form_type = form_type
 
 
 class Field(object):
@@ -424,7 +435,7 @@ class Form(object):
     SUBMITTED_HIDDEN_INPUT_NAME = '--form-submitted--'
 
     def __init__(self, fields=[], action='', method='POST', css_class=None, submit_text='Submit',
-                 read_form_data=True, form_name='', label_width=3, form_type=formtype.HORIZONTAL,
+                 read_form_data=True, form_name='', label_width=3, form_type=None,
                  id=None, submit_css_class='btn-primary', column_breakpoint='sm',
                  show_asterisks=False, max_width=None, disable_csrf=False, readonly=False,
                  style=styles.BOOTSTRAP_3):
@@ -473,12 +484,17 @@ class Form(object):
         # Add fields to form
         self.add_fields(fields)
 
+        if form_type is None:
+            self.form_type = _default_form_type
+        else:
+            self.form_type = form_type
+
         self.method = method
         self.action = action
         if css_class is None:
-            if form_type == formtype.HORIZONTAL:
+            if self.form_type == formtype.HORIZONTAL:
                 self.css_class = 'form-horizontal'
-            elif form_type == formtype.INLINE:
+            elif self.form_type == formtype.INLINE:
                 self.css_class = 'form-inline'
             else:
                 self.css_class = ''
@@ -489,7 +505,6 @@ class Form(object):
         self.processed_data = False
         self.form_name = form_name
         self.label_width = label_width
-        self.form_type = form_type
         self.id = id
         self.column_breakpoint = column_breakpoint
         self.show_asterisks = show_asterisks
