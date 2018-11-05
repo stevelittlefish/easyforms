@@ -118,6 +118,18 @@ class SelectField(form.Field):
     def render(self):
         return env.get_template('basic/select.html').render(field=self)
 
+    def convert_value(self):
+        if self.value:
+            valid = False
+            for key_pair in self.key_pairs:
+                if self.value == key_pair.select_value:
+                    valid = True
+                    break
+
+            if not valid:
+                self.error = 'Invalid selection'
+                self.value = None
+
 
 class BooleanCheckbox(form.Field):
     def __init__(self, name, default=False, **kwargs):
