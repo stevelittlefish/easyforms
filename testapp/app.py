@@ -9,6 +9,7 @@ import traceback
 from flask import Flask, render_template
 import jinja2
 from littlefish import timetool
+import flaskfilemanager
 
 from main import main
 import sessionutil
@@ -30,6 +31,8 @@ def create_app():
     app.config['RECAPTCHA_SITE_KEY'] = 'TODO: Override in config.py'
     app.config['RECAPTCHA_SECRET_KEY'] = 'TODO: Override in config.py'
     app.config['GETADDRESS_API_KEY'] = 'TODO: Override in config.py'
+    app.config['FILEMANAGER_ENABLED'] = True
+    app.config['FLASKFILEMANAGER_FILE_PATH'] = 'tmp-webapp-uploads'
     
     log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     log.info(' Test App Starting')
@@ -67,6 +70,15 @@ def create_app():
         log.error('Exception caught: %s\n%s' % (title, message))
 
         return render_template('error_page.html', title=title, message=message, preformat=True)
+    
+    log.info('Initialising Filemanager')
+    def fm_access_control():
+        """
+	:return: True if the user is allowed to access the filemanager, otherwise False
+	"""
+        return app.config['FILEMANAGER_ENABLED']
+
+    flaskfilemanager.init(app, access_control_function=fm_access_control)
 
     log.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     log.info(' Startup Complete!')

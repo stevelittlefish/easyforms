@@ -380,6 +380,19 @@ class CkeditorField(basicfields.TextAreaField):
         return height
 
 
+class FilemanagerField(UrlField):
+    """
+    Only one of these per rendered page is supported!
+    """
+    def __init__(self, name, filemanager_url='/fm/index.html', **kwargs):
+        super().__init__(name, **kwargs)
+
+        self.filemanager_url = filemanager_url
+
+    def render(self):
+        return env.get_template('advanced/filemanager.html').render(field=self)
+
+
 class HtmlField(basicfields.TextAreaField):
     """
     This field is deprecated and should no longer be used.  Please us CkeditorField

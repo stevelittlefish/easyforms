@@ -400,3 +400,12 @@ def getaddress():
 
     return render_template('getaddress.html', form=form, submitted_data=get_submitted_data(form))
 
+
+@main.route('/filemanager', methods=['GET', 'POST'])
+def filemanager():
+    form = easyforms.Form([
+        easyforms.FilemanagerField('file', required=True),
+        easyforms.TextField('must-not-be-blank', required=True)
+    ], form_type=easyforms.VERTICAL, style=sessionutil.get_render_style())
+
+    return render_template('filemanager.html', form=form, submitted_data=get_submitted_data(form))

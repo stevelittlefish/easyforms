@@ -1,0 +1,72 @@
+{% extends 'ef_basic_input.html' %}
+
+{% block form_control_end %}
+	<script>
+		//(function () {
+			var cleanUp = function () {
+				$("#fm-iframe-{{ field.id }}").remove();
+			};
+
+			var showFileManager = function () {
+				var iframe = $("<iframe id='fm-iframe-{{ field.id }}' class='fm-modal'/>").attr({
+					src: '{{ field.filemanager_url }}' 
+				});
+
+				// CSS
+				iframe.css('z-index', '10011');
+				iframe.css('width', '80%');
+				iframe.css('height', '80%');
+				iframe.css('top', '10%');
+				iframe.css('left', '10%');
+				iframe.css('border', '0');
+				iframe.css('position', 'fixed');
+				iframe.css('-moz-box-shadow', '0px 1px 5px 0px #656565');
+				iframe.css('-webkit-box-shadow', '0px 1px 5px 0px #656565');
+				iframe.css('-o-box-shadow', '0px 1px 5px 0px #656565');
+				iframe.css('box-shadow', '0px 1px 5px 0px #656565');
+
+				$("body").append(iframe);
+				$("body").css("overflow-y", "hidden");  // Get rid of possible scrollbars in containing document
+			};
+			
+			var handleFileManagerMessage = function (event) {
+				var data = event.data;
+				if (data.source != "richfilemanager") {
+					console.log("Unknown source '" + data.source + "' - ignoring");
+					return;
+				}
+
+				$("#{{ field.id }}").val(data.preview_url);
+				cleanUp();
+			};
+
+			$("#ef-fm-browse-{{ field.id }}").click(showFileManager);
+			window.addEventListener("message", handleFileManagerMessage, false);
+			
+		//})();
+	</script>
+{% endblock form_control_end %}
+
+{% block input_tag %}
+    <input type="text" class="{{ field.input_classes }}" name="{{ field.name }}"
+				       id="{{ field.id }}" value="{{ field.value|sn }}"
+				       readonly style="background: white;">
+{% endblock input_tag %}
+
+{% block input %}
+	{% if field.style == styles.BOOTSTRAP_3 %}
+		<div class="input-group">
+			{{ self.input_tag() }}
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" id="ef-fm-browse-{{ field.id }}">Browse</button>
+			</span>
+		</div>
+	{% else %}
+		<div class="input-group">
+			{{ self.input_tag() }}
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button" id="ef-fm-browse-{{ field.id }}">Browse</button>
+			</div>
+		</div>
+	{% endif %}
+{% endblock input %}
