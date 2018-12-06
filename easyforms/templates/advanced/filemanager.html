@@ -2,7 +2,7 @@
 
 {% block form_control_end %}
 	<script>
-		//(function () {
+		(function () {
 			var cleanUp = function () {
 				$("#fm-iframe-{{ field.id }}").remove();
 			};
@@ -43,7 +43,7 @@
 			$("#ef-fm-browse-{{ field.id }}").click(showFileManager);
 			window.addEventListener("message", handleFileManagerMessage, false);
 			
-		//})();
+		})();
 	</script>
 {% endblock form_control_end %}
 
