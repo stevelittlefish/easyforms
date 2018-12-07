@@ -359,12 +359,15 @@ class CkeditorField(basicfields.TextAreaField):
             self.value = re.sub(r'\s?&nbsp;\s?', ' ', self.value)
 
         if self.value and self.config.strip_empty_paragraphs:
-            self.value = re.sub(r'<p>\s*</p>', '', self.value)
+            self.value = re.sub(r'<p[^>]*>\s*</p>', '', self.value)
 
         if self.value is not None and self.config.pretty_print_html:
             self.value = htmlutil.pretty_print(
                 self.value, max_line_length=self.config.pretty_print_html_line_length
             )
+
+        if self.value and self.config.unwrap_images:
+            self.value = re.sub(r'<p[^>]*>\s*(<img[^>]*>)\s*</p>', r'\1', self.value)
 
     def get_height(self):
         height = self.config.default_height

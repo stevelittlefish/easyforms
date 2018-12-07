@@ -349,7 +349,8 @@ def ckeditor():
         filemanager_url=None,
         codesnippet_enabled=True,
         custom_styles_js_url=url_for('static', filename='js/ckeditor_styles.js'),
-        custom_contents_css_url=url_for('static', filename='css/ckeditor_contents.css')
+        custom_contents_css_url=url_for('static', filename='css/ckeditor_contents.css'),
+        unwrap_images=True
     )
 
     form = easyforms.Form([

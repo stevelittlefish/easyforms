@@ -41,7 +41,8 @@ class CkeditorConfig(object):
             format_tags='p;h2;h3;h4;pre',
             custom_styles_js_url=None,
             custom_contents_css_url=None,
-            force_paste_as_plain_text=False
+            force_paste_as_plain_text=False,
+            unwrap_images=False
     ):
         """
         Used to configure the CkeditorField
@@ -76,6 +77,9 @@ class CkeditorConfig(object):
         :param custom_styles_js_url: URL to custom styles.js
         :param custom_contents_css_url: URL to custom contents.css
         :param force_paste_as_plain_text: Should all pasted text have the formatting removed?
+        :param unwrap_images: Set to true to automatically remove img tags from surrounding p tags.
+                              This may be needed if you want to do something fancy with images, like
+                              make them wider than the text content.
         """
         self._ckeditor_url = ckeditor_url
         self.filemanager_url = filemanager_url
@@ -104,6 +108,7 @@ class CkeditorConfig(object):
         self.custom_styles_js_url = custom_styles_js_url
         self.custom_contents_css_url = custom_contents_css_url
         self.force_paste_as_plain_text = force_paste_as_plain_text
+        self.unwrap_images = unwrap_images
 
     def clone(self, **kwargs):
         out = copy.deepcopy(self)
