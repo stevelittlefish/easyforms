@@ -169,6 +169,7 @@ class CkeditorConfig(object):
         plugins = []
         if not self.image_enabled:
             plugins.append('image')
+            plugins.append('image2')
         if not self.codesnippet_enabled:
             plugins.append('codesnippet')
 
