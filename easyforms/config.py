@@ -27,8 +27,13 @@ class CkeditorConfig(object):
             undo_enabled=False,
             redo_enabled=False,
             anchor_enabled=False,
+            link_enabled=True,
             image_enabled=True,
             codesnippet_enabled=False,
+            styles_enabled=True,
+            strikethrough_enabled=False,
+            table_enabled=True,
+            hr_enabled=True,
             allow_all_extra_content=False,
             allowed_content=None,
             disallowed_content=None,
@@ -59,8 +64,13 @@ class CkeditorConfig(object):
         :param undo_enabled: Enable the undo button
         :param redo_enabled: Enable the redo button
         :param anchor_enabled: Enable the anchor button
+        :param link_enabled: Enable the link button
         :param image_enabled: Enable the image button
         :param codesnippet_enabled: Enable the codesnippet button
+        :param styles_enabled: Enable the styles drop-down
+        :param strikethrough_enabled: Enable the strikethrough button
+        :param table_enabled: Enable the table button
+        :param hr_enabled: Enable the horizontal rule button
         :param allow_all_extra_content: Allow all extra css classes and attributes to be saved.  This
                                         may be necessary if you have old content that you want to
                                         edit without totally trashing. This is ignored if
@@ -93,8 +103,13 @@ class CkeditorConfig(object):
         self.undo_enabled = undo_enabled
         self.redo_enabled = redo_enabled
         self.anchor_enabled = anchor_enabled
+        self.link_enabled = link_enabled
         self.image_enabled = image_enabled
         self.codesnippet_enabled = codesnippet_enabled
+        self.styles_enabled = styles_enabled
+        self.strikethrough_enabled = strikethrough_enabled
+        self.table_enabled = table_enabled
+        self.hr_enabled = hr_enabled
         self.allow_all_extra_content = allow_all_extra_content
         self.allowed_content = allowed_content
         self.disallowed_content = disallowed_content
@@ -153,6 +168,16 @@ class CkeditorConfig(object):
             buttons.append('Redo')
         if not self.anchor_enabled:
             buttons.append('Anchor')
+        if not self.link_enabled:
+            buttons.append('Link')
+        if not self.styles_enabled:
+            buttons.append('Styles')
+        if not self.strikethrough_enabled:
+            buttons.append('Strike')
+        if not self.table_enabled:
+            buttons.append('Table')
+        if not self.hr_enabled:
+            buttons.append('HorizontalRule')
         
         return ','.join(buttons)
 
