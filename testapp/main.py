@@ -138,7 +138,10 @@ def large_multisection_form():
                                    'accepts images from 100x100 to 200x200'),
         easyforms.MultiCheckboxField('multi-checkbox-field', values=EXAMPLE_KEY_PAIRS,
                                      help_text='Please select at least one of the above options'),
-        easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers')
+        easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers'),
+        easyforms.MultiSubmitButton('multi-submit',
+                                    ['Submit', 'Proceed', 'Continue', 'OK'],
+                                    ['btn-secondary', 'btn-danger', 'btn-success'])
         
     ])
 

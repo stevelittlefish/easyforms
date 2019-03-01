@@ -1,0 +1,10 @@
+<div {{ field.form_group_attributes }}>
+	<div class="{{ field.input_no_label_column_class }}">
+		{% for value in field.values %}
+			<input type="submit" class="btn {{ field.css_classes[loop.index0] }}"
+				   name="{{ field.name }}" value="{{ value }}"
+				   id="{{ field.id }}-{{ loop.index0 }}" {% if field.readonly %}disabled{% endif %}>
+			</input>
+		{% endfor %}
+	</div>
+</div>

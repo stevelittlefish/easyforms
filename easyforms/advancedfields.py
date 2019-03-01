@@ -705,3 +705,21 @@ class GetaddressPostcodeField(PostcodeField):
             return super().render()
 
         return env.get_template('advanced/getaddress_postcode_field.html').render(field=self)
+
+
+class MultiSubmitButton(form.Field):
+    def __init__(self, name, values, css_classes=None, render_after_sections=True, **kwargs):
+        self.values = values
+        self.css_classes = []
+        for i in range(len(values)):
+            if css_classes and len(css_classes) > i:
+                self.css_classes.append(css_classes[i])
+            else:
+                self.css_classes.append('btn-primary')
+
+        super().__init__(name, value='', noclear=True, render_after_sections=render_after_sections,
+                         allow_missing=True, **kwargs)
+
+    def render(self):
+        return env.get_template('advanced/multi_submit.html').render(field=self)
+
