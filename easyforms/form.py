@@ -714,6 +714,12 @@ class Form(object):
             raise exceptions.FieldNotFound('The field \'%s\' is not present in the processed form data' % item)
 
         return self.field_dict[item].value
+
+    def __contains__(self, item):
+        if not self.processed_data:
+            raise exceptions.FormNotProcessed('The form data has not been processed yet')
+
+        return item in self.field_dict
     
     def get_if_present(self, name, default=None):
         """
