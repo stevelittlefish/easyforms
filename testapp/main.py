@@ -77,7 +77,7 @@ def simple_form():
 @main.route('/large-multisection-form', methods=['GET', 'POST'])
 def large_multisection_form():
     form = easyforms.Form([], read_form_data=False, style=sessionutil.get_render_style(),
-                          form_type=easyforms.VERTICAL)
+                          form_type=easyforms.HORIZONTAL)
 
     form.add_section('Basic Fields', [
         easyforms.TextField('text-field', required=True,
@@ -129,8 +129,6 @@ def large_multisection_form():
         }, width=3, key_is_label=False, help_text='key_is_label=False switched the keys and values'),
         
         easyforms.TitleSelectField('title-select-field'),
-        easyforms.HtmlField('html-field', help_text='This required CKEditor to be installed in '
-                            'static/ckeditor'),
         easyforms.TimeInputField('time-input-field', help_text='Enter a time in format HH:MM',
                                  required=True),
         easyforms.FileUploadField('file-upload-field', ''),
