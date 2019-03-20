@@ -1,0 +1,5 @@
+{% extends 'ef_basic_input.html' %}
+
+{% block input %}
+	{{ ef_macros.standard_input(field, style='padding: 0; max-width: {};'.format(field.input_max_width)) }}
+{% endblock input %}

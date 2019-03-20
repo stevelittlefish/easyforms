@@ -76,7 +76,8 @@ def simple_form():
 
 @main.route('/large-multisection-form', methods=['GET', 'POST'])
 def large_multisection_form():
-    form = easyforms.Form([], read_form_data=False, style=sessionutil.get_render_style())
+    form = easyforms.Form([], read_form_data=False, style=sessionutil.get_render_style(),
+                          form_type=easyforms.VERTICAL)
 
     form.add_section('Basic Fields', [
         easyforms.TextField('text-field', required=True,
@@ -102,6 +103,7 @@ def large_multisection_form():
         easyforms.UrlField('url-field'),
         easyforms.PhoneNumberField('phone-number-field'),
         easyforms.PostcodeField('postcode-field', width=4),
+        easyforms.ColourField('colour-field', width=1),
         easyforms.GenderField('gender-field', required=True,
                               help_text='You must include images static/img/male-symbol.png and '
                               'static/img/female-symbol.png for this to work'),

@@ -1,4 +1,4 @@
-{% macro standard_input(field) %}
+{% macro standard_input(field, style=None) %}
     <input type="{{ field.type }}"
 		   class="{{ field.input_classes }}"
 	       name="{{ field.name }}"
@@ -6,7 +6,8 @@
 	       {% if field.readonly %}readonly{% endif %}
 	       {% if field.min_value is defined and field.min_value != None %}min="{{ field.min_value }}"{% endif %}
 	       {% if field.max_value is defined and field.max_value != None %}max="{{ field.max_value }}"{% endif %}
-	       {% if field.step is defined and field.step != None %}step="{{ field.step }}"{% endif %}>
+	       {% if field.step is defined and field.step != None %}step="{{ field.step }}"{% endif %}
+		   {% if style is not none %}style="{{ style }}"{% endif %}>
 {% endmacro %}
 
 

@@ -127,6 +127,33 @@ class PostcodeField(basicfields.TextField):
             self.value = self.value.upper()
 
 
+class ColourField(basicfields.TextField):
+    def __init__(self, name, input_max_width=60, **kwargs):
+        """
+        :param name: The name of the field (the name field in the generated input)
+        """
+        super().__init__(name, 'color', **kwargs)
+        self._input_max_width = input_max_width
+
+    def render(self):
+        return env.get_template('advanced/colour.html').render(field=self)
+
+    def convert_value(self):
+        if self.value is not None:
+            self.value = self.value.lower()
+
+        if not re.match('^#[0-9a-f]{6}$', self.value):
+            self.error = 'Invalid colour'
+            self.value = None
+
+    @property
+    def input_max_width(self):
+        if isinstance(self._input_max_width, int):
+            return '{}px'.format(self._input_max_width)
+
+        return self._input_max_width
+
+
 class GenderField(form.Field):
     def __init__(self, name, **kwargs):
         super(GenderField, self).__init__(name, allow_missing=True, **kwargs)
