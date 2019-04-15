@@ -296,12 +296,13 @@ class ObjectListSelectField(basicfields.SelectField):
         super().__init__(name, key_pairs, **kwargs)
 
     def convert_value(self):
-        for key_pair in self.key_pairs:
-            if str(key_pair.select_value) == self.value:
-                self.value = key_pair
-                return
+        if self.value:
+            for key_pair in self.key_pairs:
+                if str(key_pair.select_value) == self.value:
+                    self.value = key_pair
+                    return
 
-        self.error = 'Invalid Value'
+            self.error = 'Invalid Value'
 
 
 class EnumSelectField(basicfields.SelectField):
