@@ -34,6 +34,7 @@ class CkeditorConfig(object):
             strikethrough_enabled=False,
             table_enabled=True,
             hr_enabled=True,
+            div_enabled=False,
             allow_all_extra_content=False,
             allowed_content=None,
             disallowed_content=None,
@@ -71,6 +72,7 @@ class CkeditorConfig(object):
         :param strikethrough_enabled: Enable the strikethrough button
         :param table_enabled: Enable the table button
         :param hr_enabled: Enable the horizontal rule button
+        :param div_enabled: Enable div button
         :param allow_all_extra_content: Allow all extra css classes and attributes to be saved.  This
                                         may be necessary if you have old content that you want to
                                         edit without totally trashing. This is ignored if
@@ -110,6 +112,7 @@ class CkeditorConfig(object):
         self.strikethrough_enabled = strikethrough_enabled
         self.table_enabled = table_enabled
         self.hr_enabled = hr_enabled
+        self.div_enabled = div_enabled
         self.allow_all_extra_content = allow_all_extra_content
         self.allowed_content = allowed_content
         self.disallowed_content = disallowed_content
@@ -178,6 +181,8 @@ class CkeditorConfig(object):
             buttons.append('Table')
         if not self.hr_enabled:
             buttons.append('HorizontalRule')
+        if not self.div_enabled:
+            buttons.append('CreateDiv')
         
         return ','.join(buttons)
 
