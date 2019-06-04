@@ -4,6 +4,7 @@ Main blueprint for test app
 
 import logging
 import decimal
+from enum import Enum
 
 from flask import Blueprint, render_template, current_app, url_for, request
 
@@ -33,6 +34,13 @@ EXAMPLE_KEY_PAIRS = [
     KeyValue('Short', 'short'),
     KeyValue('Looooooooooooooong label text to make things wide', 'long')
 ]
+
+
+class ColourEnum(Enum):
+    RED = 'Red'
+    GREEN = 'Green'
+    BLUE = 'Blue'
+    RAINBOW = 'Rainbow'
 
 
 def get_submitted_data(form):
@@ -141,7 +149,8 @@ def large_multisection_form():
         easyforms.CardNumberField('card-number', help_text='Only accepts valid card numbers'),
         easyforms.MultiSubmitButton('multi-submit',
                                     ['Submit', 'Proceed', 'Continue', 'OK'],
-                                    ['btn-secondary', 'btn-danger', 'btn-success'])
+                                    ['btn-secondary', 'btn-danger', 'btn-success']),
+        easyforms.EnumSelectField('enum-select', ColourEnum, value=ColourEnum.RED)
         
     ])
 
