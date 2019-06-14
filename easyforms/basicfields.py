@@ -153,7 +153,8 @@ class SubmitButton(form.Field):
         self.submit_text = value
 
         super(SubmitButton, self).__init__(name, value=value, css_class=css_class, noclear=True,
-                                           render_after_sections=render_after_sections, allow_missing=True, **kwargs)
+                                           render_after_sections=render_after_sections,
+                                           allow_missing=True, allow_duplicates=True, **kwargs)
 
     def render(self):
         return env.get_template('basic/submit.html').render(field=self)

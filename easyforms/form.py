@@ -56,7 +56,7 @@ class Field(object):
                  width=9, help_text_width=9, label_width=None, units=None, pre_units=None,
                  form_group_css_class=None, noclear=False, requires_multipart=False,
                  column_breakpoint=None, max_width=None, multiple_inputs=False,
-                 base_input_css_class='form-control'):
+                 base_input_css_class='form-control', allow_duplicates=False):
         """
         :param name: The name of the field (the name field in the generated input)
         :param label: The label text.  If None, is automatically generated from the name
@@ -95,6 +95,10 @@ class Field(object):
                                 submitted values
         :param base_input_css_class: The default css class to put on the input. Defaults to
                                      form-control
+        :param allow_duplicates: If set to True, allow this field to be added to the form even if
+                                 there is already a field with the same name. Note that if
+                                 duplicate fields are present, only one of them will be retreivable
+                                 by name
         """
         self.name = name
 
@@ -133,6 +137,7 @@ class Field(object):
             self.max_width = '{}px'.format(self.max_width)
         self.multiple_inputs = multiple_inputs
         self.base_input_css_class = base_input_css_class
+        self.allow_duplicates = allow_duplicates
 
         # This should get set by the form when we add it
         self.form = None
@@ -532,9 +537,19 @@ class Form(object):
         from .basicfields import SubmitButton
         self.add_field(SubmitButton('submit', submit_text, label_width=self.label_width,
                                     css_class=css_class))
+    
+    def allow_duplicate_field(self, field, existing_fields=None):
+        """Are we going to allow the duplicate field to be added?"""
+        if existing_fields is None:
+            existing_fields = self.field_dict
+
+        if not field.allow_duplicates:
+            return False
+
+        return existing_fields[field.name].allow_duplicates
 
     def add_field(self, field):
-        if field.name in self.field_dict:
+        if field.name in self.field_dict and not self.allow_duplicate_field(field):
             raise exceptions.DuplicateField('A field named "{}" is already present in the form'.format(field.name))
 
         self.fields.append(field)
@@ -542,14 +557,17 @@ class Form(object):
         field.form = self
 
     def add_fields(self, fields):
-        # Names of all fields we are adding
-        field_names = set()
+        # Dict mapping new field names onto the new field
+        new_fields = {}
         
         for field in fields:
-            if field.name in self.field_dict or field.name in field_names:
+            if field.name in self.field_dict and not self.allow_duplicate_field(field):
                 raise exceptions.DuplicateField('A field named "{}" is already present in the form'.format(field.name))
 
-            field_names.add(field.name)
+            if field.name in new_fields and not self.allow_duplicate_field(field, new_fields):
+                raise exceptions.DuplicateField('Multiple fields named "{}" would be added to the form'.format(field.name))
+
+            new_fields[field.name] = field
 
         for field in fields:
             self.fields.append(field)
@@ -557,14 +575,17 @@ class Form(object):
             field.form = self
 
     def add_section(self, name, fields=[]):
-        # Names of all fields we are adding
-        field_names = set()
-
+        # Dict mapping new field names onto the new field
+        new_fields = {}
+        
         for field in fields:
-            if field.name in self.field_dict or field.name in field_names:
+            if field.name in self.field_dict and not self.allow_duplicate_field(field):
                 raise exceptions.DuplicateField('A field named "{}" is already present in the form'.format(field.name))
-            
-            field_names.add(field.name)
+
+            if field.name in new_fields and not self.allow_duplicate_field(field, new_fields):
+                raise exceptions.DuplicateField('Multiple fields named "{}" would be added to the form'.format(field.name))
+
+            new_fields[field.name] = field
 
         section = FormSection(name, fields)
         for field in section.fields:
