@@ -20,7 +20,7 @@ lxml==4.3.3
 MarkupSafe==1.1.1
 maxminddb==1.4.1
 olefile==0.46
-Pillow==6.0.0
+Pillow==6.2.0
 pkg-resources==0.0.0
 PyMarkovChain==1.8
 python-dateutil==2.8.0
