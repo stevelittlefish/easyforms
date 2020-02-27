@@ -5,6 +5,7 @@
 		(function () {
 			var cleanUp = function () {
 				$("#fm-iframe-{{ field.id }}").remove();
+				$("body").css("overflow-y", "auto");
 			};
 
 			var showFileManager = function () {
