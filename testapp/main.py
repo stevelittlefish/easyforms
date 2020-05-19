@@ -122,6 +122,8 @@ def large_multisection_form():
         easyforms.DatePickerField('date-picker-field',
                                   help_text='Required jquery ui and the following line of javascript: '
                                   '$(".date-picker").datepicker({ dateFormat: "dd/mm/yy" });'),
+        easyforms.DateTimeField('date-time-field', width=9,
+                                help_text='You need to set this up the same as the datepicker'),
         easyforms.ListSelectField('list-select-field', ['Option 1', 'Option 2', 'Another Option'],
                                   width=3),
         easyforms.DictSelectField('dict-select-field', {

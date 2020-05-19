@@ -260,6 +260,56 @@ class DatePickerField(form.Field):
                 self.value = datetime.datetime.now()
 
 
+class DateTimeField(form.Field):
+    """
+    You must enable the date picker javascript for this to work!
+    """
+    def __init__(self, name, **kwargs):
+        if 'width' not in kwargs:
+            kwargs['width'] = 3
+        super().__init__(name, **kwargs)
+
+    def render(self):
+        date = self.value
+        if date is not None:
+            date = timetool.datetime_to_datepicker(date)
+
+        return env.get_template('advanced/date_time.html').render(field=self, date=date)
+
+    def extract_value(self, data):
+        date_str = data['%s-date' % self.name]
+        hour_str = data['%s-hour' % self.name]
+        minute_str = data['%s-minute' % self.name]
+        
+        date = None
+        hour = None
+        minute = None
+        # Validate and process date
+        if date_str:
+            try:
+                date = timetool.datetime_from_datepicker(date_str).date()
+            except ValueError:
+                self.error = 'Invalid date: "%s"' % self.value
+                self.value = datetime.datetime.now()
+
+        # Validate and process time
+        if not self.error and hour_str and minute_str:
+            try:
+                hour = int(hour_str)
+                minute = int(minute_str)
+
+                self.value = datetime.time(hour, minute)
+            except Exception:
+                self.error = 'Invalid time'
+
+        if date and hour and minute:
+            self.value = datetime.datetime(date.year, date.month, date.day, hour, minute)
+        else:
+            self.value = None
+            if self.required and not self.error:
+                self.error = 'Please fill in all of the fields'
+
+
 class IntegerSelectField(basicfields.SelectField):
     def __init__(self, name, key_pairs, empty_option=False, empty_option_name='', button_link_url=None,
                  button_link_text=None, **kwargs):
