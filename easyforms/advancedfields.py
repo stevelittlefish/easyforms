@@ -302,7 +302,7 @@ class DateTimeField(form.Field):
             except Exception:
                 self.error = 'Invalid time'
 
-        if date and hour and minute:
+        if date is not None and hour is not None and minute is not None:
             self.value = datetime.datetime(date.year, date.month, date.day, hour, minute)
         else:
             self.value = None
