@@ -11,7 +11,7 @@ include_path = os.path.abspath(os.path.join(path, '..'))
 print('Including path: %s' % include_path)
 sys.path.append(include_path)
 
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from app import create_app
 

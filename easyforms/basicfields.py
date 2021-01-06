@@ -131,6 +131,15 @@ class SelectField(form.Field):
                 self.value = None
 
 
+class RadiosField(SelectField):
+    def __init__(self, name, key_pairs, empty_option=False, empty_option_name='(none)', **kwargs):
+
+        super().__init__(name, key_pairs, empty_option, empty_option_name, **kwargs)
+
+    def render(self):
+        return env.get_template('basic/radios.html').render(field=self)
+
+
 class BooleanCheckbox(form.Field):
     def __init__(self, name, default=False, **kwargs):
         super(BooleanCheckbox, self).__init__(name, required=False, allow_missing=True, value=default, **kwargs)

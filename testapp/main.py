@@ -102,6 +102,9 @@ def large_multisection_form():
         easyforms.NameField('name-field', width=4),
         easyforms.SelectField('select-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True,
                               help_text='You must select something otherwise you will get '
+                                        'a validation error'),
+        easyforms.RadiosField('radios-field', EXAMPLE_KEY_PAIRS, empty_option=True, required=True,
+                              help_text='You must select something otherwise you will get '
                                         'a validation error')
     ])
 

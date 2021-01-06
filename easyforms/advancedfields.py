@@ -336,6 +336,15 @@ class ListSelectField(basicfields.SelectField):
 
         super().__init__(name, key_pairs, **kwargs)
 
+        
+class ListRadiosField(ListSelectField):
+    def __init__(self, name, values, empty_option_name='(none)', **kwargs):
+
+        super().__init__(name, values, empty_option_name=empty_option_name, **kwargs)
+
+    def render(self):
+        return env.get_template('basic/radios.html').render(field=self)
+
 
 class ObjectListSelectField(basicfields.SelectField):
     """
@@ -353,6 +362,15 @@ class ObjectListSelectField(basicfields.SelectField):
                     return
 
             self.error = 'Invalid Value'
+
+
+class ObjectListRadiosField(ListSelectField):
+    def __init__(self, name, key_pairs, empty_option_name='(none)', **kwargs):
+
+        super().__init__(name, key_pairs, empty_option_name=empty_option_name, **kwargs)
+
+    def render(self):
+        return env.get_template('basic/radios.html').render(field=self)
 
 
 class EnumSelectField(basicfields.SelectField):

@@ -1,0 +1,35 @@
+{% extends 'ef_basic_input.html' %}
+
+{% block input %}
+	<div class="ef-radios field.input_classes" id="{{ field.id }}">
+		{% if field.empty_option %}
+			<div class="radio form-check">
+				<label class="form-check-label">
+					<input type="radio"
+						   name="{{ field.name }}"
+						   id="{{ field.id }}-empty"
+						   value=""
+						   class="form-check-input"
+						   {% if field.readonly %}readonly{% endif %}
+						   {% if field.value == None %}checked{% endif %}>
+					{{ field.empty_option_name }}
+				</label>
+			</div>
+		{% endif %}
+		{% for key_pair in field.key_pairs %}
+			<div class="radio form-check">
+				<label class="form-check-label">
+					<input type="radio"
+						   name="{{ field.name }}"
+						   id="{{ field.id }}-{{ loop.index0 }}"
+						   value="{{ key_pair.select_value }}"
+						   class="form-check-input"
+						   {% if field.readonly %}readonly{% endif %}
+						   {% if field.value == key_pair.select_value or field.value == key_pair %}checked{% endif %}>
+					{{ key_pair.select_name }}
+				</label>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
+
