@@ -16,7 +16,7 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 kombu==4.5.0
 littlefish==0.0.30
-lxml==4.3.3
+lxml==4.6.2
 MarkupSafe==1.1.1
 maxminddb==1.4.1
 olefile==0.46
