@@ -30,7 +30,7 @@ class DbCodeSelectField(basicfields.SelectField):
 
     def convert_value(self):
         if self.value:
-            if self.valid_codes and self.valuenot in self.valid_codes:
+            if self.valid_codes and self.value not in self.valid_codes:
                 self.error = 'Invalid selection'
             else:
                 loaded_value = self.db_model.query.filter(self.db_model.code == self.value).first()
