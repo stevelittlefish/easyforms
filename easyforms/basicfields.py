@@ -134,7 +134,7 @@ class SelectField(form.Field):
 class RadiosField(SelectField):
     def __init__(self, name, key_pairs, empty_option=False, empty_option_name='(none)', **kwargs):
 
-        super().__init__(name, key_pairs, empty_option, empty_option_name, **kwargs)
+        super().__init__(name, key_pairs, empty_option, empty_option_name, allow_missing=True, **kwargs)
 
     def render(self):
         return env.get_template('basic/radios.html').render(field=self)

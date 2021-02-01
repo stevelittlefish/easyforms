@@ -340,7 +340,7 @@ class ListSelectField(basicfields.SelectField):
 class ListRadiosField(ListSelectField):
     def __init__(self, name, values, empty_option_name='(none)', **kwargs):
 
-        super().__init__(name, values, empty_option_name=empty_option_name, **kwargs)
+        super().__init__(name, values, empty_option_name=empty_option_name, allow_missing=True, **kwargs)
 
     def render(self):
         return env.get_template('basic/radios.html').render(field=self)
@@ -367,7 +367,7 @@ class ObjectListSelectField(basicfields.SelectField):
 class ObjectListRadiosField(ListSelectField):
     def __init__(self, name, key_pairs, empty_option_name='(none)', **kwargs):
 
-        super().__init__(name, key_pairs, empty_option_name=empty_option_name, **kwargs)
+        super().__init__(name, key_pairs, empty_option_name=empty_option_name, allow_missing=True, **kwargs)
 
     def render(self):
         return env.get_template('basic/radios.html').render(field=self)
