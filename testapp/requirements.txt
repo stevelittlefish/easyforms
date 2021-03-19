@@ -27,7 +27,7 @@ idna==2.10
 ipaddr==2.2.0
 IPy==1.1
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 kombu==5.0.2
 littlefish==0.0.58
 lockfile==0.12.2
