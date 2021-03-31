@@ -31,7 +31,7 @@ Jinja2==2.11.2
 kombu==5.0.2
 littlefish==0.0.58
 lockfile==0.12.2
-lxml==4.6.2
+lxml==4.6.3
 MarkupSafe==1.1.1
 maxminddb==2.0.3
 msgpack==0.6.2
