@@ -1,18 +1,26 @@
 {% extends 'ef_basic_input.html' %}
 
 {% block input %}
-	<select name="{{ field.name }}" id="{{ field.id }}" class="{{ field.input_classes }}" {% if field.readonly %}readonly{% endif %}>
-		{% if field.empty_option %}
-			<option value="" {% if field.value == None %}selected="selected"{% endif %}>
-				{{ field.empty_option_name }}
-			</option>
-		{% endif %}
-		{% for key_pair in field.key_pairs %}
-			<option value="{{ key_pair.select_value }}"
-					{% if field.value == key_pair.select_value or field.value == key_pair %}selected="selected"{% endif %}>
-				{{ key_pair.select_name }}
-			</option>
-		{% endfor %}
-	</select>
+	{% if field.readonly %}
+		<input type="hidden" name="{{ field.name }}" id="{{ field.id }}" value="{% if field.value %}{{ field.value.select_value }}{% endif %}">
+		<input type="text" value="{% if field.value %}{{ field.value.select_name }}{% else %}{{ field.empty_option_name }}{% endif %}" class="{{ field.input_classes }}" readonly>
+	{% else %}
+		<select name="{{ field.name }}" id="{{ field.id }}" class="{{ field.input_classes }}">
+			{% if field.empty_option %}
+				<option value="" {% if field.value == None %}selected="selected"{% endif %}>
+					{{ field.empty_option_name }}
+				</option>
+			{% endif %}
+			{% for key_pair in field.key_pairs %}
+				<p>
+					{{ key_pair }} == {{ field.value }} ?
+				</p>
+				<option value="{{ key_pair.select_value }}"
+						{% if field.value == key_pair.select_value or field.value == key_pair %}selected="selected"{% endif %}>
+					{{ key_pair.select_name }}
+				</option>
+			{% endfor %}
+		</select>
+	{% endif %}
 {% endblock %}
 
